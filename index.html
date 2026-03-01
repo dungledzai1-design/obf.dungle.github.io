@@ -2,220 +2,2641 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Le Tien Dung Python Obfuscator</title>
-
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XuHuongVN - Dịch Vụ Tăng Tương Tác MXH Uy Tín</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{
-  --red:#dc2626;
-  --bg:url("https://i.imgur.com/H4kq5yd.gif");
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #1557b0;
+  --secondary: #00c6ae;
+  --accent: #ff6b35;
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --success: #3fb950;
+  --warning: #d29922;
+  --danger: #f85149;
+  --gold: #ffd700;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;position:relative;overflow-x:hidden;}
 
-body{
-  font-family:Inter,sans-serif;
-  background:linear-gradient(rgba(15,23,42,.9),rgba(15,23,42,.9)),var(--bg) center/cover fixed;
-  color:#e5e7eb;
-  min-height:100vh;
-  padding:20px;
+/* SNOW EFFECT - TUYẾT RƠI */
+.snowflake {
+  position: fixed;
+  color: #fff;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.8;
+  font-size: 1em;
+  z-index: 9999;
+  animation: fall linear infinite;
 }
-
-.container{max-width:1400px;margin:auto}
-
-.header{
-  text-align:center;
-  padding:30px;
-  border-bottom:2px solid var(--red);
-}
-.header h1{font-size:36px;font-weight:800}
-.header span{color:var(--red)}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  margin-top:25px;
-}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-
-.panel{
-  background:#020617;
-  border:1px solid #334155;
-  border-radius:10px;
-  overflow:hidden;
+@keyframes fall {
+  to { transform: translateY(100vh); }
 }
 
-.panel-header{
-  padding:12px 16px;
-  background:#020617;
-  border-bottom:1px solid #334155;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+/* HIỆU ỨNG NỀN ĐỘNG */
+.particle {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: rgba(26, 115, 232, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: float 20s infinite linear;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
 }
 
-textarea{
-  width:100%;
-  height:420px;
-  background:#020617;
-  color:#e5e7eb;
-  border:none;
-  padding:15px;
-  font-family:JetBrains Mono;
-  resize:vertical;
+/* HIỆU ỨNG GLOW */
+.glow-effect {
+  position: relative;
+  overflow: hidden;
+}
+.glow-effect::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(26,115,232,0.2) 0%, transparent 70%);
+  animation: glow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.8; }
 }
 
-button{
-  background:linear-gradient(135deg,var(--red),#991b1b);
-  border:none;
-  padding:10px 18px;
-  border-radius:6px;
-  color:white;
-  font-weight:700;
-  cursor:pointer;
+/* HIỆU ỨNG LOADING */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
-button:active{transform:scale(.96)}
-
-.controls{
-  text-align:center;
-  margin-top:20px;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-.console{
-  margin-top:25px;
-  background:#020617;
-  border:1px solid #334155;
-  border-radius:10px;
+/* HIỆU ỨNG RIPPLE */
+.ripple {
+  position: relative;
+  overflow: hidden;
 }
-.console-header{
-  padding:10px 15px;
-  border-bottom:1px solid #334155;
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
 }
-#log{
-  height:180px;
-  overflow:auto;
-  padding:10px;
-  font-family:JetBrains Mono;
-  font-size:13px;
+.ripple:active::after {
+  width: 200px;
+  height: 200px;
+  opacity: 0;
 }
-.log-info{color:#60a5fa}
-.log-ok{color:#22c55e}
-.log-err{color:#ef4444}
 
-.footer{
-  text-align:center;
-  margin-top:30px;
-  color:#94a3b8;
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:3px;}
+
+/* NAV */
+.navbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;color:var(--primary);}
+.nav-brand span{color:var(--secondary);}
+.nav-links{display:flex;gap:8px;align-items:center;}
+.nav-links a{color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:6px;font-size:0.88rem;transition:all .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
+.nav-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:8px 18px;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:inherit;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-outline{background:transparent;color:var(--primary);border:1px solid var(--primary);}
+.btn-outline:hover{background:var(--primary);color:#fff;}
+.btn-success{background:var(--success);color:#fff;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-sm{padding:5px 12px;font-size:0.82rem;}
+.btn-warning{background:var(--warning);color:#fff;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d1117 0%,#1a2332 50%,#0d1117 100%);padding:60px 24px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at center,rgba(26,115,232,.15) 0%,transparent 60%);animation:pulse 4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.hero h1{font-size:2.8rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;position:relative;}
+.hero p{color:var(--text2);font-size:1.1rem;max-width:600px;margin:0 auto 32px;position:relative;}
+.hero-stats{display:flex;gap:40px;justify-content:center;margin-top:40px;position:relative;}
+.stat-item{text-align:center;}
+.stat-num{font-size:2rem;font-weight:800;color:var(--primary);}
+.stat-label{font-size:0.85rem;color:var(--text2);}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;overflow:hidden;}
+.marquee{display:flex;gap:40px;animation:marquee 20s linear infinite;white-space:nowrap;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.marquee span{color:var(--text2);font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.marquee span i{color:var(--success);}
+
+/* MAIN LAYOUT */
+.main-layout{display:flex;min-height:calc(100vh - 60px);}
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);padding:16px;flex-shrink:0;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-title{font-size:0.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding:0 8px;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:0.88rem;transition:all .2s;margin-bottom:2px;}
+.sidebar-item:hover,.sidebar-item.active{background:var(--bg3);color:var(--text);}
+.sidebar-item.active{color:var(--primary);}
+.sidebar-item i{width:18px;text-align:center;}
+.badge{background:var(--primary);color:#fff;font-size:0.7rem;padding:2px 7px;border-radius:10px;margin-left:auto;}
+.badge-success{background:var(--success);}
+.badge-warning{background:var(--warning);}
+
+/* CONTENT */
+.content{flex:1;padding:24px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;transition:transform 0.3s, box-shadow 0.3s;}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,115,232,0.2);}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-size:1rem;font-weight:700;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+
+/* STAT CARDS */
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;transition:transform 0.3s;}
+.stat-card:hover{transform:scale(1.02);}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.stat-icon.blue{background:rgba(26,115,232,.2);color:var(--primary);}
+.stat-icon.green{background:rgba(63,185,80,.2);color:var(--success);}
+.stat-icon.orange{background:rgba(255,107,53,.2);color:var(--accent);}
+.stat-icon.teal{background:rgba(0,198,174,.2);color:var(--secondary);}
+.stat-card-info h3{font-size:1.5rem;font-weight:800;}
+.stat-card-info p{font-size:0.82rem;color:var(--text2);}
+
+/* FORM */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:0.85rem;color:var(--text2);margin-bottom:6px;}
+.form-control{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:0.9rem;font-family:inherit;transition:border-color .2s;}
+.form-control:focus{outline:none;border-color:var(--primary);}
+select.form-control option{background:var(--bg3);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+th{background:var(--bg3);padding:12px 16px;text-align:left;font-weight:600;color:var(--text2);font-size:0.82rem;text-transform:uppercase;letter-spacing:.5px;}
+td{padding:12px 16px;border-bottom:1px solid var(--border);}
+tr:hover td{background:rgba(255,255,255,.02);}
+.status-badge{padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;}
+.status-pending{background:rgba(210,153,34,.2);color:var(--warning);}
+.status-processing{background:rgba(26,115,232,.2);color:var(--primary);}
+.status-completed{background:rgba(63,185,80,.2);color:var(--success);}
+.status-failed{background:rgba(248,81,73,.2);color:var(--danger);}
+.status-cancelled{background:rgba(139,148,158,.2);color:var(--text2);}
+
+/* PLATFORM ICONS */
+.platform-icon{display:flex;align-items:center;gap:8px;}
+.p-fb{color:#1877f2;}
+.p-ig{color:#e1306c;}
+.p-tt{color:#ff0050;}
+.p-yt{color:#ff0000;}
+.p-tw{color:#1da1f2;}
+.p-tk{color:#00f2ea;}
+
+/* SERVICE CARDS */
+.service-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));}
+.service-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.service-card h3{font-size:0.95rem;font-weight:700;margin-bottom:6px;}
+.service-card p{font-size:0.82rem;color:var(--text2);}
+.service-card .price{font-size:1.1rem;font-weight:800;color:var(--primary);margin-top:10px;}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:20px;}
+.tab{flex:1;padding:8px;border-radius:8px;text-align:center;cursor:pointer;font-size:0.88rem;color:var(--text2);transition:all .2s;}
+.tab.active{background:var(--primary);color:#fff;font-weight:600;}
+
+/* NOTIFICATION */
+.notification{position:fixed;top:20px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;z-index:9999;transform:translateX(120%);transition:transform .3s;min-width:280px;}
+.notification.show{transform:translateX(0);}
+.notification.success{border-left:4px solid var(--success);}
+.notification.error{border-left:4px solid var(--danger);}
+.notification.info{border-left:4px solid var(--primary);}
+.notif-icon.success{color:var(--success);}
+.notif-icon.error{color:var(--danger);}
+.notif-icon.info{color:var(--primary);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-title{font-size:1.1rem;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer;}
+.modal-close:hover{color:var(--text);}
+
+/* PROGRESS */
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:3px;transition:width .3s;}
+
+/* ALERT */
+.alert{padding:12px 16px;border-radius:8px;font-size:0.88rem;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.alert-info{background:rgba(26,115,232,.15);border:1px solid rgba(26,115,232,.3);color:#7bb3f5;}
+.alert-success{background:rgba(63,185,80,.15);border:1px solid rgba(63,185,80,.3);color:#7ee8a2;}
+.alert-warning{background:rgba(210,153,34,.15);border:1px solid rgba(210,153,34,.3);color:#f0b84a;}
+
+/* QR CODE */
+.qr-box{background:var(--bg3);border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;}
+.qr-box img{width:180px;height:180px;border-radius:8px;}
+.bank-info{background:var(--bg3);border-radius:10px;padding:16px;margin-top:16px;}
+.bank-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
+.bank-info-row:last-child{border-bottom:none;}
+.copy-btn{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:3px 10px;border-radius:6px;cursor:pointer;font-size:0.78rem;}
+.copy-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* USER AVATAR */
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;cursor:pointer;overflow:hidden;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+
+/* DROPDOWN */
+.dropdown{position:relative;}
+.dropdown-menu{position:absolute;right:0;top:calc(100% + 8px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:6px;min-width:180px;z-index:100;display:none;}
+.dropdown-menu.show{display:block;}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:0.88rem;color:var(--text2);}
+.dropdown-item:hover{background:var(--bg3);color:var(--text);}
+.dropdown-divider{height:1px;background:var(--border);margin:4px 0;}
+
+/* LANDING */
+.landing{padding:40px 24px;}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px;}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:transform 0.3s;}
+.feature-card:hover{transform:translateY(-5px);}
+.feature-card .icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px;}
+.feature-card h3{font-size:0.95rem;font-weight:700;margin-bottom:8px;}
+.feature-card p{font-size:0.83rem;color:var(--text2);}
+
+/* PLATFORM TABS */
+.platform-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.platform-tab{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;border:1px solid var(--border);cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all .2s;}
+.platform-tab:hover{border-color:var(--primary);color:var(--primary);}
+.platform-tab.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+
+/* AVATAR UPLOAD */
+.avatar-upload{position:relative;display:inline-block;}
+.avatar-preview{width:100px;height:100px;border-radius:50%;background:var(--bg3);border:2px solid var(--primary);overflow:hidden;margin-bottom:12px;}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;}
+.avatar-upload input{display:none;}
+.avatar-upload label{background:var(--primary);color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;}
+
+/* SERVER NOTIFICATION */
+.server-notif{position:fixed;bottom:20px;left:20px;max-width:300px;z-index:9998;animation:slideIn 0.3s ease;}
+@keyframes slideIn{from{transform:translateX(-100%);}to{transform:translateX(0);}}
+.server-notif-item{background:var(--bg2);border-left:4px solid var(--primary);border-radius:8px;padding:12px;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.server-notif-item.info{border-left-color:var(--primary);}
+.server-notif-item.success{border-left-color:var(--success);}
+.server-notif-item.warning{border-left-color:var(--warning);}
+.server-notif-item.danger{border-left-color:var(--danger);}
+.server-notif-title{font-weight:700;font-size:0.9rem;margin-bottom:4px;}
+.server-notif-content{font-size:0.85rem;color:var(--text2);}
+
+/* CHAT SUPPORT */
+.chat-support{position:fixed;bottom:20px;right:20px;width:350px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;z-index:9997;box-shadow:0 4px 20px rgba(0,0,0,.5);display:none;}
+.chat-support.show{display:block;}
+.chat-header{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:12px 16px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.chat-header-title{font-weight:700;color:#fff;}
+.chat-close{cursor:pointer;color:#fff;opacity:0.8;}
+.chat-close:hover{opacity:1;}
+.chat-messages{height:300px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.chat-message{max-width:80%;padding:8px 12px;border-radius:12px;font-size:0.85rem;}
+.chat-message.sent{background:var(--primary);color:#fff;align-self:flex-end;}
+.chat-message.received{background:var(--bg3);color:var(--text);align-self:flex-start;}
+.chat-message .time{font-size:0.7rem;opacity:0.7;margin-top:4px;text-align:right;}
+.chat-input{display:flex;padding:12px;border-top:1px solid var(--border);gap:8px;}
+.chat-input input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;}
+.chat-input button{background:var(--primary);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+.chat-toggle{position:fixed;bottom:20px;right:20px;width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9996;}
+.chat-toggle i{color:#fff;font-size:1.2rem;}
+
+/* BANK ACCOUNT LIST */
+.bank-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px;}
+.bank-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.3s;}
+.bank-item:hover{border-color:var(--primary);transform:translateY(-2px);}
+.bank-item.selected{background:rgba(26,115,232,.2);border-color:var(--primary);}
+.bank-name{font-weight:700;color:var(--primary);margin-bottom:4px;}
+.bank-number{font-size:0.85rem;color:var(--text);}
+.bank-holder{font-size:0.8rem;color:var(--text2);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .main-layout{flex-direction:column;}
+  .sidebar{width:100%;padding:8px;display:flex;overflow-x:auto;gap:4px;}
+  .sidebar-section{display:flex;gap:4px;margin-bottom:0;flex-shrink:0;}
+  .sidebar-title{display:none;}
+  .hero h1{font-size:1.8rem;}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .hero-stats{gap:20px;}
+  .chat-support{width:300px;right:10px;}
 }
 </style>
 </head>
-
 <body>
-<div class="container">
 
-<div class="header">
-  <h1>Le Tien Dung <span>PYTHON OBFUSCATOR</span></h1>
+<!-- HIỆU ỨNG NỀN -->
+<div id="particles"></div>
+
+<!-- SNOW EFFECT - TUYẾT RƠI -->
+<div id="snowContainer"></div>
+
+<!-- SERVER NOTIFICATIONS -->
+<div id="serverNotifications" class="server-notif"></div>
+
+<!-- CHAT SUPPORT -->
+<div class="chat-toggle" onclick="toggleChat()">
+  <i class="fas fa-comment"></i>
+</div>
+<div class="chat-support" id="chatSupport">
+  <div class="chat-header">
+    <span class="chat-header-title"><i class="fas fa-headset"></i> Hỗ Trợ Admin</span>
+    <span class="chat-close" onclick="toggleChat()"><i class="fas fa-times"></i></span>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+    <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+  </div>
 </div>
 
-<div class="controls">
-  <input type="file" id="fileInput" accept=".py">
-  <button onclick="loadFile()">UPLOAD FILE</button>
-  <button onclick="downloadFile()">DOWNLOAD</button>
+<!-- NOTIFICATION -->
+<div class="notification" id="notification">
+  <i class="fas fa-check-circle notif-icon success" id="notif-icon"></i>
+  <div id="notif-text">Thành công!</div>
 </div>
 
-<div class="grid">
-
-<div class="panel">
-  <div class="panel-header"><b>Python goc</b></div>
-  <textarea id="inputCode" placeholder="Upload file .py hoac paste code"></textarea>
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Modal</div>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
 </div>
 
-<div class="panel">
-  <div class="panel-header"><b>Python da obf</b></div>
-  <textarea id="outputCode" readonly></textarea>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <i class="fas fa-bolt"></i>
+    <span>XuHuong</span>VN
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#" class="active" onclick="showLanding()">Trang Chủ</a>
+    <a href="#" onclick="showPage('services')">Dịch Vụ</a>
+    <a href="#" onclick="showPage('pricing')">Bảng Giá</a>
+    <a href="#" onclick="showPage('api-page')">API</a>
+  </div>
+  <div class="nav-actions" id="navActions">
+    <button class="btn btn-outline btn-sm" onclick="openLoginModal()">Đăng Nhập</button>
+    <button class="btn btn-primary btn-sm" onclick="openRegisterModal()">Đăng Ký</button>
+  </div>
+</nav>
+
+<!-- APP CONTAINER -->
+<div id="appContainer">
+  <!-- LANDING PAGE -->
+  <div id="landingPage">
+    <div class="hero">
+      <h1>Dịch Vụ Tăng Tương Tác MXH #1 Việt Nam</h1>
+      <p>Tăng follow, like, view, comment cho Facebook, Instagram, TikTok, YouTube với giá tốt nhất, uy tín nhất.</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button class="btn btn-primary" onclick="openRegisterModal()"><i class="fas fa-rocket"></i> Bắt Đầu Ngay</button>
+        <button class="btn btn-outline" onclick="showPage('services')"><i class="fas fa-list"></i> Xem Dịch Vụ</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num" id="counterOrders">0</div><div class="stat-label">Đơn Hàng</div></div>
+        <div class="stat-item"><div class="stat-num" id="counterUsers">0</div><div class="stat-label">Khách Hàng</div></div>
+        <div class="stat-item"><div class="stat-num" id="counterServices">0</div><div class="stat-label">Dịch Vụ</div></div>
+      </div>
+    </div>
+
+    <div class="marquee-wrap">
+      <div class="marquee" id="marquee">
+        <span><i class="fas fa-check-circle"></i> user***123 đã mua 1000 Follow TikTok</span>
+        <span><i class="fas fa-check-circle"></i> nguyen***abc đã nạp 500,000đ</span>
+        <span><i class="fas fa-check-circle"></i> tran***xyz đã mua 5000 Like Facebook</span>
+        <span><i class="fas fa-check-circle"></i> minh***99 đã mua 2000 View YouTube</span>
+        <span><i class="fas fa-check-circle"></i> le***vip đã mua 3000 Follow Instagram</span>
+        <span><i class="fas fa-check-circle"></i> hung***pro đã nạp 1,000,000đ</span>
+        <span><i class="fas fa-check-circle"></i> user***123 đã mua 1000 Follow TikTok</span>
+        <span><i class="fas fa-check-circle"></i> nguyen***abc đã nạp 500,000đ</span>
+        <span><i class="fas fa-check-circle"></i> tran***xyz đã mua 5000 Like Facebook</span>
+        <span><i class="fas fa-check-circle"></i> minh***99 đã mua 2000 View YouTube</span>
+        <span><i class="fas fa-check-circle"></i> le***vip đã mua 3000 Follow Instagram</span>
+        <span><i class="fas fa-check-circle"></i> hung***pro đã nạp 1,000,000đ</span>
+      </div>
+    </div>
+
+    <div class="landing">
+      <div style="text-align:center;margin-bottom:32px;">
+        <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:12px;">Tại Sao Chọn Chúng Tôi?</h2>
+        <p style="color:var(--text2);">Dịch vụ tương tác chất lượng cao, giao hàng nhanh, bảo hành uy tín</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(26,115,232,.15);color:var(--primary)"><i class="fas fa-bolt"></i></div>
+          <h3>Tốc Độ Nhanh</h3>
+          <p>Bắt đầu xử lý trong vòng 1-5 phút sau khi đặt hàng</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(0,198,174,.15);color:var(--secondary)"><i class="fas fa-shield-alt"></i></div>
+          <h3>An Toàn 100%</h3>
+          <p>Không cần mật khẩu, không vi phạm chính sách nền tảng</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(255,107,53,.15);color:var(--accent)"><i class="fas fa-headset"></i></div>
+          <h3>Hỗ Trợ 24/7</h3>
+          <p>Đội ngũ CSKH sẵn sàng hỗ trợ mọi lúc mọi nơi</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(63,185,80,.15);color:var(--success)"><i class="fas fa-redo"></i></div>
+          <h3>Bảo Hành Dài</h3>
+          <p>Bảo hành tụt đến 30 ngày cho các dịch vụ cao cấp</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(255,215,0,.15);color:var(--gold)"><i class="fas fa-tags"></i></div>
+          <h3>Giá Cực Rẻ</h3>
+          <p>Bảng giá cạnh tranh nhất thị trường, chiết khấu theo số lượng</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon" style="background:rgba(210,153,34,.15);color:var(--warning)"><i class="fas fa-robot"></i></div>
+          <h3>Hệ Thống Tự Động</h3>
+          <p>Tự động nạp tiền, đặt hàng và theo dõi đơn 24/7</p>
+        </div>
+      </div>
+
+      <!-- PLATFORM SECTION -->
+      <div style="margin-top:48px;text-align:center;">
+        <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:32px;">Nền Tảng Hỗ Trợ</h2>
+        <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;">
+          <div style="text-align:center;cursor:pointer;" onclick="openRegisterModal()">
+            <div style="width:64px;height:64px;background:#1877f2;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.8rem;color:#fff;"><i class="fab fa-facebook-f"></i></div>
+            <div style="font-size:0.85rem;">Facebook</div>
+          </div>
+          <div style="text-align:center;cursor:pointer;" onclick="openRegisterModal()">
+            <div style="width:64px;height:64px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.8rem;color:#fff;"><i class="fab fa-instagram"></i></div>
+            <div style="font-size:0.85rem;">Instagram</div>
+          </div>
+          <div style="text-align:center;cursor:pointer;" onclick="openRegisterModal()">
+            <div style="width:64px;height:64px;background:#ff0050;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.8rem;color:#fff;"><i class="fab fa-tiktok"></i></div>
+            <div style="font-size:0.85rem;">TikTok</div>
+          </div>
+          <div style="text-align:center;cursor:pointer;" onclick="openRegisterModal()">
+            <div style="width:64px;height:64px;background:#ff0000;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.8rem;color:#fff;"><i class="fab fa-youtube"></i></div>
+            <div style="font-size:0.85rem;">YouTube</div>
+          </div>
+          <div style="text-align:center;cursor:pointer;" onclick="openRegisterModal()">
+            <div style="width:64px;height:64px;background:#1da1f2;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.8rem;color:#fff;"><i class="fab fa-twitter"></i></div>
+            <div style="font-size:0.85rem;">Twitter/X</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN INFO -->
+      <div style="margin-top:48px;text-align:center;background:linear-gradient(135deg,rgba(26,115,232,.1),rgba(0,198,174,.1));border-radius:16px;padding:30px;">
+        <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:12px;">Thông Tin Admin</h2>
+        <p style="color:var(--text2);margin-bottom:8px;">Admin: <strong style="color:var(--primary);">Lê Tiến Dũng</strong></p>
+        <p style="color:var(--text2);margin-bottom:8px;">Zalo: <strong style="color:var(--success);">0969411158</strong></p>
+        <p style="color:var(--text2);">Liên hệ ngay để được tư vấn và hỗ trợ 24/7</p>
+      </div>
+
+      <!-- CTA -->
+      <div style="margin-top:60px;background:linear-gradient(135deg,rgba(26,115,232,.2),rgba(0,198,174,.2));border:1px solid rgba(26,115,232,.3);border-radius:16px;padding:40px;text-align:center;">
+        <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:12px;">Bắt Đầu Tăng Tương Tác Ngay Hôm Nay</h2>
+        <p style="color:var(--text2);margin-bottom:24px;">Đăng ký miễn phí, nạp tiền và đặt dịch vụ chỉ trong vài bước đơn giản</p>
+        <button class="btn btn-primary" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> Đăng Ký Miễn Phí</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (user logged in) -->
+  <div id="dashboardPage" style="display:none;">
+    <div class="main-layout">
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Menu Chính</div>
+          <div class="sidebar-item active" onclick="showPage('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+          <div class="sidebar-item" onclick="showPage('new-order')"><i class="fas fa-plus-circle"></i> Đặt Dịch Vụ</div>
+          <div class="sidebar-item" onclick="showPage('orders')"><i class="fas fa-list-alt"></i> Đơn Hàng <span class="badge" id="pendingBadge">0</span></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Tài Khoản</div>
+          <div class="sidebar-item" onclick="showPage('deposit')"><i class="fas fa-wallet"></i> Nạp Tiền</div>
+          <div class="sidebar-item" onclick="showPage('withdraw')"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
+          <div class="sidebar-item" onclick="showPage('history')"><i class="fas fa-history"></i> Lịch Sử</div>
+          <div class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i> Tài Khoản</div>
+          <div class="sidebar-item" onclick="showPage('api-keys')"><i class="fas fa-key"></i> API Key</div>
+        </div>
+        <div class="sidebar-section" id="adminSidebarSection" style="display:none;">
+          <div class="sidebar-title">Quản Trị</div>
+          <div class="sidebar-item" onclick="showPage('admin-dashboard')"><i class="fas fa-chart-line"></i> Tổng Quan</div>
+          <div class="sidebar-item" onclick="showPage('admin-users')"><i class="fas fa-users"></i> Người Dùng</div>
+          <div class="sidebar-item" onclick="showPage('admin-orders')"><i class="fas fa-shopping-cart"></i> Đơn Hàng</div>
+          <div class="sidebar-item" onclick="showPage('admin-services')"><i class="fas fa-cogs"></i> Dịch Vụ</div>
+          <div class="sidebar-item" onclick="showPage('admin-payments')"><i class="fas fa-money-bill"></i> Nạp Tiền</div>
+          <div class="sidebar-item" onclick="showPage('admin-bank')"><i class="fas fa-university"></i> Ngân Hàng</div>
+          <div class="sidebar-item" onclick="showPage('admin-withdraw')"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
+          <div class="sidebar-item" onclick="showPage('admin-settings')"><i class="fas fa-sliders-h"></i> Cài Đặt</div>
+        </div>
+      </div>
+
+      <div class="content" id="mainContent">
+        <!-- DASHBOARD PAGE -->
+        <div class="page active" id="page-dashboard">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <h1 style="font-size:1.4rem;font-weight:800;">Tổng Quan</h1>
+              <p style="color:var(--text2);font-size:0.88rem;">Xin chào, <span id="welcomeUser" style="color:var(--primary);font-weight:600;"></span>!</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="showPage('new-order')"><i class="fas fa-plus"></i> Đặt Dịch Vụ</button>
+          </div>
+
+          <div class="grid-4">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="fas fa-wallet"></i></div>
+              <div class="stat-card-info"><h3 id="balanceDisplay">0đ</h3><p>Số Dư</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-card-info"><h3 id="completedOrdersDisplay">0</h3><p>Đơn Hoàn Thành</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="fas fa-spinner"></i></div>
+              <div class="stat-card-info"><h3 id="pendingOrdersDisplay">0</h3><p>Đang Xử Lý</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon teal"><i class="fas fa-coins"></i></div>
+              <div class="stat-card-info"><h3 id="totalSpentDisplay">0đ</h3><p>Tổng Chi Tiêu</p></div>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Đơn Hàng Gần Đây</div>
+                <button class="btn btn-outline btn-sm" onclick="showPage('orders')">Xem Tất Cả</button>
+              </div>
+              <div id="recentOrdersList"><p style="color:var(--text2);font-size:0.88rem;">Chưa có đơn hàng nào</p></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Thông Tin Tài Khoản</div></div>
+              <div id="accountInfo"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW ORDER PAGE -->
+        <div class="page" id="page-new-order">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Đặt Dịch Vụ</h1>
+          
+          <div class="alert alert-info"><i class="fas fa-info-circle"></i> Chọn nền tảng và dịch vụ phù hợp, điền link và số lượng để đặt hàng.</div>
+
+          <div class="card">
+            <div class="form-group">
+              <label class="form-label">Chọn Nền Tảng</label>
+              <div class="platform-tabs" id="platformTabs">
+                <div class="platform-tab active" onclick="filterPlatform('all',this)"><i class="fas fa-globe"></i> Tất Cả</div>
+                <div class="platform-tab" onclick="filterPlatform('facebook',this)"><i class="fab fa-facebook-f p-fb"></i> Facebook</div>
+                <div class="platform-tab" onclick="filterPlatform('instagram',this)"><i class="fab fa-instagram p-ig"></i> Instagram</div>
+                <div class="platform-tab" onclick="filterPlatform('tiktok',this)"><i class="fab fa-tiktok p-tt"></i> TikTok</div>
+                <div class="platform-tab" onclick="filterPlatform('youtube',this)"><i class="fab fa-youtube p-yt"></i> YouTube</div>
+                <div class="platform-tab" onclick="filterPlatform('twitter',this)"><i class="fab fa-twitter p-tw"></i> Twitter</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Chọn Dịch Vụ</label>
+              <select class="form-control" id="serviceSelect" onchange="updateServiceInfo()">
+                <option value="">-- Chọn dịch vụ --</option>
+              </select>
+            </div>
+
+            <div id="serviceInfoBox" style="display:none;margin-bottom:16px;">
+              <div class="alert alert-success" id="serviceInfoText"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Link/URL *</label>
+                <input type="text" class="form-control" id="orderLink" placeholder="https://...">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Số Lượng *</label>
+                <input type="number" class="form-control" id="orderQty" placeholder="Tối thiểu: 100" oninput="calcPrice()">
+              </div>
+            </div>
+
+            <div id="priceCalcBox" style="display:none;" class="card" style="background:var(--bg3);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="color:var(--text2);">Đơn giá:</span>
+                <span id="unitPrice">0đ/1000</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+                <span style="color:var(--text2);">Tổng tiền:</span>
+                <span id="totalPrice" style="font-size:1.2rem;font-weight:800;color:var(--primary);">0đ</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="placeOrder()" style="width:100%;padding:12px;font-size:1rem;margin-top:12px;"><i class="fas fa-shopping-cart"></i> Đặt Hàng Ngay</button>
+          </div>
+        </div>
+
+        <!-- ORDERS PAGE -->
+        <div class="page" id="page-orders">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Đơn Hàng</h1>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Dịch Vụ</th><th>Link</th><th>SL</th><th>Tổng Tiền</th><th>Trạng Thái</th><th>Ngày</th></tr></thead>
+                <tbody id="ordersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPOSIT PAGE -->
+        <div class="page" id="page-deposit">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Nạp Tiền</h1>
+          
+          <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Số tiền nạp tối thiểu: 2,000đ</div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Chọn Ngân Hàng</div>
+              <div class="bank-list" id="bankList"></div>
+              
+              <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Số Tiền Nạp (VNĐ)</label>
+                <input type="number" class="form-control" id="depositAmount" placeholder="Tối thiểu 2,000đ" min="2000" oninput="generateDepositCode()">
+              </div>
+              
+              <div id="depositInfo" style="display:none;">
+                <div class="bank-info" id="bankInfoBox"></div>
+                
+                <div class="qr-box" style="margin-top:16px;">
+                  <img id="qrImage" src="" alt="QR Code" style="width:200px;height:200px;">
+                  <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">Quét mã QR để chuyển khoản</p>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;margin-top:16px;" onclick="generateDepositCode()"><i class="fas fa-qrcode"></i> Tạo Mã Nạp Tiền</button>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Lịch Sử Nạp Tiền</div>
+              <div id="depositHistory"><p style="color:var(--text2);">Chưa có lịch sử nạp tiền</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WITHDRAW PAGE -->
+        <div class="page" id="page-withdraw">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Rút Tiền</h1>
+          
+          <div class="alert alert-info"><i class="fas fa-info-circle"></i> Rút tiền về mọi ngân hàng tại Việt Nam</div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Thông Tin Rút Tiền</div>
+              
+              <div class="stat-card" style="margin-bottom:16px;">
+                <div class="stat-icon green"><i class="fas fa-wallet"></i></div>
+                <div class="stat-card-info">
+                  <h3 id="withdrawBalance">0đ</h3>
+                  <p>Số Dư Khả Dụng</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Chọn Ngân Hàng</label>
+                <select class="form-control" id="withdrawBankSelect">
+                  <option value="">-- Chọn ngân hàng --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Số Tài Khoản</label>
+                <input type="text" class="form-control" id="withdrawAccountNumber" placeholder="Nhập số tài khoản">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tên Chủ Tài Khoản</label>
+                <input type="text" class="form-control" id="withdrawAccountName" placeholder="Nhập tên chủ tài khoản">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Số Tiền Rút</label>
+                <input type="number" class="form-control" id="withdrawAmount" placeholder="Nhập số tiền cần rút" min="20000">
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;" onclick="requestWithdraw()"><i class="fas fa-hand-holding-usd"></i> Yêu Cầu Rút Tiền</button>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Lịch Sử Rút Tiền</div>
+              <div id="withdrawHistory"><p style="color:var(--text2);">Chưa có lịch sử rút tiền</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div class="page" id="page-profile">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Tài Khoản Của Tôi</h1>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Thông Tin Cá Nhân</div>
+              <div id="profileInfo"></div>
+            </div>
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Đổi Mật Khẩu</div>
+              <div class="form-group"><label class="form-label">Mật Khẩu Cũ</label><input type="password" class="form-control" id="oldPass"></div>
+              <div class="form-group"><label class="form-label">Mật Khẩu Mới</label><input type="password" class="form-control" id="newPass"></div>
+              <div class="form-group"><label class="form-label">Xác Nhận Mật Khẩu</label><input type="password" class="form-control" id="confirmPass"></div>
+              <button class="btn btn-primary" onclick="changePassword()">Đổi Mật Khẩu</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- API KEYS PAGE -->
+        <div class="page" id="page-api-keys">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">API Key</h1>
+          <div class="card">
+            <div class="alert alert-info"><i class="fas fa-info-circle"></i> Sử dụng API Key để tích hợp dịch vụ vào hệ thống của bạn.</div>
+            <div id="apiKeyBox"></div>
+            <button class="btn btn-primary" style="margin-top:12px;" onclick="generateApiKey()"><i class="fas fa-sync"></i> Tạo API Key Mới</button>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title" style="margin-bottom:16px;">Tài Liệu API</div>
+            <pre style="background:var(--bg3);padding:16px;border-radius:8px;font-size:0.82rem;overflow-x:auto;color:var(--secondary);">
+GET /api/v2?action=services&key=YOUR_API_KEY
+GET /api/v2?action=balance&key=YOUR_API_KEY
+POST /api/v2?action=add&key=YOUR_API_KEY&service=ID&link=URL&quantity=QTY
+GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
+            </pre>
+          </div>
+        </div>
+
+        <!-- HISTORY PAGE -->
+        <div class="page" id="page-history">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Lịch Sử Giao Dịch</h1>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Loại</th><th>Số Tiền</th><th>Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th></tr></thead>
+                <tbody id="historyTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD -->
+        <div class="page" id="page-admin-dashboard">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Trị - Tổng Quan</h1>
+          <div class="grid-4">
+            <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-card-info"><h3 id="adminTotalUsers">0</h3><p>Tổng Users</p></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="fas fa-shopping-cart"></i></div><div class="stat-card-info"><h3 id="adminTotalOrders">0</h3><p>Tổng Đơn</p></div></div>
+            <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-money-bill"></i></div><div class="stat-card-info"><h3 id="adminRevenue">0đ</h3><p>Doanh Thu</p></div></div>
+            <div class="stat-card"><div class="stat-icon teal"><i class="fas fa-coins"></i></div><div class="stat-card-info"><h3 id="adminFund">0đ</h3><p>Quỹ Admin</p></div></div>
+          </div>
+          <div class="grid-2" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Nạp Tiền Mới Nhất</div></div>
+              <div id="adminRecentDeposits"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Đơn Hàng Mới Nhất</div></div>
+              <div id="adminRecentOrders"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN USERS -->
+        <div class="page" id="page-admin-users">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Người Dùng</h1>
+            <button class="btn btn-primary btn-sm" onclick="openAddUserModal()"><i class="fas fa-user-plus"></i> Thêm User</button>
+          </div>
+          <div class="card">
+            <div class="form-group"><input type="text" class="form-control" placeholder="Tìm kiếm user..." oninput="searchUsers(this.value)" style="max-width:300px;"></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Số Dư</th><th>Role</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead>
+                <tbody id="adminUsersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN ORDERS -->
+        <div class="page" id="page-admin-orders">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Đơn Hàng</h1>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>User</th><th>Dịch Vụ</th><th>Số Lượng</th><th>Tiền</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+                <tbody id="adminOrdersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN SERVICES -->
+        <div class="page" id="page-admin-services">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Dịch Vụ</h1>
+            <button class="btn btn-primary btn-sm" onclick="openAddServiceModal()"><i class="fas fa-plus"></i> Thêm Dịch Vụ</button>
+          </div>
+          <div class="card">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Tên Dịch Vụ</th><th>Nền Tảng</th><th>Loại</th><th>Đơn Giá</th><th>Min/Max</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+                <tbody id="adminServicesTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN PAYMENTS -->
+        <div class="page" id="page-admin-payments">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Nạp Tiền</h1>
+          <div class="card">
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <button class="btn btn-primary btn-sm" onclick="filterPayments('all')">Tất Cả</button>
+              <button class="btn btn-outline btn-sm" onclick="filterPayments('pending')">Chờ Duyệt</button>
+              <button class="btn btn-outline btn-sm" onclick="filterPayments('completed')">Đã Duyệt</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Mã GD</th><th>User</th><th>Số Tiền</th><th>Mã Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
+                <tbody id="adminPaymentsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN BANK -->
+        <div class="page" id="page-admin-bank">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Ngân Hàng</h1>
+            <button class="btn btn-primary btn-sm" onclick="openAddBankModal()"><i class="fas fa-plus"></i> Thêm Ngân Hàng</button>
+          </div>
+          <div id="banksList"></div>
+        </div>
+
+        <!-- ADMIN WITHDRAW -->
+        <div class="page" id="page-admin-withdraw">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Rút Tiền</h1>
+          <div class="card">
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+              <button class="btn btn-primary btn-sm" onclick="filterWithdraw('all')">Tất Cả</button>
+              <button class="btn btn-outline btn-sm" onclick="filterWithdraw('pending')">Chờ Duyệt</button>
+              <button class="btn btn-outline btn-sm" onclick="filterWithdraw('completed')">Đã Duyệt</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Mã GD</th><th>User</th><th>Ngân Hàng</th><th>Số TK</th><th>Số Tiền</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
+                <tbody id="adminWithdrawTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN SETTINGS -->
+        <div class="page" id="page-admin-settings">
+          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Cài Đặt Hệ Thống</h1>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title" style="margin-bottom:16px;">Cài Đặt Chung</div>
+              <div class="form-group"><label class="form-label">Tên Website</label><input type="text" class="form-control" id="siteName" value="XuHuongVN"></div>
+              <div class="form-group"><label class="form-label">Số Dư Tối Thiểu Đặt Hàng</label><input type="number" class="form-control" id="minBalance" value="1000"></div>
+              <div class="form-group"><label class="form-label">Nạp Tiền Tối Thiểu</label><input type="number" class="form-control" id="minDeposit" value="2000"></div>
+              <button class="btn btn-primary" onclick="saveSettings()">Lưu Cài Đặt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-</div>
+<!-- PUBLIC PAGES (services, pricing, api) -->
+<div id="publicPages" style="display:none;">
+  <div class="page active" id="page-services">
+    <div class="hero" style="padding:40px 24px;">
+      <h1>Dịch Vụ Của Chúng Tôi</h1>
+      <p>Đa dạng dịch vụ tăng tương tác cho tất cả nền tảng mạng xã hội</p>
+    </div>
+    <div style="padding:24px;">
+      <div class="platform-tabs" id="publicPlatformTabs">
+        <div class="platform-tab active" onclick="filterPublicServices('all',this)"><i class="fas fa-globe"></i> Tất Cả</div>
+        <div class="platform-tab" onclick="filterPublicServices('facebook',this)"><i class="fab fa-facebook-f p-fb"></i> Facebook</div>
+        <div class="platform-tab" onclick="filterPublicServices('instagram',this)"><i class="fab fa-instagram p-ig"></i> Instagram</div>
+        <div class="platform-tab" onclick="filterPublicServices('tiktok',this)"><i class="fab fa-tiktok p-tt"></i> TikTok</div>
+        <div class="platform-tab" onclick="filterPublicServices('youtube',this)"><i class="fab fa-youtube p-yt"></i> YouTube</div>
+      </div>
+      <div class="grid-3" id="publicServicesList"></div>
+    </div>
+  </div>
 
-<div class="controls">
-  <button onclick="obfuscate()">MA HOA CODE</button>
-</div>
+  <div class="page" id="page-pricing">
+    <div class="hero" style="padding:40px 24px;"><h1>Bảng Giá</h1><p>Giá cả cạnh tranh, minh bạch</p></div>
+    <div style="padding:24px;">
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Dịch Vụ</th><th>Nền Tảng</th><th>Đơn Giá</th><th>Min</th><th>Max</th></tr></thead>
+            <tbody id="pricingTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="console">
-  <div class="console-header"><b>Console</b></div>
-  <div id="log"></div>
-</div>
+  <div class="page" id="page-api-page">
+    <div class="hero" style="padding:40px 24px;"><h1>API Tích Hợp</h1><p>Tích hợp dễ dàng vào hệ thống của bạn</p></div>
+    <div style="padding:24px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Hướng Dẫn Sử Dụng API</div>
+        <p style="color:var(--text2);margin-bottom:16px;">Đăng nhập và vào mục API Key để lấy key của bạn</p>
+        <pre style="background:var(--bg3);padding:16px;border-radius:8px;font-size:0.82rem;overflow-x:auto;color:var(--secondary);">
+# Lấy danh sách dịch vụ
+GET /api/v2?action=services&key=YOUR_API_KEY
 
-<div class="footer">
-  Le Tien Dung – Python Obfuscator
-</div>
+# Kiểm tra số dư
+GET /api/v2?action=balance&key=YOUR_API_KEY
 
+# Tạo đơn hàng
+POST /api/v2?action=add&key=YOUR_API_KEY&service=1&link=URL&quantity=1000
+
+# Kiểm tra trạng thái đơn
+GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
+
+# Response mẫu (balance):
+{"balance":"1500000","currency":"VND"}
+
+# Response mẫu (add order):
+{"order":"123456"}
+        </pre>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-function log(msg,type="info"){
-  const d=document.createElement("div");
-  d.className=type==="ok"?"log-ok":type==="err"?"log-err":"log-info";
-  d.textContent=msg;
-  document.getElementById("log").appendChild(d);
-  document.getElementById("log").scrollTop=999999;
+// ============================================================
+// HIỆU ỨNG NỀN
+// ============================================================
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 50; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = 15 + Math.random() * 10 + 's';
+    container.appendChild(particle);
+  }
 }
 
-function loadFile(){
-  const f=document.getElementById("fileInput").files[0];
-  if(!f){log("Chua chon file","err");return;}
-  const r=new FileReader();
-  r.onload=e=>{
-    document.getElementById("inputCode").value=e.target.result;
-    log("Da load file: "+f.name,"ok");
+function createSnow() {
+  const container = document.getElementById('snowContainer');
+  for (let i = 0; i < 30; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.innerHTML = '❄️';
+    snowflake.style.left = Math.random() * 100 + '%';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    snowflake.style.animationDuration = 5 + Math.random() * 5 + 's';
+    snowflake.style.fontSize = (0.5 + Math.random() * 1) + 'em';
+    container.appendChild(snowflake);
+  }
+}
+
+// ============================================================
+// DATA STORE (localStorage)
+// ============================================================
+const DB = {
+  get: (key) => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }},
+  set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
+  del: (key) => localStorage.removeItem(key)
+};
+
+// INIT DEFAULT DATA
+function initDB() {
+  if (!DB.get('users')) {
+    const adminPass = hashPass('admin123');
+    DB.set('users', [{
+      id: 1, username: 'admin', email: 'admin@xuhuongvn.com', password: adminPass,
+      role: 'admin', balance: 5000000, totalSpent: 0, apiKey: genKey(), status: 'active',
+      avatar: null, createdAt: new Date().toISOString()
+    }]);
+  }
+  
+  if (!DB.get('services')) {
+    DB.set('services', [
+      {id:1, name:'Follow Facebook Việt Nam', platform:'facebook', type:'follow', price:15000, min:100, max:50000, status:'active'},
+      {id:2, name:'Like Bài Viết Facebook', platform:'facebook', type:'like', price:8000, min:50, max:100000, status:'active'},
+      {id:3, name:'View Video Facebook', platform:'facebook', type:'view', price:3000, min:1000, max:500000, status:'active'},
+      {id:4, name:'Follow Instagram VN', platform:'instagram', type:'follow', price:18000, min:100, max:50000, status:'active'},
+      {id:5, name:'Like Instagram', platform:'instagram', type:'like', price:10000, min:50, max:100000, status:'active'},
+      {id:6, name:'Follow TikTok VN', platform:'tiktok', type:'follow', price:20000, min:100, max:50000, status:'active'},
+      {id:7, name:'Like TikTok', platform:'tiktok', type:'like', price:8000, min:100, max:200000, status:'active'},
+      {id:8, name:'View TikTok', platform:'tiktok', type:'view', price:2000, min:1000, max:1000000, status:'active'},
+      {id:9, name:'Sub YouTube VN', platform:'youtube', type:'subscribe', price:25000, min:100, max:20000, status:'active'},
+      {id:10, name:'View YouTube', platform:'youtube', type:'view', price:4000, min:1000, max:500000, status:'active'},
+    ]);
+  }
+  
+  if (!DB.get('orders')) DB.set('orders', []);
+  if (!DB.get('transactions')) DB.set('transactions', []);
+  if (!DB.get('withdrawRequests')) DB.set('withdrawRequests', []);
+  
+  if (!DB.get('banks')) {
+    DB.set('banks', [
+      {id:1, bankName:'Vietcombank', accountNumber:'0123456789', accountName:'LE TIEN DUNG', branch:'Hà Nội', isDefault:true},
+      {id:2, bankName:'MB Bank', accountNumber:'0373822468', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:3, bankName:'Techcombank', accountNumber:'1234567890', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:4, bankName:'BIDV', accountNumber:'9876543210', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:5, bankName:'Agribank', accountNumber:'4567890123', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:6, bankName:'ACB', accountNumber:'7890123456', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'},
+      {id:7, bankName:'VPBank', accountNumber:'2345678901', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:8, bankName:'TPBank', accountNumber:'3456789012', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
+      {id:9, bankName:'Sacombank', accountNumber:'5678901234', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'},
+      {id:10, bankName:'HDBank', accountNumber:'6789012345', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'}
+    ]);
+  }
+  
+  if (!DB.get('settings')) {
+    DB.set('settings', { siteName:'XuHuongVN', minBalance:1000, minDeposit:2000, fund:5000000 });
+  }
+}
+
+function hashPass(p) { 
+  let h=0; 
+  for(let c of p){
+    h=((h<<5)-h)+c.charCodeAt(0);
+    h|=0;
+  } 
+  return h.toString(16); 
+}
+
+function genKey() { return 'sk_' + Math.random().toString(36).substr(2,32); }
+function genOrderId() { return 'ORD' + Date.now() + Math.floor(Math.random()*1000); }
+function genTransId() { return 'TXN' + Date.now() + Math.floor(Math.random()*1000); }
+function fmtMoney(n) { return Number(n).toLocaleString('vi-VN') + 'đ'; }
+function fmtDate(d) { return new Date(d).toLocaleString('vi-VN'); }
+
+// ============================================================
+// AUTH
+// ============================================================
+let currentUser = null;
+
+function openLoginModal() {
+  showModal('Đăng Nhập', `
+    <div class="form-group"><label class="form-label">Username hoặc Email</label>
+    <input type="text" class="form-control" id="loginUser" placeholder="Username / Email"></div>
+    <div class="form-group"><label class="form-label">Mật Khẩu</label>
+    <input type="password" class="form-control" id="loginPass" placeholder="Mật khẩu"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">Đăng Nhập</button>
+    <p style="text-align:center;margin-top:12px;font-size:0.88rem;color:var(--text2);">Chưa có tài khoản? <a href="#" style="color:var(--primary);" onclick="closeModal();openRegisterModal();">Đăng ký ngay</a></p>
+  `);
+}
+
+function openRegisterModal() {
+  showModal('Đăng Ký Tài Khoản', `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Username *</label><input type="text" class="form-control" id="regUser" placeholder="Tên đăng nhập"></div>
+      <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="regEmail" placeholder="Email"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Mật Khẩu *</label><input type="password" class="form-control" id="regPass" placeholder="Mật khẩu"></div>
+      <div class="form-group"><label class="form-label">Xác Nhận Mật Khẩu *</label><input type="password" class="form-control" id="regPass2" placeholder="Nhập lại mật khẩu"></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="doRegister()"><i class="fas fa-user-plus"></i> Đăng Ký</button>
+    <p style="text-align:center;margin-top:12px;font-size:0.88rem;color:var(--text2);">Đã có tài khoản? <a href="#" style="color:var(--primary);" onclick="closeModal();openLoginModal();">Đăng nhập</a></p>
+  `);
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (!u || !p) { showNotif('Vui lòng điền đầy đủ thông tin','error'); return; }
+  const users = DB.get('users') || [];
+  const user = users.find(x => (x.username===u || x.email===u) && x.password===hashPass(p));
+  if (!user) { showNotif('Sai thông tin đăng nhập','error'); return; }
+  if (user.status === 'banned') { showNotif('Tài khoản đã bị khóa','error'); return; }
+  currentUser = user;
+  DB.set('session', user.id);
+  closeModal();
+  showDashboard();
+  showNotif('Đăng nhập thành công! Xin chào ' + user.username);
+}
+
+function doRegister() {
+  const username = document.getElementById('regUser').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  if (!username || !email || !pass) { showNotif('Vui lòng điền đầy đủ','error'); return; }
+  if (pass !== pass2) { showNotif('Mật khẩu không khớp','error'); return; }
+  if (pass.length < 6) { showNotif('Mật khẩu tối thiểu 6 ký tự','error'); return; }
+  const users = DB.get('users') || [];
+  if (users.find(x => x.username===username)) { showNotif('Username đã tồn tại','error'); return; }
+  if (users.find(x => x.email===email)) { showNotif('Email đã tồn tại','error'); return; }
+  const newUser = {
+    id: Date.now(), username, email, password: hashPass(pass),
+    role: 'user', balance: 0, totalSpent: 0, apiKey: genKey(),
+    status: 'active', avatar: null, createdAt: new Date().toISOString()
   };
-  r.readAsText(f);
+  users.push(newUser);
+  DB.set('users', users);
+  currentUser = newUser;
+  DB.set('session', newUser.id);
+  closeModal();
+  showDashboard();
+  showNotif('Đăng ký thành công! Chào mừng ' + username);
 }
 
-function obfuscate(){
-  const code=document.getElementById("inputCode").value;
-  if(!code){log("Khong co code","err");return;}
-
-  const encoded=btoa(unescape(encodeURIComponent(code)));
-
-  const pythonStub = `# Le Tien Dung Obfuscated
-import sys, os, time, base64, hashlib
-
-def __anti_debug__():
-    if sys.gettrace():
-        os._exit(1)
-    for m in ("pdb","pydevd","debugpy"):
-        if m in sys.modules:
-            os._exit(1)
-    t=time.time()
-    for _ in range(5000000):
-        pass
-    if time.time()-t>0.4:
-        os._exit(1)
-
-__anti_debug__()
-
-_data="${encoded}"
-exec(base64.b64decode(_data).decode("utf-8"))
-`;
-
-  document.getElementById("outputCode").value=pythonStub;
-  log("Obfuscate thanh cong (anti-debug on)","ok");
+function logout() {
+  currentUser = null;
+  DB.del('session');
+  showLanding();
+  showNotif('Đã đăng xuất','info');
 }
 
-function downloadFile(){
-  const data=document.getElementById("outputCode").value;
-  if(!data){log("Chua co code obf","err");return;}
-  const blob=new Blob([data],{type:"text/plain"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="obf_le_tien_dung.py";
-  a.click();
-  log("Da tai file","ok");
+function checkSession() {
+  const sid = DB.get('session');
+  if (sid) {
+    const users = DB.get('users') || [];
+    const user = users.find(x => x.id === sid);
+    if (user) { currentUser = user; showDashboard(); return; }
+  }
+  showLanding();
 }
+
+// ============================================================
+// CHAT SUPPORT
+// ============================================================
+let chatMessages = [];
+
+function toggleChat() {
+  const chat = document.getElementById('chatSupport');
+  chat.classList.toggle('show');
+  if (chat.classList.contains('show') && currentUser) {
+    loadChatMessages();
+  }
+}
+
+function loadChatMessages() {
+  const messages = DB.get('chat_' + currentUser.id) || [];
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = messages.map(msg => `
+    <div class="chat-message ${msg.sender === currentUser.id ? 'sent' : 'received'}">
+      <div>${msg.content}</div>
+      <div class="time">${fmtDate(msg.time)}</div>
+    </div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendChatMessage() {
+  if (!currentUser) { showNotif('Vui lòng đăng nhập','error'); return; }
+  const input = document.getElementById('chatInput');
+  const content = input.value.trim();
+  if (!content) return;
+  
+  const message = {
+    id: Date.now(),
+    sender: currentUser.id,
+    senderName: currentUser.username,
+    content: content,
+    time: new Date().toISOString()
+  };
+  
+  // Lưu tin nhắn cho user
+  const userMessages = DB.get('chat_' + currentUser.id) || [];
+  userMessages.push(message);
+  DB.set('chat_' + currentUser.id, userMessages);
+  
+  // Lưu tin nhắn cho admin (tất cả chat)
+  const adminChats = DB.get('adminChats') || [];
+  adminChats.push({...message, userId: currentUser.id});
+  DB.set('adminChats', adminChats);
+  
+  input.value = '';
+  loadChatMessages();
+  
+  // Gửi thông báo cho admin nếu đang online
+  if (currentUser.role !== 'admin') {
+    showServerNotification('Tin nhắn mới từ ' + currentUser.username, 'info');
+  }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showLanding() {
+  document.getElementById('landingPage').style.display = 'block';
+  document.getElementById('dashboardPage').style.display = 'none';
+  document.getElementById('publicPages').style.display = 'none';
+  document.getElementById('navLinks').style.display = 'flex';
+  if (currentUser) {
+    document.getElementById('navActions').innerHTML = `
+      <span style="color:var(--text2);font-size:0.88rem;">${fmtMoney(currentUser.balance)}</span>
+      <div class="dropdown">
+        <div class="avatar" onclick="toggleDropdown()">
+          ${currentUser.avatar ? `<img src="${currentUser.avatar}" alt="avatar">` : currentUser.username[0].toUpperCase()}
+        </div>
+        <div class="dropdown-menu" id="userDropdown">
+          <div class="dropdown-item" onclick="showDashboard();toggleDropdown()"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+          <div class="dropdown-item" onclick="showPage('deposit');toggleDropdown()"><i class="fas fa-wallet"></i> Nạp Tiền</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</div>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('navActions').innerHTML = `
+      <button class="btn btn-outline btn-sm" onclick="openLoginModal()">Đăng Nhập</button>
+      <button class="btn btn-primary btn-sm" onclick="openRegisterModal()">Đăng Ký</button>`;
+  }
+}
+
+function showDashboard() {
+  if (!currentUser) { openLoginModal(); return; }
+  document.getElementById('landingPage').style.display = 'none';
+  document.getElementById('dashboardPage').style.display = 'block';
+  document.getElementById('publicPages').style.display = 'none';
+  document.getElementById('navLinks').style.display = 'none';
+  document.getElementById('navActions').innerHTML = `
+    <span style="color:var(--text2);font-size:0.88rem;" id="navBalance">${fmtMoney(currentUser.balance)}</span>
+    <div class="dropdown">
+      <div class="avatar" onclick="toggleDropdown()">
+        ${currentUser.avatar ? `<img src="${currentUser.avatar}" alt="avatar">` : currentUser.username[0].toUpperCase()}
+      </div>
+      <div class="dropdown-menu" id="userDropdown">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+          <div style="font-weight:700;">${currentUser.username}</div>
+          <div style="font-size:0.82rem;color:var(--text2);">${currentUser.email}</div>
+          <div style="font-size:0.88rem;color:var(--success);margin-top:4px;">${fmtMoney(currentUser.balance)}</div>
+        </div>
+        <div class="dropdown-item" onclick="showPage('profile');toggleDropdown()"><i class="fas fa-user"></i> Tài Khoản</div>
+        <div class="dropdown-item" onclick="showPage('deposit');toggleDropdown()"><i class="fas fa-wallet"></i> Nạp Tiền</div>
+        <div class="dropdown-item" onclick="showPage('withdraw');toggleDropdown()"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
+        <div class="dropdown-item" onclick="showPage('api-keys');toggleDropdown()"><i class="fas fa-key"></i> API Key</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</div>
+      </div>
+    </div>`;
+  if (currentUser.role === 'admin') {
+    document.getElementById('adminSidebarSection').style.display = 'block';
+  }
+  showPage('dashboard');
+}
+
+function showPage(pageId) {
+  if (!currentUser && ['dashboard','new-order','orders','deposit','withdraw','profile','api-keys','history',
+    'admin-dashboard','admin-users','admin-orders','admin-services','admin-payments','admin-bank','admin-withdraw','admin-settings'].includes(pageId)) {
+    openLoginModal(); return;
+  }
+
+  // Public pages
+  const publicPageIds = ['services','pricing','api-page'];
+  if (publicPageIds.includes(pageId)) {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('dashboardPage').style.display = 'none';
+    document.getElementById('publicPages').style.display = 'block';
+    document.getElementById('navLinks').style.display = 'flex';
+    document.querySelectorAll('#publicPages .page').forEach(p => p.classList.remove('active'));
+    const pg = document.getElementById('page-' + pageId);
+    if (pg) pg.classList.add('active');
+    loadPublicPage(pageId);
+    return;
+  }
+
+  // Dashboard pages
+  document.querySelectorAll('#mainContent .page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  const pg = document.getElementById('page-' + pageId);
+  if (pg) pg.classList.add('active');
+  loadPageData(pageId);
+}
+
+function loadPublicPage(pageId) {
+  const services = DB.get('services') || [];
+  if (pageId === 'services') {
+    renderPublicServices(services, 'all');
+  } else if (pageId === 'pricing') {
+    const tbody = document.getElementById('pricingTable');
+    tbody.innerHTML = services.filter(s=>s.status==='active').map(s => `
+      <tr>
+        <td>#${s.id}</td>
+        <td>${s.name}</td>
+        <td>${getPlatformBadge(s.platform)}</td>
+        <td style="color:var(--primary);font-weight:700;">${fmtMoney(s.price)}/1000</td>
+        <td>${s.min.toLocaleString()}</td>
+        <td>${s.max.toLocaleString()}</td>
+      </tr>`).join('');
+  }
+}
+
+function loadPageData(pageId) {
+  if (!currentUser) return;
+  const refreshUser = () => {
+    const users = DB.get('users') || [];
+    currentUser = users.find(u => u.id === currentUser.id) || currentUser;
+  };
+  refreshUser();
+
+  switch(pageId) {
+    case 'dashboard': loadDashboard(); break;
+    case 'new-order': loadNewOrder(); break;
+    case 'orders': loadOrders(); break;
+    case 'deposit': loadDeposit(); break;
+    case 'withdraw': loadWithdraw(); break;
+    case 'profile': loadProfile(); break;
+    case 'history': loadHistory(); break;
+    case 'api-keys': loadApiKeys(); break;
+    case 'admin-dashboard': loadAdminDashboard(); break;
+    case 'admin-users': loadAdminUsers(); break;
+    case 'admin-orders': loadAdminOrders(); break;
+    case 'admin-services': loadAdminServices(); break;
+    case 'admin-payments': loadAdminPayments(); break;
+    case 'admin-bank': loadAdminBank(); break;
+    case 'admin-withdraw': loadAdminWithdraw(); break;
+    case 'admin-settings': loadAdminSettings(); break;
+  }
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function loadDashboard() {
+  const orders = (DB.get('orders')||[]).filter(o => o.userId === currentUser.id);
+  document.getElementById('welcomeUser').textContent = currentUser.username;
+  document.getElementById('balanceDisplay').textContent = fmtMoney(currentUser.balance);
+  document.getElementById('completedOrdersDisplay').textContent = orders.filter(o=>o.status==='completed').length;
+  document.getElementById('pendingOrdersDisplay').textContent = orders.filter(o=>o.status==='processing').length;
+  document.getElementById('totalSpentDisplay').textContent = fmtMoney(currentUser.totalSpent || 0);
+  
+  const recentOrders = orders.slice(-5).reverse();
+  const recentEl = document.getElementById('recentOrdersList');
+  if (recentOrders.length === 0) {
+    recentEl.innerHTML = '<p style="color:var(--text2);font-size:0.88rem;">Chưa có đơn hàng nào. <a href="#" style="color:var(--primary);" onclick="showPage(\'new-order\')">Đặt ngay</a></p>';
+  } else {
+    recentEl.innerHTML = recentOrders.map(o => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div><div style="font-size:0.88rem;font-weight:600;">${o.serviceName}</div><div style="font-size:0.78rem;color:var(--text2);">${o.id}</div></div>
+        <div style="text-align:right;"><div style="font-size:0.88rem;color:var(--primary);">${fmtMoney(o.totalPrice)}</div><span class="status-badge status-${o.status}">${statusLabel(o.status)}</span></div>
+      </div>`).join('');
+  }
+
+  const avatarHtml = currentUser.avatar ? 
+    `<img src="${currentUser.avatar}" alt="avatar" style="width:56px;height:56px;border-radius:50%;">` : 
+    `<div class="avatar" style="width:56px;height:56px;font-size:1.3rem;">${currentUser.username[0].toUpperCase()}</div>`;
+
+  document.getElementById('accountInfo').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+      ${avatarHtml}
+      <div><div style="font-weight:700;font-size:1rem;">${currentUser.username}</div><div style="color:var(--text2);font-size:0.85rem;">${currentUser.email}</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Số dư:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(currentUser.balance)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Tổng chi tiêu:</span><span>${fmtMoney(currentUser.totalSpent||0)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Role:</span><span style="color:${currentUser.role==='admin'?'var(--gold)':'var(--primary)'};">${currentUser.role.toUpperCase()}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Ngày tham gia:</span><span style="font-size:0.85rem;">${fmtDate(currentUser.createdAt)}</span></div>
+    </div>`;
+}
+
+// ============================================================
+// NEW ORDER
+// ============================================================
+function loadNewOrder() {
+  const services = (DB.get('services')||[]).filter(s=>s.status==='active');
+  populateServiceSelect(services, 'all');
+}
+
+function populateServiceSelect(services, platform) {
+  const sel = document.getElementById('serviceSelect');
+  const filtered = platform === 'all' ? services : services.filter(s => s.platform === platform);
+  sel.innerHTML = '<option value="">-- Chọn dịch vụ --</option>' +
+    filtered.map(s => `<option value="${s.id}" data-price="${s.price}" data-min="${s.min}" data-max="${s.max}">[${s.id}] ${s.name} - ${fmtMoney(s.price)}/1000</option>`).join('');
+}
+
+function filterPlatform(platform, el) {
+  document.querySelectorAll('#platformTabs .platform-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const services = (DB.get('services')||[]).filter(s=>s.status==='active');
+  populateServiceSelect(services, platform);
+}
+
+function updateServiceInfo() {
+  const sel = document.getElementById('serviceSelect');
+  const opt = sel.options[sel.selectedIndex];
+  const box = document.getElementById('serviceInfoBox');
+  if (sel.value) {
+    const price = opt.dataset.price;
+    const min = opt.dataset.min;
+    const max = opt.dataset.max;
+    document.getElementById('serviceInfoText').innerHTML = `<i class="fas fa-info-circle"></i> <strong>Đơn giá:</strong> ${fmtMoney(price)}/1000 | <strong>Min:</strong> ${Number(min).toLocaleString()} | <strong>Max:</strong> ${Number(max).toLocaleString()}`;
+    box.style.display = 'block';
+    document.getElementById('orderQty').min = min;
+    document.getElementById('orderQty').max = max;
+    document.getElementById('orderQty').placeholder = `Tối thiểu: ${Number(min).toLocaleString()}`;
+  } else {
+    box.style.display = 'none';
+  }
+  calcPrice();
+}
+
+function calcPrice() {
+  const sel = document.getElementById('serviceSelect');
+  const qty = parseInt(document.getElementById('orderQty').value) || 0;
+  const box = document.getElementById('priceCalcBox');
+  if (sel.value && qty > 0) {
+    const price = parseFloat(sel.options[sel.selectedIndex].dataset.price);
+    const total = (qty / 1000) * price;
+    document.getElementById('unitPrice').textContent = fmtMoney(price) + '/1000';
+    document.getElementById('totalPrice').textContent = fmtMoney(Math.ceil(total));
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function placeOrder() {
+  const sel = document.getElementById('serviceSelect');
+  const link = document.getElementById('orderLink').value.trim();
+  const qty = parseInt(document.getElementById('orderQty').value);
+  
+  if (!sel.value) { showNotif('Vui lòng chọn dịch vụ','error'); return; }
+  if (!link) { showNotif('Vui lòng nhập link','error'); return; }
+  if (!qty || qty < 1) { showNotif('Vui lòng nhập số lượng','error'); return; }
+  
+  const opt = sel.options[sel.selectedIndex];
+  const min = parseInt(opt.dataset.min);
+  const max = parseInt(opt.dataset.max);
+  if (qty < min) { showNotif(`Số lượng tối thiểu là ${min.toLocaleString()}`,'error'); return; }
+  if (qty > max) { showNotif(`Số lượng tối đa là ${max.toLocaleString()}`,'error'); return; }
+  
+  const price = parseFloat(opt.dataset.price);
+  const total = Math.ceil((qty / 1000) * price);
+  
+  const users = DB.get('users') || [];
+  const userIdx = users.findIndex(u => u.id === currentUser.id);
+  if (users[userIdx].balance < total) {
+    showNotif('Số dư không đủ. Vui lòng nạp tiền!','error');
+    setTimeout(() => showPage('deposit'), 1500);
+    return;
+  }
+  
+  const services = DB.get('services') || [];
+  const service = services.find(s => s.id == sel.value);
+  const orders = DB.get('orders') || [];
+  const newOrder = {
+    id: genOrderId(), userId: currentUser.id, username: currentUser.username,
+    serviceId: service.id, serviceName: service.name, platform: service.platform,
+    link, quantity: qty, totalPrice: total, status: 'processing',
+    startCount: 0, remains: qty, createdAt: new Date().toISOString()
+  };
+  orders.push(newOrder);
+  DB.set('orders', orders);
+  
+  users[userIdx].balance -= total;
+  users[userIdx].totalSpent = (users[userIdx].totalSpent || 0) + total;
+  DB.set('users', users);
+  currentUser = users[userIdx];
+  
+  // Transaction
+  addTransaction(currentUser.id, 'order', -total, `Đặt hàng: ${service.name} x${qty.toLocaleString()}`, 'completed');
+  
+  // Update fund
+  const settings = DB.get('settings') || {};
+  settings.fund = (settings.fund || 0) + total;
+  DB.set('settings', settings);
+  
+  // Thông báo cho admin
+  const adminUsers = users.filter(u => u.role === 'admin');
+  adminUsers.forEach(admin => {
+    showServerNotification(`Đơn hàng mới từ ${currentUser.username}: ${service.name} - ${qty.toLocaleString()} - ${fmtMoney(total)}`, 'info');
+  });
+  
+  // Simulate order completion
+  setTimeout(() => completeOrder(newOrder.id), 5000 + Math.random()*10000);
+  
+  document.getElementById('orderLink').value = '';
+  document.getElementById('orderQty').value = '';
+  document.getElementById('priceCalcBox').style.display = 'none';
+  
+  updateNavBalance();
+  showNotif('Đặt hàng thành công! Đơn #' + newOrder.id);
+  showPage('orders');
+}
+
+function completeOrder(orderId) {
+  const orders = DB.get('orders') || [];
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx !== -1 && orders[idx].status === 'processing') {
+    orders[idx].status = 'completed';
+    orders[idx].remains = 0;
+    DB.set('orders', orders);
+    
+    // Thông báo cho user
+    const user = (DB.get('users') || []).find(u => u.id === orders[idx].userId);
+    if (user) {
+      showServerNotification(`Đơn hàng #${orderId} đã hoàn thành!`, 'success');
+    }
+  }
+}
+
+// ============================================================
+// ORDERS
+// ============================================================
+function loadOrders() {
+  const orders = (DB.get('orders')||[]).filter(o => o.userId === currentUser.id).reverse();
+  const tbody = document.getElementById('ordersTableBody');
+  if (orders.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Chưa có đơn hàng nào</td></tr>';
+    return;
+  }
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td style="font-size:0.8rem;color:var(--text2);">${o.id}</td>
+      <td>${o.serviceName}</td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><a href="${o.link}" target="_blank" style="color:var(--primary);">${o.link}</a></td>
+      <td>${o.quantity.toLocaleString()}</td>
+      <td style="color:var(--primary);font-weight:700;">${fmtMoney(o.totalPrice)}</td>
+      <td><span class="status-badge status-${o.status}">${statusLabel(o.status)}</span></td>
+      <td style="font-size:0.82rem;color:var(--text2);">${fmtDate(o.createdAt)}</td>
+    </tr>`).join('');
+  document.getElementById('pendingBadge').textContent = orders.filter(o=>o.status==='processing').length;
+}
+
+function statusLabel(s) {
+  const m = {processing:'Đang Xử Lý',completed:'Hoàn Thành',pending:'Chờ Xử Lý',failed:'Thất Bại',cancelled:'Đã Hủy'};
+  return m[s] || s;
+}
+
+// ============================================================
+// DEPOSIT
+// ============================================================
+function loadDeposit() {
+  // Load danh sách ngân hàng
+  const banks = DB.get('banks') || [];
+  const bankList = document.getElementById('bankList');
+  bankList.innerHTML = banks.map(b => `
+    <div class="bank-item" onclick="selectBank(${b.id})">
+      <div class="bank-name">${b.bankName}</div>
+      <div class="bank-number">${b.accountNumber}</div>
+      <div class="bank-holder">${b.accountName}</div>
+    </div>
+  `).join('');
+  
+  const transactions = (DB.get('transactions')||[]).filter(t => t.userId === currentUser.id && t.type === 'deposit').reverse().slice(0, 10);
+  const depEl = document.getElementById('depositHistory');
+  if (transactions.length === 0) {
+    depEl.innerHTML = '<p style="color:var(--text2);">Chưa có lịch sử nạp tiền</p>';
+  } else {
+    depEl.innerHTML = transactions.map(t => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div><div style="font-size:0.88rem;font-weight:600;color:var(--success);">+${fmtMoney(t.amount)}</div><div style="font-size:0.78rem;color:var(--text2);">${t.note}</div></div>
+        <div style="text-align:right;"><span class="status-badge status-${t.status}">${statusLabel(t.status)}</span><div style="font-size:0.78rem;color:var(--text2);margin-top:4px;">${fmtDate(t.createdAt)}</div></div>
+      </div>`).join('');
+  }
+}
+
+let selectedBank = null;
+
+function selectBank(bankId) {
+  const banks = DB.get('banks') || [];
+  selectedBank = banks.find(b => b.id === bankId);
+  document.querySelectorAll('.bank-item').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+}
+
+function generateDepositCode() {
+  if (!selectedBank) {
+    showNotif('Vui lòng chọn ngân hàng','error');
+    return;
+  }
+  
+  const amount = parseInt(document.getElementById('depositAmount').value);
+  if (!amount || amount < 2000) { 
+    showNotif('Số tiền tối thiểu 2,000đ','error'); 
+    return; 
+  }
+  
+  const code = 'NAP' + currentUser.id + '' + Date.now().toString().slice(-6);
+  
+  document.getElementById('bankInfoBox').innerHTML = `
+    <div class="bank-info-row"><span style="font-weight:600;">${selectedBank.bankName}</span><span></span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Số TK:</span><span style="font-weight:700;">${selectedBank.accountNumber} <button class="copy-btn" onclick="copyText('${selectedBank.accountNumber}')">Copy</button></span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Tên TK:</span><span style="font-weight:700;">${selectedBank.accountName}</span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Chi Nhánh:</span><span>${selectedBank.branch}</span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
+    <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
+  
+  // Generate QR via VietQR API
+  const bankCode = selectedBank.bankName.toLowerCase().replace(' ', '');
+  const qrUrl = `https://img.vietqr.io/image/${bankCode}-${selectedBank.accountNumber}-qr_only.png?amount=${amount}&addInfo=${code}&accountName=${encodeURIComponent(selectedBank.accountName)}`;
+  document.getElementById('qrImage').src = qrUrl;
+  document.getElementById('depositInfo').style.display = 'block';
+  
+  // Tạo giao dịch
+  const transaction = {
+    id: 'DEP' + Date.now(), userId: currentUser.id, type: 'deposit',
+    amount, note: code, status: 'pending', createdAt: new Date().toISOString()
+  };
+  const transactions = DB.get('transactions') || [];
+  transactions.push(transaction);
+  DB.set('transactions', transactions);
+  
+  // Thêm vào admin payments queue
+  const payments = DB.get('payments') || [];
+  payments.push({...transaction, username: currentUser.username, bankCode: code});
+  DB.set('payments', payments);
+  
+  showNotif('Đã tạo mã nạp tiền: ' + code + '. Chuyển khoản đúng nội dung để hệ thống tự xử lý!','info');
+}
+
+// ============================================================
+// WITHDRAW
+// ============================================================
+function loadWithdraw() {
+  document.getElementById('withdrawBalance').textContent = fmtMoney(currentUser.balance);
+  
+  // Load ngân hàng cho dropdown
+  const banks = DB.get('banks') || [];
+  const select = document.getElementById('withdrawBankSelect');
+  select.innerHTML = '<option value="">-- Chọn ngân hàng --</option>' + 
+    banks.map(b => `<option value="${b.id}">${b.bankName} - ${b.accountNumber}</option>`).join('');
+  
+  // Load lịch sử rút tiền
+  const withdraws = (DB.get('withdrawRequests') || []).filter(w => w.userId === currentUser.id).reverse();
+  const historyEl = document.getElementById('withdrawHistory');
+  if (withdraws.length === 0) {
+    historyEl.innerHTML = '<p style="color:var(--text2);">Chưa có lịch sử rút tiền</p>';
+  } else {
+    historyEl.innerHTML = withdraws.map(w => `
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div><div style="font-weight:600;color:var(--danger);">-${fmtMoney(w.amount)}</div><div style="font-size:0.78rem;color:var(--text2);">${w.bankName}</div></div>
+        <div style="text-align:right;"><span class="status-badge status-${w.status}">${statusLabel(w.status)}</span><div style="font-size:0.78rem;color:var(--text2);margin-top:4px;">${fmtDate(w.createdAt)}</div></div>
+      </div>`).join('');
+  }
+}
+
+function requestWithdraw() {
+  const bankId = document.getElementById('withdrawBankSelect').value;
+  const accountNumber = document.getElementById('withdrawAccountNumber').value.trim();
+  const accountName = document.getElementById('withdrawAccountName').value.trim();
+  const amount = parseInt(document.getElementById('withdrawAmount').value);
+  
+  if (!bankId) { showNotif('Vui lòng chọn ngân hàng','error'); return; }
+  if (!accountNumber) { showNotif('Vui lòng nhập số tài khoản','error'); return; }
+  if (!accountName) { showNotif('Vui lòng nhập tên chủ tài khoản','error'); return; }
+  if (!amount || amount < 20000) { showNotif('Số tiền rút tối thiểu 20,000đ','error'); return; }
+  if (amount > currentUser.balance) { showNotif('Số dư không đủ','error'); return; }
+  
+  const banks = DB.get('banks') || [];
+  const bank = banks.find(b => b.id == bankId);
+  
+  const withdrawRequest = {
+    id: 'WD' + Date.now(),
+    userId: currentUser.id,
+    username: currentUser.username,
+    bankName: bank.bankName,
+    bankId: bank.id,
+    accountNumber: accountNumber,
+    accountName: accountName,
+    amount: amount,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  
+  const withdraws = DB.get('withdrawRequests') || [];
+  withdraws.push(withdrawRequest);
+  DB.set('withdrawRequests', withdraws);
+  
+  // Trừ tiền tạm thời
+  const users = DB.get('users') || [];
+  const userIdx = users.findIndex(u => u.id === currentUser.id);
+  users[userIdx].balance -= amount;
+  DB.set('users', users);
+  currentUser = users[userIdx];
+  
+  addTransaction(currentUser.id, 'withdraw', -amount, `Rút tiền về ${bank.bankName} - ${accountNumber}`, 'pending');
+  
+  // Thông báo cho admin
+  const adminUsers = users.filter(u => u.role === 'admin');
+  adminUsers.forEach(admin => {
+    showServerNotification(`Yêu cầu rút tiền mới từ ${currentUser.username}: ${fmtMoney(amount)}`, 'warning');
+  });
+  
+  document.getElementById('withdrawAccountNumber').value = '';
+  document.getElementById('withdrawAccountName').value = '';
+  document.getElementById('withdrawAmount').value = '';
+  
+  updateNavBalance();
+  loadWithdraw();
+  showNotif('Yêu cầu rút tiền đã được gửi, chờ admin duyệt!','success');
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function loadProfile() {
+  const avatarHtml = currentUser.avatar ? 
+    `<img src="${currentUser.avatar}" alt="avatar" style="width:64px;height:64px;border-radius:50%;">` : 
+    `<div class="avatar" style="width:64px;height:64px;font-size:1.5rem;">${currentUser.username[0].toUpperCase()}</div>`;
+
+  document.getElementById('profileInfo').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+      ${avatarHtml}
+      <div>
+        <div style="font-weight:700;font-size:1.1rem;">${currentUser.username}</div>
+        <div style="color:var(--text2);">${currentUser.email}</div>
+        <div style="color:${currentUser.role==='admin'?'var(--gold)':'var(--primary)'};font-size:0.85rem;">${currentUser.role.toUpperCase()}</div>
+      </div>
+    </div>
+    
+    <div class="avatar-upload">
+      <div class="avatar-preview">
+        <img id="avatarPreview" src="${currentUser.avatar || 'https://via.placeholder.com/100'}" alt="Preview">
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(this)">
+      <label for="avatarInput"><i class="fas fa-camera"></i> Chọn ảnh đại diện</label>
+      <button class="btn btn-primary btn-sm" style="margin-left:8px;" onclick="uploadAvatar()"><i class="fas fa-upload"></i> Tải lên</button>
+    </div>
+    
+    <div class="form-group" style="margin-top:16px;"><label class="form-label">Username</label><input type="text" class="form-control" value="${currentUser.username}" readonly></div>
+    <div class="form-group"><label class="form-label">Email</label><input type="text" class="form-control" value="${currentUser.email}" readonly></div>
+    <div class="form-group"><label class="form-label">Số Dư</label><input type="text" class="form-control" value="${fmtMoney(currentUser.balance)}" readonly style="color:var(--success);font-weight:700;"></div>
+    <div class="form-group"><label class="form-label">Ngày Tham Gia</label><input type="text" class="form-control" value="${fmtDate(currentUser.createdAt)}" readonly></div>`;
+}
+
+function previewAvatar(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('avatarPreview').src = e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function uploadAvatar() {
+  const preview = document.getElementById('avatarPreview').src;
+  if (preview && preview !== 'https://via.placeholder.com/100') {
+    const users = DB.get('users') || [];
+    const idx = users.findIndex(u => u.id === currentUser.id);
+    users[idx].avatar = preview;
+    DB.set('users', users);
+    currentUser = users[idx];
+    showNotif('Cập nhật ảnh đại diện thành công!');
+    loadProfile();
+  }
+}
+
+function changePassword() {
+  const oldPass = document.getElementById('oldPass').value;
+  const newPass = document.getElementById('newPass').value;
+  const confirmPass = document.getElementById('confirmPass').value;
+  if (!oldPass || !newPass) { showNotif('Vui lòng điền đầy đủ','error'); return; }
+  if (hashPass(oldPass) !== currentUser.password) { showNotif('Mật khẩu cũ không đúng','error'); return; }
+  if (newPass !== confirmPass) { showNotif('Mật khẩu mới không khớp','error'); return; }
+  if (newPass.length < 6) { showNotif('Mật khẩu tối thiểu 6 ký tự','error'); return; }
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u => u.id === currentUser.id);
+  users[idx].password = hashPass(newPass);
+  DB.set('users', users);
+  currentUser = users[idx];
+  showNotif('Đổi mật khẩu thành công!');
+  document.getElementById('oldPass').value = '';
+  document.getElementById('newPass').value = '';
+  document.getElementById('confirmPass').value = '';
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+function loadHistory() {
+  const transactions = (DB.get('transactions')||[]).filter(t => t.userId === currentUser.id).reverse();
+  const tbody = document.getElementById('historyTableBody');
+  if (transactions.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text2);">Chưa có giao dịch nào</td></tr>';
+    return;
+  }
+  tbody.innerHTML = transactions.map(t => `
+    <tr>
+      <td><span style="color:${t.amount>0?'var(--success)':'var(--danger)'};">${t.type==='deposit'?'Nạp Tiền':t.type==='order'?'Đặt Hàng':'Rút Tiền'}</span></td>
+      <td style="font-weight:700;color:${t.amount>0?'var(--success)':'var(--danger)'};">${t.amount>0?'+':''}${fmtMoney(t.amount)}</td>
+      <td>${t.note}</td>
+      <td><span class="status-badge status-${t.status}">${statusLabel(t.status)}</span></td>
+      <td style="font-size:0.82rem;color:var(--text2);">${fmtDate(t.createdAt)}</td>
+    </tr>`).join('');
+}
+
+// ============================================================
+// API KEYS
+// ============================================================
+function loadApiKeys() {
+  document.getElementById('apiKeyBox').innerHTML = `
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+      <code style="color:var(--secondary);font-size:0.88rem;">${currentUser.apiKey || 'Chưa có API Key'}</code>
+      <button class="copy-btn" onclick="copyText('${currentUser.apiKey}')">Copy</button>
+    </div>`;
+}
+
+function generateApiKey() {
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u => u.id === currentUser.id);
+  users[idx].apiKey = genKey();
+  DB.set('users', users);
+  currentUser = users[idx];
+  loadApiKeys();
+  showNotif('Đã tạo API Key mới!');
+}
+
+// ============================================================
+// ADMIN - DASHBOARD
+// ============================================================
+function loadAdminDashboard() {
+  if (currentUser.role !== 'admin') return;
+  
+  const users = DB.get('users') || [];
+  const orders = DB.get('orders') || [];
+  const transactions = DB.get('transactions') || [];
+  const settings = DB.get('settings') || {};
+  const revenue = transactions.filter(t=>t.type==='deposit'&&t.status==='completed').reduce((s,t)=>s+t.amount,0);
+  
+  document.getElementById('adminTotalUsers').textContent = users.filter(u=>u.role!=='admin').length;
+  document.getElementById('adminTotalOrders').textContent = orders.length;
+  document.getElementById('adminRevenue').textContent = fmtMoney(revenue);
+  document.getElementById('adminFund').textContent = fmtMoney(settings.fund || 0);
+  
+  const deposits = (DB.get('transactions')||[]).filter(t=>t.type==='deposit').reverse().slice(0,5);
+  document.getElementById('adminRecentDeposits').innerHTML = deposits.length ? deposits.map(d=>`
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+      <span>${d.username||'user'} - ${fmtMoney(d.amount)}</span>
+      <span class="status-badge status-${d.status}">${statusLabel(d.status)}</span>
+    </div>`).join('') : '<p style="color:var(--text2);">Chưa có</p>';
+  
+  const recentOrders = orders.reverse().slice(0,5);
+  document.getElementById('adminRecentOrders').innerHTML = recentOrders.length ? recentOrders.map(o=>`
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+      <span>${o.username} - ${o.serviceName.slice(0,25)}</span>
+      <span class="status-badge status-${o.status}">${statusLabel(o.status)}</span>
+    </div>`).join('') : '<p style="color:var(--text2);">Chưa có</p>';
+}
+
+// ============================================================
+// ADMIN - USERS
+// ============================================================
+function loadAdminUsers(filter = '') {
+  if (currentUser.role !== 'admin') return;
+  
+  let users = DB.get('users') || [];
+  if (filter) users = users.filter(u => u.username.includes(filter) || u.email.includes(filter));
+  document.getElementById('adminUsersTable').innerHTML = users.map(u=>`
+    <tr>
+      <td>${u.id}</td>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.email}</td>
+      <td style="color:var(--success);font-weight:700;">${fmtMoney(u.balance)}</td>
+      <td><span style="color:${u.role==='admin'?'var(--gold)':'var(--primary)'};">${u.role.toUpperCase()}</span></td>
+      <td><span class="status-badge status-${u.status==='active'?'completed':'failed'}">${u.status==='active'?'Hoạt Động':'Đã Khóa'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline" onclick="editUserModal(${u.id})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-warning" onclick="addBalanceModal(${u.id})" style="margin-left:4px;"><i class="fas fa-plus"></i> Tiền</button>
+        <button class="btn btn-sm ${u.status==='active'?'btn-danger':'btn-success'}" onclick="toggleUserStatus(${u.id})" style="margin-left:4px;">${u.status==='active'?'Khóa':'Mở'}</button>
+      </td>
+    </tr>`).join('');
+}
+
+function searchUsers(val) { loadAdminUsers(val); }
+
+function openAddUserModal() {
+  if (currentUser.role !== 'admin') return;
+  
+  showModal('Thêm Người Dùng', `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-control" id="nuUsername"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="nuEmail"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Mật Khẩu</label><input type="password" class="form-control" id="nuPass"></div>
+      <div class="form-group"><label class="form-label">Role</label>
+        <select class="form-control" id="nuRole"><option value="user">User</option><option value="admin">Admin</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Số Dư Ban Đầu</label><input type="number" class="form-control" id="nuBalance" value="0"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="addUser()">Thêm User</button>
+  `);
+}
+
+function addUser() {
+  const username = document.getElementById('nuUsername').value.trim();
+  const email = document.getElementById('nuEmail').value.trim();
+  const pass = document.getElementById('nuPass').value;
+  const role = document.getElementById('nuRole').value;
+  const balance = parseFloat(document.getElementById('nuBalance').value) || 0;
+  if (!username || !email || !pass) { showNotif('Điền đầy đủ thông tin','error'); return; }
+  const users = DB.get('users') || [];
+  if (users.find(u=>u.username===username)) { showNotif('Username đã tồn tại','error'); return; }
+  users.push({id:Date.now(), username, email, password:hashPass(pass), role, balance, totalSpent:0, apiKey:genKey(), status:'active', avatar:null, createdAt:new Date().toISOString()});
+  DB.set('users', users);
+  closeModal();
+  loadAdminUsers();
+  showNotif('Thêm user thành công!');
+}
+
+function editUserModal(userId) {
+  if (currentUser.role !== 'admin') return;
+  
+  const users = DB.get('users') || [];
+  const u = users.find(x=>x.id===userId);
+  if (!u) return;
+  showModal('Chỉnh Sửa User: ' + u.username, `
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="euEmail" value="${u.email}"></div>
+    <div class="form-group"><label class="form-label">Role</label>
+      <select class="form-control" id="euRole">
+        <option value="user" ${u.role==='user'?'selected':''}>User</option>
+        <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Mật Khẩu Mới (để trống nếu không đổi)</label><input type="password" class="form-control" id="euPass"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveEditUser(${userId})">Lưu</button>
+  `);
+}
+
+function saveEditUser(userId) {
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u=>u.id===userId);
+  users[idx].email = document.getElementById('euEmail').value;
+  users[idx].role = document.getElementById('euRole').value;
+  const newPass = document.getElementById('euPass').value;
+  if (newPass) users[idx].password = hashPass(newPass);
+  DB.set('users', users);
+  closeModal();
+  loadAdminUsers();
+  showNotif('Cập nhật user thành công!');
+}
+
+function addBalanceModal(userId) {
+  if (currentUser.role !== 'admin') return;
+  
+  const users = DB.get('users') || [];
+  const u = users.find(x=>x.id===userId);
+  showModal('Cộng Tiền: ' + u.username, `
+    <div class="stat-card" style="margin-bottom:16px;">
+      <div class="stat-icon green"><i class="fas fa-wallet"></i></div>
+      <div class="stat-card-info"><h3>${fmtMoney(u.balance)}</h3><p>Số dư hiện tại</p></div>
+    </div>
+    <div class="form-group"><label class="form-label">Số Tiền (+/-)</label><input type="number" class="form-control" id="abAmount" placeholder="VD: 100000 hoặc -50000"></div>
+    <div class="form-group"><label class="form-label">Ghi Chú</label><input type="text" class="form-control" id="abNote" placeholder="Lý do cộng/trừ tiền"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveAddBalance(${userId})">Xác Nhận</button>
+  `);
+}
+
+function saveAddBalance(userId) {
+  const amount = parseFloat(document.getElementById('abAmount').value);
+  const note = document.getElementById('abNote').value || 'Admin cộng tiền';
+  if (!amount) { showNotif('Nhập số tiền','error'); return; }
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u=>u.id===userId);
+  users[idx].balance += amount;
+  if (users[idx].balance < 0) users[idx].balance = 0;
+  DB.set('users', users);
+  addTransaction(userId, 'deposit', amount, note, 'completed');
+  closeModal();
+  loadAdminUsers();
+  showNotif('Đã ' + (amount>0?'cộng':'trừ') + ' tiền thành công!');
+}
+
+function toggleUserStatus(userId) {
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u=>u.id===userId);
+  users[idx].status = users[idx].status==='active'?'banned':'active';
+  DB.set('users', users);
+  loadAdminUsers();
+  showNotif('Đã ' + (users[idx].status==='active'?'mở khóa':'khóa') + ' tài khoản!');
+}
+
+// ============================================================
+// ADMIN - ORDERS
+// ============================================================
+function loadAdminOrders() {
+  if (currentUser.role !== 'admin') return;
+  
+  const orders = (DB.get('orders')||[]).reverse();
+  document.getElementById('adminOrdersTable').innerHTML = orders.length ? orders.map(o=>`
+    <tr>
+      <td style="font-size:0.8rem;">${o.id}</td>
+      <td>${o.username}</td>
+      <td style="font-size:0.85rem;">${o.serviceName}</td>
+      <td>${o.quantity.toLocaleString()}</td>
+      <td style="color:var(--primary);font-weight:700;">${fmtMoney(o.totalPrice)}</td>
+      <td><span class="status-badge status-${o.status}">${statusLabel(o.status)}</span></td>
+      <td>
+        ${o.status!=='completed'?`<button class="btn btn-sm btn-success" onclick="completeOrderAdmin('${o.id}')">Hoàn Thành</button>`:''}
+        ${o.status==='processing'?`<button class="btn btn-sm btn-danger" onclick="cancelOrder('${o.id}')" style="margin-left:4px;">Hủy</button>`:''}
+      </td>
+    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Chưa có đơn hàng</td></tr>';
+}
+
+function completeOrderAdmin(orderId) {
+  completeOrder(orderId);
+  loadAdminOrders();
+  showNotif('Đã hoàn thành đơn!');
+}
+
+function cancelOrder(orderId) {
+  const orders = DB.get('orders') || [];
+  const idx = orders.findIndex(o=>o.id===orderId);
+  if (idx !== -1) {
+    const order = orders[idx];
+    orders[idx].status = 'cancelled';
+    DB.set('orders', orders);
+    // Refund
+    const users = DB.get('users') || [];
+    const uidx = users.findIndex(u=>u.id===order.userId);
+    if (uidx !== -1) {
+      users[uidx].balance += order.totalPrice;
+      users[uidx].totalSpent = Math.max(0, (users[uidx].totalSpent||0) - order.totalPrice);
+      DB.set('users', users);
+      addTransaction(order.userId, 'refund', order.totalPrice, 'Hoàn tiền đơn #'+orderId, 'completed');
+    }
+    const settings = DB.get('settings') || {};
+    settings.fund = Math.max(0, (settings.fund||0) - order.totalPrice);
+    DB.set('settings', settings);
+  }
+  loadAdminOrders();
+  showNotif('Đã hủy đơn và hoàn tiền!');
+}
+
+// ============================================================
+// ADMIN - SERVICES
+// ============================================================
+function loadAdminServices() {
+  if (currentUser.role !== 'admin') return;
+  
+  const services = DB.get('services') || [];
+  document.getElementById('adminServicesTable').innerHTML = services.map(s=>`
+    <tr>
+      <td>#${s.id}</td>
+      <td>${s.name}</td>
+      <td>${getPlatformBadge(s.platform)}</td>
+      <td>${s.type}</td>
+      <td style="color:var(--primary);font-weight:700;">${fmtMoney(s.price)}/1k</td>
+      <td>${s.min.toLocaleString()} / ${s.max.toLocaleString()}</td>
+      <td><span class="status-badge status-${s.status==='active'?'completed':'failed'}">${s.status==='active'?'Hoạt Động':'Tạm Dừng'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline" onclick="editServiceModal(${s.id})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-warning" onclick="toggleService(${s.id})" style="margin-left:4px;">${s.status==='active'?'Dừng':'Bật'}</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteService(${s.id})" style="margin-left:4px;"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+function openAddServiceModal() {
+  if (currentUser.role !== 'admin') return;
+  
+  showModal('Thêm Dịch Vụ', `
+    <div class="form-group"><label class="form-label">Tên Dịch Vụ</label><input type="text" class="form-control" id="svName" placeholder="VD: Follow TikTok VN"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nền Tảng</label>
+        <select class="form-control" id="svPlatform">
+          <option value="facebook">Facebook</option>
+          <option value="instagram">Instagram</option>
+          <option value="tiktok">TikTok</option>
+          <option value="youtube">YouTube</option>
+          <option value="twitter">Twitter</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Loại</label>
+        <select class="form-control" id="svType">
+          <option value="follow">Follow</option>
+          <option value="like">Like</option>
+          <option value="view">View</option>
+          <option value="comment">Comment</option>
+          <option value="share">Share</option>
+          <option value="subscribe">Subscribe</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Đơn Giá (đ/1000)</label><input type="number" class="form-control" id="svPrice" placeholder="15000"></div>
+      <div class="form-group"><label class="form-label">Min</label><input type="number" class="form-control" id="svMin" value="100"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Max</label><input type="number" class="form-control" id="svMax" value="50000"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="addService()">Thêm Dịch Vụ</button>
+  `);
+}
+
+function addService() {
+  const name = document.getElementById('svName').value.trim();
+  const platform = document.getElementById('svPlatform').value;
+  const type = document.getElementById('svType').value;
+  const price = parseFloat(document.getElementById('svPrice').value);
+  const min = parseInt(document.getElementById('svMin').value);
+  const max = parseInt(document.getElementById('svMax').value);
+  if (!name || !price) { showNotif('Điền đầy đủ','error'); return; }
+  const services = DB.get('services') || [];
+  services.push({id: Date.now(), name, platform, type, price, min, max, status:'active'});
+  DB.set('services', services);
+  closeModal();
+  loadAdminServices();
+  showNotif('Thêm dịch vụ thành công!');
+}
+
+function editServiceModal(sid) {
+  if (currentUser.role !== 'admin') return;
+  
+  const services = DB.get('services') || [];
+  const s = services.find(x=>x.id===sid);
+  if (!s) return;
+  showModal('Chỉnh Sửa: ' + s.name, `
+    <div class="form-group"><label class="form-label">Tên</label><input type="text" class="form-control" id="esvName" value="${s.name}"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Đơn Giá</label><input type="number" class="form-control" id="esvPrice" value="${s.price}"></div>
+      <div class="form-group"><label class="form-label">Min</label><input type="number" class="form-control" id="esvMin" value="${s.min}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Max</label><input type="number" class="form-control" id="esvMax" value="${s.max}"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveEditService(${sid})">Lưu</button>
+  `);
+}
+
+function saveEditService(sid) {
+  const services = DB.get('services') || [];
+  const idx = services.findIndex(s=>s.id===sid);
+  services[idx].name = document.getElementById('esvName').value;
+  services[idx].price = parseFloat(document.getElementById('esvPrice').value);
+  services[idx].min = parseInt(document.getElementById('esvMin').value);
+  services[idx].max = parseInt(document.getElementById('esvMax').value);
+  DB.set('services', services);
+  closeModal();
+  loadAdminServices();
+  showNotif('Cập nhật dịch vụ thành công!');
+}
+
+function toggleService(sid) {
+  const services = DB.get('services') || [];
+  const idx = services.findIndex(s=>s.id===sid);
+  services[idx].status = services[idx].status==='active'?'inactive':'active';
+  DB.set('services', services);
+  loadAdminServices();
+}
+
+function deleteService(sid) {
+  if (!confirm('Xóa dịch vụ này?')) return;
+  let services = DB.get('services') || [];
+  services = services.filter(s=>s.id!==sid);
+  DB.set('services', services);
+  loadAdminServices();
+  showNotif('Đã xóa dịch vụ!');
+}
+
+// ============================================================
+// ADMIN - PAYMENTS
+// ============================================================
+function loadAdminPayments(filter = 'all') {
+  if (currentUser.role !== 'admin') return;
+  
+  let payments = DB.get('payments') || [];
+  if (filter !== 'all') payments = payments.filter(p => p.status === filter);
+  payments = payments.reverse();
+  document.getElementById('adminPaymentsTable').innerHTML = payments.length ? payments.map(p=>`
+    <tr>
+      <td style="font-size:0.8rem;">${p.id}</td>
+      <td>${p.username}</td>
+      <td style="font-weight:700;color:var(--success);">${fmtMoney(p.amount)}</td>
+      <td><code style="background:var(--bg3);padding:3px 8px;border-radius:4px;">${p.bankCode||p.note}</code></td>
+      <td><span class="status-badge status-${p.status==='completed'?'completed':p.status==='pending'?'pending':'failed'}">${p.status==='completed'?'Đã Duyệt':p.status==='pending'?'Chờ Duyệt':'Từ Chối'}</span></td>
+      <td style="font-size:0.82rem;">${fmtDate(p.createdAt)}</td>
+      <td>${p.status==='pending'?`<button class="btn btn-sm btn-success" onclick="approvePayment('${p.id}')">Duyệt</button> <button class="btn btn-sm btn-danger" onclick="rejectPayment('${p.id}')" style="margin-left:4px;">Từ Chối</button>`:'--'}</td>
+    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
+}
+
+function filterPayments(f) { loadAdminPayments(f); }
+
+function approvePayment(pid) {
+  const payments = DB.get('payments') || [];
+  const idx = payments.findIndex(p=>p.id===pid);
+  if (idx === -1) return;
+  payments[idx].status = 'completed';
+  DB.set('payments', payments);
+  
+  // Credit user
+  const users = DB.get('users') || [];
+  const uidx = users.findIndex(u=>u.id===payments[idx].userId);
+  if (uidx !== -1) {
+    users[uidx].balance += payments[idx].amount;
+    DB.set('users', users);
+    
+    // Cập nhật quỹ admin
+    const settings = DB.get('settings') || {};
+    settings.fund = (settings.fund || 0) + payments[idx].amount;
+    DB.set('settings', settings);
+    
+    // Thông báo cho user
+    showServerNotification(`Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`, 'success');
+  }
+  
+  // Update transaction
+  const transactions = DB.get('transactions') || [];
+  const tidx = transactions.findIndex(t=>t.id===pid);
+  if (tidx !== -1) transactions[tidx].status = 'completed';
+  DB.set('transactions', transactions);
+  
+  loadAdminPayments();
+  showNotif(`Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`);
+}
+
+function rejectPayment(pid) {
+  const payments = DB.get('payments') || [];
+  const idx = payments.findIndex(p=>p.id===pid);
+  if (idx !== -1) { 
+    payments[idx].status = 'failed'; 
+    DB.set('payments', payments); 
+  }
+  const transactions = DB.get('transactions') || [];
+  const tidx = transactions.findIndex(t=>t.id===pid);
+  if (tidx !== -1) { 
+    transactions[tidx].status = 'failed'; 
+    DB.set('transactions', transactions); 
+  }
+  loadAdminPayments();
+  showNotif('Đã từ chối giao dịch','error');
+}
+
+// ============================================================
+// ADMIN - BANK
+// ============================================================
+function loadAdminBank() {
+  if (currentUser.role !== 'admin') return;
+  
+  const banks = DB.get('banks') || [];
+  document.getElementById('banksList').innerHTML = banks.length ? banks.map(b=>`
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:start;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:8px;">${b.bankName} ${b.isDefault?'<span style="background:var(--gold);color:#000;font-size:0.75rem;padding:2px 8px;border-radius:10px;">Mặc Định</span>':''}</div>
+          <div style="color:var(--text2);font-size:0.88rem;">Số TK: <strong style="color:var(--text);">${b.accountNumber}</strong></div>
+          <div style="color:var(--text2);font-size:0.88rem;">Tên TK: <strong style="color:var(--text);">${b.accountName}</strong></div>
+          <div style="color:var(--text2);font-size:0.88rem;">Chi Nhánh: ${b.branch}</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          ${!b.isDefault?`<button class="btn btn-sm btn-outline" onclick="setDefaultBank(${b.id})">Đặt Mặc Định</button>`:''}
+          <button class="btn btn-sm btn-outline" onclick="editBankModal(${b.id})"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-sm btn-danger" onclick="deleteBank(${b.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`).join('') : '<p style="color:var(--text2);">Chưa có ngân hàng nào</p>';
+}
+
+function openAddBankModal() {
+  if (currentUser.role !== 'admin') return;
+  
+  showModal('Thêm Ngân Hàng', `
+    <div class="form-group"><label class="form-label">Tên Ngân Hàng</label><input type="text" class="form-control" id="nbBank" placeholder="VD: MB Bank, Vietcombank..."></div>
+    <div class="form-group"><label class="form-label">Số Tài Khoản</label><input type="text" class="form-control" id="nbAccNum" placeholder="Số tài khoản"></div>
+    <div class="form-group"><label class="form-label">Tên Chủ Tài Khoản</label><input type="text" class="form-control" id="nbAccName" placeholder="Tên chủ TK (viết hoa, không dấu)"></div>
+    <div class="form-group"><label class="form-label">Chi Nhánh</label><input type="text" class="form-control" id="nbBranch" placeholder="VD: Hà Nội"></div>
+    <div class="form-group"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="nbDefault"> Đặt làm mặc định</label></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="addBank()">Thêm Ngân Hàng</button>
+  `);
+}
+
+function addBank() {
+  const bankName = document.getElementById('nbBank').value.trim();
+  const accountNumber = document.getElementById('nbAccNum').value.trim();
+  const accountName = document.getElementById('nbAccName').value.trim();
+  const branch = document.getElementById('nbBranch').value.trim() || 'Toàn Quốc';
+  const isDefault = document.getElementById('nbDefault').checked;
+  if (!bankName || !accountNumber || !accountName) { showNotif('Điền đầy đủ','error'); return; }
+  const banks = DB.get('banks') || [];
+  if (isDefault) banks.forEach(b => b.isDefault = false);
+  banks.push({id: Date.now(), bankName, accountNumber, accountName, branch, status:'active', isDefault});
+  DB.set('banks', banks);
+  closeModal();
+  loadAdminBank();
+  showNotif('Thêm ngân hàng thành công!');
+}
+
+function editBankModal(bid) {
+  const banks = DB.get('banks') || [];
+  const b = banks.find(x=>x.id===bid);
+  showModal('Chỉnh Sửa Ngân Hàng', `
+    <div class="form-group"><label class="form-label">Tên Ngân Hàng</label><input type="text" class="form-control" id="ebBank" value="${b.bankName}"></div>
+    <div class="form-group"><label class="form-label">Số TK</label><input type="text" class="form-control" id="ebAccNum" value="${b.accountNumber}"></div>
+    <div class="form-group"><label class="form-label">Tên Chủ TK</label><input type="text" class="form-control" id="ebAccName" value="${b.accountName}"></div>
+    <div class="form-group"><label class="form-label">Chi Nhánh</label><input type="text" class="form-control" id="ebBranch" value="${b.branch}"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveEditBank(${bid})">Lưu</button>
+  `);
+}
+
+function saveEditBank(bid) {
+  const banks = DB.get('banks') || [];
+  const idx = banks.findIndex(b=>b.id===bid);
+  banks[idx].bankName = document.getElementById('ebBank').value;
+  banks[idx].accountNumber = document.getElementById('ebAccNum').value;
+  banks[idx].accountName = document.getElementById('ebAccName').value;
+  banks[idx].branch = document.getElementById('ebBranch').value;
+  DB.set('banks', banks);
+  closeModal();
+  loadAdminBank();
+  showNotif('Đã cập nhật ngân hàng!');
+}
+
+function setDefaultBank(bid) {
+  const banks = DB.get('banks') || [];
+  banks.forEach(b => b.isDefault = (b.id === bid));
+  DB.set('banks', banks);
+  loadAdminBank();
+}
+
+function deleteBank(bid) {
+  if (!confirm('Xóa ngân hàng này?')) return;
+  let banks = DB.get('banks') || [];
+  banks = banks.filter(b=>b.id!==bid);
+  DB.set('banks', banks);
+  loadAdminBank();
+}
+
+// ============================================================
+// ADMIN - WITHDRAW
+// ============================================================
+function loadAdminWithdraw(filter = 'all') {
+  if (currentUser.role !== 'admin') return;
+  
+  let withdraws = DB.get('withdrawRequests') || [];
+  if (filter !== 'all') withdraws = withdraws.filter(w => w.status === filter);
+  withdraws = withdraws.reverse();
+  
+  document.getElementById('adminWithdrawTable').innerHTML = withdraws.length ? withdraws.map(w=>`
+    <tr>
+      <td style="font-size:0.8rem;">${w.id}</td>
+      <td>${w.username}</td>
+      <td>${w.bankName}</td>
+      <td>${w.accountNumber}</td>
+      <td style="color:var(--danger);font-weight:700;">${fmtMoney(w.amount)}</td>
+      <td><span class="status-badge status-${w.status==='completed'?'completed':w.status==='pending'?'pending':'failed'}">${w.status==='completed'?'Đã Duyệt':w.status==='pending'?'Chờ Duyệt':'Từ Chối'}</span></td>
+      <td style="font-size:0.82rem;">${fmtDate(w.createdAt)}</td>
+      <td>
+        ${w.status==='pending'?`
+          <button class="btn btn-sm btn-success" onclick="approveWithdraw('${w.id}')">Duyệt</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectWithdraw('${w.id}')" style="margin-left:4px;">Từ Chối</button>
+        `:'--'}
+      </td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text2);">Không có yêu cầu rút tiền</td></tr>';
+}
+
+function filterWithdraw(f) { loadAdminWithdraw(f); }
+
+function approveWithdraw(wid) {
+  const withdraws = DB.get('withdrawRequests') || [];
+  const idx = withdraws.findIndex(w => w.id === wid);
+  if (idx === -1) return;
+  
+  withdraws[idx].status = 'completed';
+  DB.set('withdrawRequests', withdraws);
+  
+  // Cập nhật quỹ
+  const settings = DB.get('settings') || {};
+  settings.fund = (settings.fund || 0) - withdraws[idx].amount;
+  DB.set('settings', settings);
+  
+  // Cập nhật transaction
+  const transactions = DB.get('transactions') || [];
+  const tidx = transactions.findIndex(t => t.id === wid);
+  if (tidx !== -1) transactions[tidx].status = 'completed';
+  DB.set('transactions', transactions);
+  
+  // Thông báo cho user
+  showServerNotification(`Yêu cầu rút ${fmtMoney(withdraws[idx].amount)} đã được duyệt!`, 'success');
+  
+  loadAdminWithdraw();
+  showNotif('Đã duyệt yêu cầu rút tiền!');
+}
+
+function rejectWithdraw(wid) {
+  const withdraws = DB.get('withdrawRequests') || [];
+  const idx = withdraws.findIndex(w => w.id === wid);
+  if (idx === -1) return;
+  
+  withdraws[idx].status = 'failed';
+  DB.set('withdrawRequests', withdraws);
+  
+  // Hoàn tiền lại cho user
+  const users = DB.get('users') || [];
+  const uidx = users.findIndex(u => u.id === withdraws[idx].userId);
+  if (uidx !== -1) {
+    users[uidx].balance += withdraws[idx].amount;
+    DB.set('users', users);
+  }
+  
+  // Cập nhật transaction
+  const transactions = DB.get('transactions') || [];
+  const tidx = transactions.findIndex(t => t.id === wid);
+  if (tidx !== -1) transactions[tidx].status = 'failed';
+  DB.set('transactions', transactions);
+  
+  // Thông báo cho user
+  showServerNotification(`Yêu cầu rút ${fmtMoney(withdraws[idx].amount)} bị từ chối!`, 'error');
+  
+  loadAdminWithdraw();
+  showNotif('Đã từ chối yêu cầu rút tiền!');
+}
+
+// ============================================================
+// ADMIN - SETTINGS
+// ============================================================
+function loadAdminSettings() {
+  if (currentUser.role !== 'admin') return;
+  
+  const settings = DB.get('settings') || {};
+  document.getElementById('siteName').value = settings.siteName || 'XuHuongVN';
+  document.getElementById('minBalance').value = settings.minBalance || 1000;
+  document.getElementById('minDeposit').value = settings.minDeposit || 2000;
+}
+
+function saveSettings() {
+  const settings = DB.get('settings') || {};
+  settings.siteName = document.getElementById('siteName').value;
+  settings.minBalance = parseFloat(document.getElementById('minBalance').value);
+  settings.minDeposit = parseFloat(document.getElementById('minDeposit').value);
+  DB.set('settings', settings);
+  showNotif('Đã lưu cài đặt!');
+}
+
+// ============================================================
+// PUBLIC SERVICES
+// ============================================================
+function renderPublicServices(services, platform) {
+  const list = document.getElementById('publicServicesList');
+  const filtered = platform === 'all' ? services : services.filter(s=>s.platform===platform);
+  const active = filtered.filter(s=>s.status==='active');
+  list.innerHTML = active.map(s=>`
+    <div class="service-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">${getPlatformBadge(s.platform)}</div>
+      <h3>${s.name}</h3>
+      <p>Min: ${s.min.toLocaleString()} | Max: ${s.max.toLocaleString()}</p>
+      <div class="price">${fmtMoney(s.price)}<span style="font-size:0.75rem;font-weight:400;color:var(--text2);">/1000</span></div>
+      <button class="btn btn-primary btn-sm" style="margin-top:12px;width:100%;" onclick="openRegisterModal()"><i class="fas fa-cart-plus"></i> Đặt Ngay</button>
+    </div>`).join('');
+}
+
+function filterPublicServices(platform, el) {
+  document.querySelectorAll('#publicPlatformTabs .platform-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderPublicServices(DB.get('services')||[], platform);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getPlatformBadge(platform) {
+  const m = {
+    facebook: '<span class="p-fb"><i class="fab fa-facebook-f"></i> Facebook</span>',
+    instagram: '<span class="p-ig"><i class="fab fa-instagram"></i> Instagram</span>',
+    tiktok: '<span class="p-tt"><i class="fab fa-tiktok"></i> TikTok</span>',
+    youtube: '<span class="p-yt"><i class="fab fa-youtube"></i> YouTube</span>',
+    twitter: '<span class="p-tw"><i class="fab fa-twitter"></i> Twitter</span>',
+  };
+  return m[platform] || platform;
+}
+
+function addTransaction(userId, type, amount, note, status) {
+  const transactions = DB.get('transactions') || [];
+  const users = DB.get('users') || [];
+  const user = users.find(u=>u.id===userId);
+  transactions.push({id:'TX'+Date.now()+Math.random().toString(36).substr(2,4), userId, username:user?.username, type, amount, note, status, createdAt:new Date().toISOString()});
+  DB.set('transactions', transactions);
+}
+
+function updateNavBalance() {
+  const el = document.getElementById('navBalance');
+  if (el) el.textContent = fmtMoney(currentUser.balance);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(()=>showNotif('Đã copy!','info'));
+}
+
+function showServerNotification(message, type = 'info') {
+  const container = document.getElementById('serverNotifications');
+  const notif = document.createElement('div');
+  notif.className = `server-notif-item ${type}`;
+  notif.innerHTML = `
+    <div class="server-notif-title">${type === 'info' ? '📢 Thông báo' : type === 'success' ? '✅ Thành công' : type === 'warning' ? '⚠️ Cảnh báo' : '❌ Lỗi'}</div>
+    <div class="server-notif-content">${message}</div>
+  `;
+  container.appendChild(notif);
+  
+  setTimeout(() => {
+    notif.remove();
+  }, 5000);
+}
+
+// MODAL
+function showModal(title, body) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+// NOTIFICATION
+function showNotif(msg, type = 'success') {
+  const el = document.getElementById('notification');
+  const icon = document.getElementById('notif-icon');
+  const text = document.getElementById('notif-text');
+  el.className = 'notification show ' + type;
+  icon.className = 'fas notif-icon ' + type + ' ' + (type==='success'?'fa-check-circle':type==='error'?'fa-times-circle':'fa-info-circle');
+  text.textContent = msg;
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// DROPDOWN
+function toggleDropdown() {
+  const d = document.getElementById('userDropdown');
+  if (d) d.classList.toggle('show');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown-menu').forEach(d=>d.classList.remove('show'));
+  }
+});
+
+// COUNTER ANIMATION
+function animateCounter(id, target) {
+  let cur = 0;
+  const step = target / 60;
+  const el = document.getElementById(id);
+  const timer = setInterval(()=>{
+    cur += step;
+    if (cur >= target) { cur = target; clearInterval(timer); }
+    el.textContent = Math.floor(cur).toLocaleString();
+  }, 20);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+createParticles();
+createSnow();
+initDB();
+
+// Animate hero counters
+setTimeout(()=>{
+  const orders = DB.get('orders') || [];
+  const users = DB.get('users') || [];
+  const services = DB.get('services') || [];
+  animateCounter('counterOrders', Math.max(orders.length, 12580));
+  animateCounter('counterUsers', Math.max(users.length, 4320));
+  animateCounter('counterServices', Math.max(services.length, 150));
+}, 500);
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', e=>{
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// Check for existing session
+checkSession();
 </script>
-
 </body>
 </html>
