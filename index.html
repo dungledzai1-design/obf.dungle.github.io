@@ -677,7 +677,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
                 </div>
                 <div class="bank-branch">Chi nhánh: Toàn quốc</div>
                 <div class="qr-code" id="qrCodeContainer">
-                  <img id="qrImage" src="https://sf-static.upanhlaylink.com/img/image_202603013d9fe9465ef3a0de1faee8872fa2f866.jpg" alt="QR Code VP Bank">
+                  <!-- QR Code sẽ được tạo động với mã nạp tiền -->
+                  <img id="qrImage" src="" alt="QR Code">
                   <div class="qr-text" id="qrCodeText"></div>
                 </div>
               </div>
@@ -1505,7 +1506,7 @@ function statusLabel(s) {
 }
 
 // ============================================================
-// DEPOSIT - TỰ ĐỘNG THÊM MÃ NẠP TIỀN VÀO QR
+// DEPOSIT - TỰ ĐỘNG TẠO QR VỚI MÃ NẠP TIỀN
 // ============================================================
 function loadDeposit() {
   const bank = DB.get('bank'); // CHỈ MỘT NGÂN HÀNG DUY NHẤT
@@ -1542,12 +1543,15 @@ function generateDepositCode() {
     <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
   
-  // TỰ ĐỘNG THÊM MÃ NẠP TIỀN VÀO ẢNH QR
+  // TẠO QR CODE VỚI MÃ NẠP TIỀN TỰ ĐỘNG ĐIỀN VÀO NỘI DUNG CHUYỂN KHOẢN
+  // Sử dụng API VietQR để tạo mã QR có chứa nội dung chuyển khoản
+  const bankCode = 'VPB'; // Mã ngân hàng VP Bank
+  const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bank.accountNumber}-compact.png?amount=${amount}&addInfo=${encodeURIComponent(code)}&accountName=${encodeURIComponent(bank.accountName)}`;
+  
   const qrImage = document.getElementById('qrImage');
   const qrText = document.getElementById('qrCodeText');
   
-  // Giữ nguyên ảnh QR gốc và thêm text overlay
-  qrImage.src = bank.qrImage;
+  qrImage.src = qrUrl;
   qrText.textContent = code;
   
   document.getElementById('depositInfo').style.display = 'block';
@@ -1576,7 +1580,7 @@ function generateDepositCode() {
     showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
   });
   
-  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Mã đã được thêm vào QR!','info');
+  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Khi quét QR, nội dung chuyển khoản sẽ tự động điền!','info');
 }
 
 // ============================================================
