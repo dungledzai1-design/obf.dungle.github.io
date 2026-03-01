@@ -59,25 +59,45 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
 }
 
-/* HIỆU ỨNG GLOW */
-.glow-effect {
-  position: relative;
-  overflow: hidden;
+/* CAPTCHA STYLES */
+.captcha-container {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
 }
-.glow-effect::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(26,115,232,0.2) 0%, transparent 70%);
-  animation: glow 3s ease-in-out infinite;
-  pointer-events: none;
+.captcha-box {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  user-select: none;
+  font-family: monospace;
 }
-@keyframes glow {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 0.8; }
+.captcha-input {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1rem;
+  text-align: center;
+}
+.captcha-refresh {
+  margin-top: 8px;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.captcha-refresh:hover {
+  color: var(--secondary);
 }
 
 /* SCROLLBAR */
@@ -323,6 +343,43 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .order-info{background:var(--bg3);border-radius:8px;padding:16px;margin:16px 0;}
 .order-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
 .order-info-row:last-child{border-bottom:none;}
+
+/* CAPTCHA */
+.captcha-box {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.captcha-text {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  user-select: none;
+}
+.captcha-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg3);
+  color: var(--text);
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.captcha-refresh {
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.captcha-refresh:hover {
+  color: var(--secondary);
+}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -659,7 +716,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="page" id="page-deposit">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Nạp Tiền</h1>
           
-          <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Số tiền nạp tối thiểu: 2,000đ</div>
+          <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Số tiền nạp tối thiểu: 2,000đ. Nếu quá 5 phút không được duyệt, hệ thống sẽ tự động cộng tiền!</div>
 
           <div class="grid-2">
             <div class="card">
@@ -677,7 +734,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
                 </div>
                 <div class="bank-branch">Chi nhánh: Toàn quốc</div>
                 <div class="qr-code" id="qrCodeContainer">
-                  <!-- QR Code sẽ được tạo động với mã nạp tiền -->
                   <img id="qrImage" src="" alt="QR Code">
                   <div class="qr-text" id="qrCodeText"></div>
                 </div>
@@ -767,8 +823,8 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
               <div id="adminPendingOrders"></div>
             </div>
             <div class="card">
-              <div class="card-header"><div class="card-title">Nạp Tiền Mới Nhất</div></div>
-              <div id="adminRecentDeposits"></div>
+              <div class="card-header"><div class="card-title">Nạp Tiền Chờ Duyệt</div></div>
+              <div id="adminPendingPayments"></div>
             </div>
           </div>
         </div>
@@ -783,7 +839,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
             <div class="form-group"><input type="text" class="form-control" placeholder="Tìm kiếm user..." oninput="searchUsers(this.value)" style="max-width:300px;"></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Số Dư</th><th>Role</th><th>Trạng Thái</th><th>Hành Động</th></tr></thead>
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Số Dư</th><th>Role</th><th>Trạng Thái</th><th>Ngày Tạo</th><th>Hành Động</th></tr></thead>
                 <tbody id="adminUsersTable"></tbody>
               </table>
             </div>
@@ -836,7 +892,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Mã GD</th><th>User</th><th>Số Tiền</th><th>Mã Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
+                <thead><tr><th>Mã GD</th><th>User</th><th>Số Tiền</th><th>Mã Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th><th>Tự Động</th></tr></thead>
                 <tbody id="adminPaymentsTable"></tbody>
               </table>
             </div>
@@ -852,6 +908,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
               <div class="form-group"><label class="form-label">Tên Website</label><input type="text" class="form-control" id="siteName" value="XuHuongVN"></div>
               <div class="form-group"><label class="form-label">Số Dư Tối Thiểu Đặt Hàng</label><input type="number" class="form-control" id="minBalance" value="1000"></div>
               <div class="form-group"><label class="form-label">Nạp Tiền Tối Thiểu</label><input type="number" class="form-control" id="minDeposit" value="2000"></div>
+              <div class="form-group"><label class="form-label">Thời Gian Tự Động Duyệt (phút)</label><input type="number" class="form-control" id="autoApproveTime" value="5"></div>
               <button class="btn btn-primary" onclick="saveSettings()">Lưu Cài Đặt</button>
             </div>
           </div>
@@ -968,9 +1025,19 @@ function initDB() {
   if (!DB.get('users')) {
     const adminPass = hashPass('admin123');
     DB.set('users', [{
-      id: 1, username: 'admin', email: 'admin@xuhuongvn.com', password: adminPass,
-      role: 'admin', balance: 5000000, totalSpent: 0, apiKey: genKey(), status: 'active',
-      avatar: null, createdAt: new Date().toISOString()
+      id: 1, 
+      username: 'admin', 
+      email: 'admin@xuhuongvn.com', 
+      password: adminPass,
+      role: 'admin', 
+      balance: 5000000, 
+      totalSpent: 0, 
+      apiKey: genKey(), 
+      status: 'active',
+      avatar: null, 
+      createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+      ip: '127.0.0.1'
     }]);
   }
   
@@ -991,6 +1058,7 @@ function initDB() {
   
   if (!DB.get('orders')) DB.set('orders', []);
   if (!DB.get('transactions')) DB.set('transactions', []);
+  if (!DB.get('payments')) DB.set('payments', []);
   
   // CHỈ MỘT NGÂN HÀNG DUY NHẤT - VP BANK
   if (!DB.get('bank')) {
@@ -1005,7 +1073,13 @@ function initDB() {
   }
   
   if (!DB.get('settings')) {
-    DB.set('settings', { siteName:'XuHuongVN', minBalance:1000, minDeposit:2000, fund:5000000 });
+    DB.set('settings', { 
+      siteName:'XuHuongVN', 
+      minBalance:1000, 
+      minDeposit:2000, 
+      fund:5000000,
+      autoApproveTime: 5 // phút
+    });
   }
 }
 
@@ -1025,6 +1099,25 @@ function fmtMoney(n) { return Number(n).toLocaleString('vi-VN') + 'đ'; }
 function fmtDate(d) { return new Date(d).toLocaleString('vi-VN'); }
 
 // ============================================================
+// CAPTCHA
+// ============================================================
+let currentCaptcha = '';
+
+function generateCaptcha() {
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let captcha = '';
+  for (let i = 0; i < 6; i++) {
+    captcha += chars[Math.floor(Math.random() * chars.length)];
+  }
+  currentCaptcha = captcha;
+  return captcha;
+}
+
+function refreshCaptcha() {
+  document.getElementById('captchaDisplay').textContent = generateCaptcha();
+}
+
+// ============================================================
 // AUTH
 // ============================================================
 let currentUser = null;
@@ -1041,18 +1134,46 @@ function openLoginModal() {
 }
 
 function openRegisterModal() {
+  const captcha = generateCaptcha();
   showModal('Đăng Ký Tài Khoản', `
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Username *</label><input type="text" class="form-control" id="regUser" placeholder="Tên đăng nhập"></div>
+      <div class="form-group"><label class="form-label">Username *</label><input type="text" class="form-control" id="regUser" placeholder="Tên đăng nhập" onkeyup="checkUsername()"></div>
       <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="regEmail" placeholder="Email"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Mật Khẩu *</label><input type="password" class="form-control" id="regPass" placeholder="Mật khẩu"></div>
       <div class="form-group"><label class="form-label">Xác Nhận Mật Khẩu *</label><input type="password" class="form-control" id="regPass2" placeholder="Nhập lại mật khẩu"></div>
     </div>
+    <div id="usernameStatus" style="margin-bottom:10px;font-size:0.85rem;"></div>
+    
+    <div class="captcha-container">
+      <div class="captcha-box" id="captchaDisplay">${captcha}</div>
+      <input type="text" class="captcha-input" id="regCaptcha" placeholder="Nhập mã xác nhận">
+      <div class="captcha-refresh" onclick="refreshCaptcha()"><i class="fas fa-sync-alt"></i> Tạo mã mới</div>
+    </div>
+    
     <button class="btn btn-primary" style="width:100%;" onclick="doRegister()"><i class="fas fa-user-plus"></i> Đăng Ký</button>
     <p style="text-align:center;margin-top:12px;font-size:0.88rem;color:var(--text2);">Đã có tài khoản? <a href="#" style="color:var(--primary);" onclick="closeModal();openLoginModal();">Đăng nhập</a></p>
   `);
+}
+
+function checkUsername() {
+  const username = document.getElementById('regUser').value.trim();
+  const statusDiv = document.getElementById('usernameStatus');
+  
+  if (username.length < 3) {
+    statusDiv.innerHTML = '<span style="color:var(--warning);">❌ Username phải có ít nhất 3 ký tự</span>';
+    return;
+  }
+  
+  const users = DB.get('users') || [];
+  const exists = users.find(u => u.username === username);
+  
+  if (exists) {
+    statusDiv.innerHTML = '<span style="color:var(--danger);">❌ Username đã tồn tại, vui lòng chọn username khác</span>';
+  } else {
+    statusDiv.innerHTML = '<span style="color:var(--success);">✅ Username có thể sử dụng</span>';
+  }
 }
 
 function doLogin() {
@@ -1063,6 +1184,11 @@ function doLogin() {
   const user = users.find(x => (x.username===u || x.email===u) && x.password===hashPass(p));
   if (!user) { showNotif('Sai thông tin đăng nhập','error'); return; }
   if (user.status === 'banned') { showNotif('Tài khoản đã bị khóa','error'); return; }
+  
+  // Cập nhật thời gian đăng nhập
+  user.lastLogin = new Date().toISOString();
+  DB.set('users', users);
+  
   currentUser = user;
   DB.set('session', user.id);
   closeModal();
@@ -1075,17 +1201,51 @@ function doRegister() {
   const email = document.getElementById('regEmail').value.trim();
   const pass = document.getElementById('regPass').value;
   const pass2 = document.getElementById('regPass2').value;
+  const captcha = document.getElementById('regCaptcha').value.trim();
+  
   if (!username || !email || !pass) { showNotif('Vui lòng điền đầy đủ','error'); return; }
   if (pass !== pass2) { showNotif('Mật khẩu không khớp','error'); return; }
   if (pass.length < 6) { showNotif('Mật khẩu tối thiểu 6 ký tự','error'); return; }
+  
+  // Kiểm tra captcha
+  if (captcha !== currentCaptcha) {
+    showNotif('Mã xác nhận không đúng','error');
+    refreshCaptcha();
+    return;
+  }
+  
   const users = DB.get('users') || [];
-  if (users.find(x => x.username===username)) { showNotif('Username đã tồn tại','error'); return; }
-  if (users.find(x => x.email===email)) { showNotif('Email đã tồn tại','error'); return; }
+  
+  // Kiểm tra username đã tồn tại chưa
+  if (users.find(x => x.username === username)) { 
+    showNotif('Username đã tồn tại','error'); 
+    return; 
+  }
+  
+  if (users.find(x => x.email === email)) { 
+    showNotif('Email đã tồn tại','error'); 
+    return; 
+  }
+  
+  // Lấy IP (giả lập)
+  const ip = '127.0.0.1';
+  
   const newUser = {
-    id: Date.now(), username, email, password: hashPass(pass),
-    role: 'user', balance: 0, totalSpent: 0, apiKey: genKey(),
-    status: 'active', avatar: null, createdAt: new Date().toISOString()
+    id: Date.now(), 
+    username, 
+    email, 
+    password: hashPass(pass),
+    role: 'user', 
+    balance: 0, 
+    totalSpent: 0, 
+    apiKey: genKey(),
+    status: 'active', 
+    avatar: null, 
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    ip: ip
   };
+  
   users.push(newUser);
   DB.set('users', users);
   currentUser = newUser;
@@ -1107,7 +1267,11 @@ function checkSession() {
   if (sid) {
     const users = DB.get('users') || [];
     const user = users.find(x => x.id === sid);
-    if (user) { currentUser = user; showDashboard(); return; }
+    if (user) { 
+      currentUser = user; 
+      showDashboard(); 
+      return; 
+    }
   }
   showLanding();
 }
@@ -1336,6 +1500,7 @@ function loadDashboard() {
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Số dư:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(currentUser.balance)}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Tổng chi tiêu:</span><span>${fmtMoney(currentUser.totalSpent||0)}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Ngày tham gia:</span><span style="font-size:0.85rem;">${fmtDate(currentUser.createdAt)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Lần đăng nhập cuối:</span><span style="font-size:0.85rem;">${fmtDate(currentUser.lastLogin || currentUser.createdAt)}</span></div>
     </div>`;
 }
 
@@ -1544,7 +1709,6 @@ function generateDepositCode() {
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
   
   // TẠO QR CODE VỚI MÃ NẠP TIỀN TỰ ĐỘNG ĐIỀN VÀO NỘI DUNG CHUYỂN KHOẢN
-  // Sử dụng API VietQR để tạo mã QR có chứa nội dung chuyển khoản
   const bankCode = 'VPB'; // Mã ngân hàng VP Bank
   const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bank.accountNumber}-compact.png?amount=${amount}&addInfo=${encodeURIComponent(code)}&accountName=${encodeURIComponent(bank.accountName)}`;
   
@@ -1559,6 +1723,7 @@ function generateDepositCode() {
   const transaction = {
     id: 'DEP' + Date.now(), 
     userId: currentUser.id, 
+    username: currentUser.username,
     type: 'deposit',
     amount, 
     note: code, 
@@ -1570,7 +1735,7 @@ function generateDepositCode() {
   DB.set('transactions', transactions);
   
   const payments = DB.get('payments') || [];
-  payments.push({...transaction, username: currentUser.username, bankCode: code});
+  payments.push(transaction);
   DB.set('payments', payments);
   
   // Thông báo cho admin
@@ -1580,7 +1745,20 @@ function generateDepositCode() {
     showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
   });
   
-  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Khi quét QR, nội dung chuyển khoản sẽ tự động điền!','info');
+  // TỰ ĐỘNG DUYỆT SAU 5 PHÚT NẾU ADMIN KHÔNG DUYỆT
+  const settings = DB.get('settings') || {};
+  const autoApproveTime = (settings.autoApproveTime || 5) * 60 * 1000; // Convert to milliseconds
+  
+  setTimeout(() => {
+    const currentPayments = DB.get('payments') || [];
+    const payment = currentPayments.find(p => p.id === transaction.id);
+    
+    if (payment && payment.status === 'pending') {
+      approvePayment(transaction.id, true); // true = auto approve
+    }
+  }, autoApproveTime);
+  
+  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Hệ thống sẽ tự động duyệt sau 5 phút nếu admin không duyệt!','info');
 }
 
 // ============================================================
@@ -1612,7 +1790,8 @@ function loadProfile() {
     <div class="form-group" style="margin-top:16px;"><label class="form-label">Username</label><input type="text" class="form-control" value="${currentUser.username}" readonly></div>
     <div class="form-group"><label class="form-label">Email</label><input type="text" class="form-control" value="${currentUser.email}" readonly></div>
     <div class="form-group"><label class="form-label">Số Dư</label><input type="text" class="form-control" value="${fmtMoney(currentUser.balance)}" readonly style="color:var(--success);font-weight:700;"></div>
-    <div class="form-group"><label class="form-label">Ngày Tham Gia</label><input type="text" class="form-control" value="${fmtDate(currentUser.createdAt)}" readonly></div>`;
+    <div class="form-group"><label class="form-label">Ngày Tham Gia</label><input type="text" class="form-control" value="${fmtDate(currentUser.createdAt)}" readonly></div>
+    <div class="form-group"><label class="form-label">IP Đăng Ký</label><input type="text" class="form-control" value="${currentUser.ip || 'N/A'}" readonly></div>`;
 }
 
 function previewAvatar(input) {
@@ -1707,6 +1886,7 @@ function loadAdminDashboard() {
   const users = DB.get('users') || [];
   const orders = DB.get('orders') || [];
   const transactions = DB.get('transactions') || [];
+  const payments = DB.get('payments') || [];
   const settings = DB.get('settings') || {};
   const revenue = transactions.filter(t=>t.type==='deposit'&&t.status==='completed').reduce((s,t)=>s+t.amount,0);
   
@@ -1724,12 +1904,14 @@ function loadAdminDashboard() {
     </div>
   `).join('') : '<p style="color:var(--text2);">Không có đơn chờ</p>';
   
-  const deposits = (DB.get('transactions')||[]).filter(t=>t.type==='deposit').reverse().slice(0,5);
-  document.getElementById('adminRecentDeposits').innerHTML = deposits.length ? deposits.map(d=>`
+  // Nạp tiền chờ duyệt
+  const pendingPayments = payments.filter(p => p.status === 'pending').reverse().slice(0, 5);
+  document.getElementById('adminPendingPayments').innerHTML = pendingPayments.length ? pendingPayments.map(p => `
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
-      <span>${d.username||'user'} - ${fmtMoney(d.amount)}</span>
-      <span class="status-badge status-${d.status}">${statusLabel(d.status)}</span>
-    </div>`).join('') : '<p style="color:var(--text2);">Chưa có</p>';
+      <span><strong>${p.username}</strong> - ${fmtMoney(p.amount)}</span>
+      <span style="color:var(--warning);">${p.note}</span>
+    </div>
+  `).join('') : '<p style="color:var(--text2);">Không có nạp tiền chờ</p>';
 }
 
 // ============================================================
@@ -1739,7 +1921,8 @@ function loadAdminUsers(filter = '') {
   if (currentUser.role !== 'admin') return;
   
   let users = DB.get('users') || [];
-  if (filter) users = users.filter(u => u.username.includes(filter) || u.email.includes(filter));
+  if (filter) users = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()) || u.email.toLowerCase().includes(filter.toLowerCase()));
+  
   document.getElementById('adminUsersTable').innerHTML = users.map(u=>`
     <tr>
       <td>${u.id}</td>
@@ -1748,9 +1931,11 @@ function loadAdminUsers(filter = '') {
       <td style="color:var(--success);font-weight:700;">${fmtMoney(u.balance)}</td>
       <td><span style="color:${u.role==='admin'?'var(--gold)':'var(--primary)'};">${u.role.toUpperCase()}</span></td>
       <td><span class="status-badge status-${u.status==='active'?'completed':'failed'}">${u.status==='active'?'Hoạt Động':'Đã Khóa'}</span></td>
+      <td style="font-size:0.8rem;">${fmtDate(u.createdAt).split(' ')[0]}</td>
       <td>
         <button class="btn btn-sm btn-outline" onclick="editUserModal(${u.id})"><i class="fas fa-edit"></i></button>
         <button class="btn btn-sm btn-warning" onclick="addBalanceModal(${u.id})" style="margin-left:4px;"><i class="fas fa-plus"></i> Tiền</button>
+        <button class="btn btn-sm btn-primary" onclick="changeUserPasswordModal(${u.id})" style="margin-left:4px;"><i class="fas fa-key"></i> Đổi MK</button>
         <button class="btn btn-sm ${u.status==='active'?'btn-danger':'btn-success'}" onclick="toggleUserStatus(${u.id})" style="margin-left:4px;">${u.status==='active'?'Khóa':'Mở'}</button>
       </td>
     </tr>`).join('');
@@ -1783,10 +1968,29 @@ function addUser() {
   const pass = document.getElementById('nuPass').value;
   const role = document.getElementById('nuRole').value;
   const balance = parseFloat(document.getElementById('nuBalance').value) || 0;
+  
   if (!username || !email || !pass) { showNotif('Điền đầy đủ thông tin','error'); return; }
+  
   const users = DB.get('users') || [];
   if (users.find(u=>u.username===username)) { showNotif('Username đã tồn tại','error'); return; }
-  users.push({id:Date.now(), username, email, password:hashPass(pass), role, balance, totalSpent:0, apiKey:genKey(), status:'active', avatar:null, createdAt:new Date().toISOString()});
+  if (users.find(u=>u.email===email)) { showNotif('Email đã tồn tại','error'); return; }
+  
+  users.push({
+    id:Date.now(), 
+    username, 
+    email, 
+    password:hashPass(pass), 
+    role, 
+    balance, 
+    totalSpent:0, 
+    apiKey:genKey(), 
+    status:'active', 
+    avatar:null, 
+    createdAt:new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    ip: '127.0.0.1'
+  });
+  
   DB.set('users', users);
   closeModal();
   loadAdminUsers();
@@ -1799,6 +2003,7 @@ function editUserModal(userId) {
   const users = DB.get('users') || [];
   const u = users.find(x=>x.id===userId);
   if (!u) return;
+  
   showModal('Chỉnh Sửa User: ' + u.username, `
     <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="euEmail" value="${u.email}"></div>
     <div class="form-group"><label class="form-label">Role</label>
@@ -1807,7 +2012,6 @@ function editUserModal(userId) {
         <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
       </select>
     </div>
-    <div class="form-group"><label class="form-label">Mật Khẩu Mới (để trống nếu không đổi)</label><input type="password" class="form-control" id="euPass"></div>
     <button class="btn btn-primary" style="width:100%;" onclick="saveEditUser(${userId})">Lưu</button>
   `);
 }
@@ -1817,12 +2021,41 @@ function saveEditUser(userId) {
   const idx = users.findIndex(u=>u.id===userId);
   users[idx].email = document.getElementById('euEmail').value;
   users[idx].role = document.getElementById('euRole').value;
-  const newPass = document.getElementById('euPass').value;
-  if (newPass) users[idx].password = hashPass(newPass);
   DB.set('users', users);
   closeModal();
   loadAdminUsers();
   showNotif('Cập nhật user thành công!');
+}
+
+function changeUserPasswordModal(userId) {
+  if (currentUser.role !== 'admin') return;
+  
+  const users = DB.get('users') || [];
+  const u = users.find(x=>x.id===userId);
+  
+  showModal('Đổi Mật Khẩu cho ' + u.username, `
+    <div class="form-group"><label class="form-label">Mật Khẩu Mới</label><input type="password" class="form-control" id="newUserPass"></div>
+    <div class="form-group"><label class="form-label">Xác Nhận Mật Khẩu</label><input type="password" class="form-control" id="confirmUserPass"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="saveUserPassword(${userId})">Đổi Mật Khẩu</button>
+  `);
+}
+
+function saveUserPassword(userId) {
+  const newPass = document.getElementById('newUserPass').value;
+  const confirmPass = document.getElementById('confirmUserPass').value;
+  
+  if (!newPass || !confirmPass) { showNotif('Vui lòng điền đầy đủ','error'); return; }
+  if (newPass !== confirmPass) { showNotif('Mật khẩu không khớp','error'); return; }
+  if (newPass.length < 6) { showNotif('Mật khẩu tối thiểu 6 ký tự','error'); return; }
+  
+  const users = DB.get('users') || [];
+  const idx = users.findIndex(u => u.id === userId);
+  users[idx].password = hashPass(newPass);
+  DB.set('users', users);
+  
+  closeModal();
+  loadAdminUsers();
+  showNotif('Đổi mật khẩu thành công!');
 }
 
 function addBalanceModal(userId) {
@@ -1830,6 +2063,7 @@ function addBalanceModal(userId) {
   
   const users = DB.get('users') || [];
   const u = users.find(x=>x.id===userId);
+  
   showModal('Cộng Tiền: ' + u.username, `
     <div class="stat-card" style="margin-bottom:16px;">
       <div class="stat-icon green"><i class="fas fa-wallet"></i></div>
@@ -1845,11 +2079,13 @@ function saveAddBalance(userId) {
   const amount = parseFloat(document.getElementById('abAmount').value);
   const note = document.getElementById('abNote').value || 'Admin cộng tiền';
   if (!amount) { showNotif('Nhập số tiền','error'); return; }
+  
   const users = DB.get('users') || [];
   const idx = users.findIndex(u=>u.id===userId);
   users[idx].balance += amount;
   if (users[idx].balance < 0) users[idx].balance = 0;
   DB.set('users', users);
+  
   addTransaction(userId, 'deposit', amount, note, 'completed');
   closeModal();
   loadAdminUsers();
@@ -2113,25 +2349,34 @@ function loadAdminPayments(filter = 'all') {
   let payments = DB.get('payments') || [];
   if (filter !== 'all') payments = payments.filter(p => p.status === filter);
   payments = payments.reverse();
+  
   document.getElementById('adminPaymentsTable').innerHTML = payments.length ? payments.map(p=>`
     <tr>
       <td style="font-size:0.8rem;">${p.id}</td>
       <td>${p.username}</td>
       <td style="font-weight:700;color:var(--success);">${fmtMoney(p.amount)}</td>
-      <td><code style="background:var(--bg3);padding:3px 8px;border-radius:4px;">${p.bankCode||p.note}</code></td>
-      <td><span class="status-badge status-${p.status==='completed'?'completed':p.status==='pending'?'pending':'failed'}">${p.status==='completed'?'Đã Duyệt':p.status==='pending'?'Chờ Duyệt':'Từ Chối'}</span></td>
+      <td><code style="background:var(--bg3);padding:3px 8px;border-radius:4px;">${p.note}</code></td>
+      <td><span class="status-badge status-${p.status}">${statusLabel(p.status)}</span></td>
       <td style="font-size:0.82rem;">${fmtDate(p.createdAt)}</td>
-      <td>${p.status==='pending'?`<button class="btn btn-sm btn-success" onclick="approvePayment('${p.id}')">Duyệt</button> <button class="btn btn-sm btn-danger" onclick="rejectPayment('${p.id}')" style="margin-left:4px;">Từ Chối</button>`:'--'}</td>
-    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
+      <td>
+        ${p.status === 'pending' ? `
+          <button class="btn btn-sm btn-success" onclick="approvePayment('${p.id}')">Duyệt</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectPayment('${p.id}')" style="margin-left:4px;">Từ Chối</button>
+        ` : '--'}
+      </td>
+      <td>${p.autoApprove ? '<span class="badge-success">Tự động</span>' : ''}</td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
 }
 
 function filterPayments(f) { loadAdminPayments(f); }
 
-function approvePayment(pid) {
+function approvePayment(pid, auto = false) {
   const payments = DB.get('payments') || [];
   const idx = payments.findIndex(p=>p.id===pid);
   if (idx === -1) return;
+  
   payments[idx].status = 'completed';
+  if (auto) payments[idx].autoApprove = true;
   DB.set('payments', payments);
   
   const users = DB.get('users') || [];
@@ -2144,7 +2389,11 @@ function approvePayment(pid) {
     settings.fund = (settings.fund || 0) + payments[idx].amount;
     DB.set('settings', settings);
     
-    showServerNotification(`💰 Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`, 'success');
+    const message = auto ? 
+      `💰 Hệ thống tự động duyệt nạp ${fmtMoney(payments[idx].amount)}` : 
+      `💰 Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`;
+    
+    showServerNotification(message, 'success');
   }
   
   const transactions = DB.get('transactions') || [];
@@ -2153,7 +2402,12 @@ function approvePayment(pid) {
   DB.set('transactions', transactions);
   
   loadAdminPayments();
-  showNotif(`Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`);
+  
+  const msg = auto ? 
+    `Tự động duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!` : 
+    `Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`;
+  
+  showNotif(msg, 'success');
 }
 
 function rejectPayment(pid) {
@@ -2163,12 +2417,14 @@ function rejectPayment(pid) {
     payments[idx].status = 'failed'; 
     DB.set('payments', payments); 
   }
+  
   const transactions = DB.get('transactions') || [];
   const tidx = transactions.findIndex(t=>t.id===pid);
   if (tidx !== -1) { 
     transactions[tidx].status = 'failed'; 
     DB.set('transactions', transactions); 
   }
+  
   loadAdminPayments();
   showNotif('Đã từ chối giao dịch','error');
 }
@@ -2183,6 +2439,7 @@ function loadAdminSettings() {
   document.getElementById('siteName').value = settings.siteName || 'XuHuongVN';
   document.getElementById('minBalance').value = settings.minBalance || 1000;
   document.getElementById('minDeposit').value = settings.minDeposit || 2000;
+  document.getElementById('autoApproveTime').value = settings.autoApproveTime || 5;
 }
 
 function saveSettings() {
@@ -2190,6 +2447,7 @@ function saveSettings() {
   settings.siteName = document.getElementById('siteName').value;
   settings.minBalance = parseFloat(document.getElementById('minBalance').value);
   settings.minDeposit = parseFloat(document.getElementById('minDeposit').value);
+  settings.autoApproveTime = parseFloat(document.getElementById('autoApproveTime').value);
   DB.set('settings', settings);
   showNotif('Đã lưu cài đặt!');
 }
