@@ -233,7 +233,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 /* QR CODE */
 .qr-box{background:var(--bg3);border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;}
-.qr-box img{width:180px;height:180px;border-radius:8px;object-fit:contain;}
+.qr-box img{width:200px;height:200px;border-radius:8px;object-fit:contain;}
 .bank-info{background:var(--bg3);border-radius:10px;padding:16px;margin-top:16px;}
 .bank-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
 .bank-info-row:last-child{border-bottom:none;}
@@ -303,15 +303,17 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .chat-toggle{position:fixed;bottom:20px;right:20px;width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9996;}
 .chat-toggle i{color:#fff;font-size:1.2rem;}
 
-/* BANK ACCOUNT LIST */
-.bank-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px;}
-.bank-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.3s;}
-.bank-item:hover{border-color:var(--primary);transform:translateY(-2px);}
-.bank-item.selected{background:rgba(26,115,232,.2);border-color:var(--primary);}
-.bank-name{font-weight:700;color:var(--primary);margin-bottom:4px;}
-.bank-number{font-size:0.85rem;color:var(--text);}
-.bank-holder{font-size:0.8rem;color:var(--text2);}
-.bank-qr{max-width:100%;height:auto;margin-top:8px;border-radius:4px;}
+/* BANK INFO */
+.bank-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:2px solid var(--primary);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.bank-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(26,115,232,0.2) 0%,transparent 70%);animation:rotate 10s linear infinite;}
+@keyframes rotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.bank-card .bank-name{font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:8px;}
+.bank-card .bank-detail{display:flex;justify-content:space-between;align-items:center;margin:16px 0;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;}
+.bank-card .bank-number{font-size:1.2rem;font-weight:700;color:var(--gold);letter-spacing:2px;}
+.bank-card .bank-holder{font-size:1rem;color:var(--text2);}
+.bank-card .bank-branch{color:var(--text2);margin-bottom:8px;}
+.bank-card .qr-code{text-align:center;margin-top:16px;}
+.bank-card .qr-code img{max-width:200px;border:4px solid var(--primary);border-radius:12px;}
 
 /* ORDER DETAIL MODAL */
 .order-detail{padding:16px;}
@@ -415,12 +417,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
     <div class="marquee-wrap">
       <div class="marquee" id="marquee">
-        <span><i class="fas fa-check-circle"></i> user***123 đã mua 1000 Follow TikTok</span>
-        <span><i class="fas fa-check-circle"></i> nguyen***abc đã nạp 500,000đ</span>
-        <span><i class="fas fa-check-circle"></i> tran***xyz đã mua 5000 Like Facebook</span>
-        <span><i class="fas fa-check-circle"></i> minh***99 đã mua 2000 View YouTube</span>
-        <span><i class="fas fa-check-circle"></i> le***vip đã mua 3000 Follow Instagram</span>
-        <span><i class="fas fa-check-circle"></i> hung***pro đã nạp 1,000,000đ</span>
         <span><i class="fas fa-check-circle"></i> user***123 đã mua 1000 Follow TikTok</span>
         <span><i class="fas fa-check-circle"></i> nguyen***abc đã nạp 500,000đ</span>
         <span><i class="fas fa-check-circle"></i> tran***xyz đã mua 5000 Like Facebook</span>
@@ -536,7 +532,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <div class="sidebar-item" onclick="showPage('admin-orders')"><i class="fas fa-shopping-cart"></i> Đơn Hàng</div>
           <div class="sidebar-item" onclick="showPage('admin-services')"><i class="fas fa-cogs"></i> Dịch Vụ</div>
           <div class="sidebar-item" onclick="showPage('admin-payments')"><i class="fas fa-money-bill"></i> Nạp Tiền</div>
-          <div class="sidebar-item" onclick="showPage('admin-bank')"><i class="fas fa-university"></i> Ngân Hàng</div>
           <div class="sidebar-item" onclick="showPage('admin-settings')"><i class="fas fa-sliders-h"></i> Cài Đặt</div>
         </div>
       </div>
@@ -665,8 +660,23 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
           <div class="grid-2">
             <div class="card">
-              <div class="card-title" style="margin-bottom:16px;">Chọn Ngân Hàng</div>
-              <div class="bank-list" id="bankList"></div>
+              <div class="card-title" style="margin-bottom:16px;">Thông Tin Ngân Hàng</div>
+              
+              <div class="bank-card" id="bankInfo">
+                <div class="bank-name">VP Bank</div>
+                <div class="bank-detail">
+                  <span>Số tài khoản:</span>
+                  <span class="bank-number">0969411158</span>
+                </div>
+                <div class="bank-detail">
+                  <span>Chủ tài khoản:</span>
+                  <span class="bank-holder">LÊ TIẾN DŨNG</span>
+                </div>
+                <div class="bank-branch">Chi nhánh: Toàn quốc</div>
+                <div class="qr-code">
+                  <img src="https://sf-static.upanhlaylink.com/img/image_202603013d9fe9465ef3a0de1faee8872fa2f866.jpg" alt="QR Code VP Bank">
+                </div>
+              </div>
               
               <div class="form-group" style="margin-top:16px;">
                 <label class="form-label">Số Tiền Nạp (VNĐ)</label>
@@ -675,11 +685,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
               
               <div id="depositInfo" style="display:none;">
                 <div class="bank-info" id="bankInfoBox"></div>
-                
-                <div class="qr-box" style="margin-top:16px;">
-                  <img id="qrImage" src="" alt="QR Code" style="width:200px;height:200px;">
-                  <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">Quét mã QR để chuyển khoản</p>
-                </div>
               </div>
 
               <button class="btn btn-primary" style="width:100%;margin-top:16px;" onclick="generateDepositCode()"><i class="fas fa-qrcode"></i> Tạo Mã Nạp Tiền</button>
@@ -833,15 +838,6 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
           </div>
         </div>
 
-        <!-- ADMIN BANK -->
-        <div class="page" id="page-admin-bank">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Ngân Hàng</h1>
-            <button class="btn btn-primary btn-sm" onclick="openAddBankModal()"><i class="fas fa-plus"></i> Thêm Ngân Hàng</button>
-          </div>
-          <div id="banksList"></div>
-        </div>
-
         <!-- ADMIN SETTINGS -->
         <div class="page" id="page-admin-settings">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Cài Đặt Hệ Thống</h1>
@@ -962,7 +958,7 @@ const DB = {
   del: (key) => localStorage.removeItem(key)
 };
 
-// INIT DEFAULT DATA
+// INIT DEFAULT DATA - CHỈ MỘT NGÂN HÀNG DUY NHẤT
 function initDB() {
   if (!DB.get('users')) {
     const adminPass = hashPass('admin123');
@@ -991,19 +987,16 @@ function initDB() {
   if (!DB.get('orders')) DB.set('orders', []);
   if (!DB.get('transactions')) DB.set('transactions', []);
   
-  if (!DB.get('banks')) {
-    DB.set('banks', [
-      {id:1, bankName:'Vietcombank', accountNumber:'0123456789', accountName:'LE TIEN DUNG', branch:'Hà Nội', isDefault:true, qrImage:''},
-      {id:2, bankName:'MB Bank', accountNumber:'0373822468', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:3, bankName:'Techcombank', accountNumber:'1234567890', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:4, bankName:'BIDV', accountNumber:'9876543210', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:5, bankName:'Agribank', accountNumber:'4567890123', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:6, bankName:'ACB', accountNumber:'7890123456', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''},
-      {id:7, bankName:'VPBank', accountNumber:'2345678901', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:8, bankName:'TPBank', accountNumber:'3456789012', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
-      {id:9, bankName:'Sacombank', accountNumber:'5678901234', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''},
-      {id:10, bankName:'HDBank', accountNumber:'6789012345', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''}
-    ]);
+  // CHỈ MỘT NGÂN HÀNG DUY NHẤT - VP BANK
+  if (!DB.get('bank')) {
+    DB.set('bank', {
+      id: 1,
+      bankName: 'VP Bank',
+      accountNumber: '0969411158',
+      accountName: 'LÊ TIẾN DŨNG',
+      branch: 'Toàn quốc',
+      qrImage: 'https://sf-static.upanhlaylink.com/img/image_202603013d9fe9465ef3a0de1faee8872fa2f866.jpg'
+    });
   }
   
   if (!DB.get('settings')) {
@@ -1233,7 +1226,7 @@ function showDashboard() {
 
 function showPage(pageId) {
   if (!currentUser && ['dashboard','new-order','orders','deposit','profile','api-keys','history',
-    'admin-dashboard','admin-users','admin-orders','admin-services','admin-payments','admin-bank','admin-settings'].includes(pageId)) {
+    'admin-dashboard','admin-users','admin-orders','admin-services','admin-payments','admin-settings'].includes(pageId)) {
     openLoginModal(); return;
   }
 
@@ -1298,7 +1291,6 @@ function loadPageData(pageId) {
     case 'admin-orders': loadAdminOrders(); break;
     case 'admin-services': loadAdminServices(); break;
     case 'admin-payments': loadAdminPayments(); break;
-    case 'admin-bank': loadAdminBank(); break;
     case 'admin-settings': loadAdminSettings(); break;
   }
 }
@@ -1512,16 +1504,7 @@ function statusLabel(s) {
 // DEPOSIT
 // ============================================================
 function loadDeposit() {
-  const banks = DB.get('banks') || [];
-  const bankList = document.getElementById('bankList');
-  bankList.innerHTML = banks.map(b => `
-    <div class="bank-item" onclick="selectBank(${b.id})">
-      <div class="bank-name">${b.bankName}</div>
-      <div class="bank-number">${b.accountNumber}</div>
-      <div class="bank-holder">${b.accountName}</div>
-      ${b.qrImage ? `<img src="${b.qrImage}" class="bank-qr" alt="QR">` : ''}
-    </div>
-  `).join('');
+  const bank = DB.get('bank'); // CHỈ MỘT NGÂN HÀNG DUY NHẤT
   
   const transactions = (DB.get('transactions')||[]).filter(t => t.userId === currentUser.id && t.type === 'deposit').reverse().slice(0, 10);
   const depEl = document.getElementById('depositHistory');
@@ -1536,22 +1519,10 @@ function loadDeposit() {
   }
 }
 
-let selectedBank = null;
-
-function selectBank(bankId) {
-  const banks = DB.get('banks') || [];
-  selectedBank = banks.find(b => b.id === bankId);
-  document.querySelectorAll('.bank-item').forEach(el => el.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-}
-
 function generateDepositCode() {
-  if (!selectedBank) {
-    showNotif('Vui lòng chọn ngân hàng','error');
-    return;
-  }
-  
+  const bank = DB.get('bank'); // Lấy thông tin ngân hàng duy nhất
   const amount = parseInt(document.getElementById('depositAmount').value);
+  
   if (!amount || amount < 2000) { 
     showNotif('Số tiền tối thiểu 2,000đ','error'); 
     return; 
@@ -1560,21 +1531,12 @@ function generateDepositCode() {
   const code = 'NAP' + currentUser.id + '' + Date.now().toString().slice(-6);
   
   document.getElementById('bankInfoBox').innerHTML = `
-    <div class="bank-info-row"><span style="font-weight:600;">${selectedBank.bankName}</span><span></span></div>
-    <div class="bank-info-row"><span style="color:var(--text2);">Số TK:</span><span style="font-weight:700;">${selectedBank.accountNumber} <button class="copy-btn" onclick="copyText('${selectedBank.accountNumber}')">Copy</button></span></div>
-    <div class="bank-info-row"><span style="color:var(--text2);">Tên TK:</span><span style="font-weight:700;">${selectedBank.accountName}</span></div>
-    <div class="bank-info-row"><span style="color:var(--text2);">Chi Nhánh:</span><span>${selectedBank.branch}</span></div>
+    <div class="bank-info-row"><span style="font-weight:600;">${bank.bankName}</span><span></span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Số TK:</span><span style="font-weight:700;">${bank.accountNumber} <button class="copy-btn" onclick="copyText('${bank.accountNumber}')">Copy</button></span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Tên TK:</span><span style="font-weight:700;">${bank.accountName}</span></div>
+    <div class="bank-info-row"><span style="color:var(--text2);">Chi Nhánh:</span><span>${bank.branch}</span></div>
     <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
-  
-  // Sử dụng QR code từ ngân hàng nếu có, nếu không thì tạo tự động
-  if (selectedBank.qrImage) {
-    document.getElementById('qrImage').src = selectedBank.qrImage;
-  } else {
-    const bankCode = selectedBank.bankName.toLowerCase().replace(' ', '');
-    const qrUrl = `https://img.vietqr.io/image/${bankCode}-${selectedBank.accountNumber}-qr_only.png?amount=${amount}&addInfo=${code}&accountName=${encodeURIComponent(selectedBank.accountName)}`;
-    document.getElementById('qrImage').src = qrUrl;
-  }
   
   document.getElementById('depositInfo').style.display = 'block';
   
@@ -2193,135 +2155,6 @@ function rejectPayment(pid) {
   }
   loadAdminPayments();
   showNotif('Đã từ chối giao dịch','error');
-}
-
-// ============================================================
-// ADMIN - BANK
-// ============================================================
-function loadAdminBank() {
-  if (currentUser.role !== 'admin') return;
-  
-  const banks = DB.get('banks') || [];
-  document.getElementById('banksList').innerHTML = banks.length ? banks.map(b=>`
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:start;">
-        <div>
-          <div style="font-weight:700;font-size:1rem;margin-bottom:8px;">${b.bankName} ${b.isDefault?'<span style="background:var(--gold);color:#000;font-size:0.75rem;padding:2px 8px;border-radius:10px;">Mặc Định</span>':''}</div>
-          <div style="color:var(--text2);font-size:0.88rem;">Số TK: <strong style="color:var(--text);">${b.accountNumber}</strong></div>
-          <div style="color:var(--text2);font-size:0.88rem;">Tên TK: <strong style="color:var(--text);">${b.accountName}</strong></div>
-          <div style="color:var(--text2);font-size:0.88rem;">Chi Nhánh: ${b.branch}</div>
-          ${b.qrImage ? `<img src="${b.qrImage}" style="max-width:100px;margin-top:8px;" alt="QR">` : ''}
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-sm btn-outline" onclick="editBankQR(${b.id})"><i class="fas fa-qrcode"></i> Thêm QR</button>
-          <button class="btn btn-sm btn-outline" onclick="editBankModal(${b.id})"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-sm btn-danger" onclick="deleteBank(${b.id})"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>
-    </div>`).join('') : '<p style="color:var(--text2);">Chưa có ngân hàng nào</p>';
-}
-
-function openAddBankModal() {
-  if (currentUser.role !== 'admin') return;
-  
-  showModal('Thêm Ngân Hàng', `
-    <div class="form-group"><label class="form-label">Tên Ngân Hàng</label><input type="text" class="form-control" id="nbBank" placeholder="VD: MB Bank, Vietcombank..."></div>
-    <div class="form-group"><label class="form-label">Số Tài Khoản</label><input type="text" class="form-control" id="nbAccNum" placeholder="Số tài khoản"></div>
-    <div class="form-group"><label class="form-label">Tên Chủ Tài Khoản</label><input type="text" class="form-control" id="nbAccName" placeholder="Tên chủ TK (viết hoa, không dấu)"></div>
-    <div class="form-group"><label class="form-label">Chi Nhánh</label><input type="text" class="form-control" id="nbBranch" placeholder="VD: Hà Nội"></div>
-    <div class="form-group"><label class="form-label">Link Ảnh QR Code</label><input type="url" class="form-control" id="nbQR" placeholder="https://... (có thể để trống)"></div>
-    <div class="form-group"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="nbDefault"> Đặt làm mặc định</label></div>
-    <button class="btn btn-primary" style="width:100%;" onclick="addBank()">Thêm Ngân Hàng</button>
-  `);
-}
-
-function addBank() {
-  const bankName = document.getElementById('nbBank').value.trim();
-  const accountNumber = document.getElementById('nbAccNum').value.trim();
-  const accountName = document.getElementById('nbAccName').value.trim();
-  const branch = document.getElementById('nbBranch').value.trim() || 'Toàn Quốc';
-  const qrImage = document.getElementById('nbQR').value.trim();
-  const isDefault = document.getElementById('nbDefault').checked;
-  
-  if (!bankName || !accountNumber || !accountName) { showNotif('Điền đầy đủ','error'); return; }
-  
-  const banks = DB.get('banks') || [];
-  if (isDefault) banks.forEach(b => b.isDefault = false);
-  
-  banks.push({
-    id: Date.now(), 
-    bankName, 
-    accountNumber, 
-    accountName, 
-    branch, 
-    status:'active', 
-    isDefault,
-    qrImage: qrImage || ''
-  });
-  
-  DB.set('banks', banks);
-  closeModal();
-  loadAdminBank();
-  showNotif('Thêm ngân hàng thành công!');
-}
-
-function editBankQR(bid) {
-  const banks = DB.get('banks') || [];
-  const b = banks.find(x=>x.id===bid);
-  
-  showModal('Thêm QR Code cho ' + b.bankName, `
-    <div class="form-group">
-      <label class="form-label">Link Ảnh QR Code</label>
-      <input type="url" class="form-control" id="qrLink" value="${b.qrImage || ''}" placeholder="https://...">
-    </div>
-    <div class="qr-box" style="margin-top:16px;">
-      ${b.qrImage ? `<img src="${b.qrImage}" style="max-width:200px;" alt="QR">` : '<p style="color:var(--text2);">Chưa có QR code</p>'}
-    </div>
-    <button class="btn btn-primary" style="width:100%;margin-top:16px;" onclick="saveBankQR(${bid})">Lưu QR Code</button>
-  `);
-}
-
-function saveBankQR(bid) {
-  const banks = DB.get('banks') || [];
-  const idx = banks.findIndex(b=>b.id===bid);
-  banks[idx].qrImage = document.getElementById('qrLink').value;
-  DB.set('banks', banks);
-  closeModal();
-  loadAdminBank();
-  showNotif('Đã cập nhật QR code!');
-}
-
-function editBankModal(bid) {
-  const banks = DB.get('banks') || [];
-  const b = banks.find(x=>x.id===bid);
-  showModal('Chỉnh Sửa Ngân Hàng', `
-    <div class="form-group"><label class="form-label">Tên Ngân Hàng</label><input type="text" class="form-control" id="ebBank" value="${b.bankName}"></div>
-    <div class="form-group"><label class="form-label">Số TK</label><input type="text" class="form-control" id="ebAccNum" value="${b.accountNumber}"></div>
-    <div class="form-group"><label class="form-label">Tên Chủ TK</label><input type="text" class="form-control" id="ebAccName" value="${b.accountName}"></div>
-    <div class="form-group"><label class="form-label">Chi Nhánh</label><input type="text" class="form-control" id="ebBranch" value="${b.branch}"></div>
-    <button class="btn btn-primary" style="width:100%;" onclick="saveEditBank(${bid})">Lưu</button>
-  `);
-}
-
-function saveEditBank(bid) {
-  const banks = DB.get('banks') || [];
-  const idx = banks.findIndex(b=>b.id===bid);
-  banks[idx].bankName = document.getElementById('ebBank').value;
-  banks[idx].accountNumber = document.getElementById('ebAccNum').value;
-  banks[idx].accountName = document.getElementById('ebAccName').value;
-  banks[idx].branch = document.getElementById('ebBranch').value;
-  DB.set('banks', banks);
-  closeModal();
-  loadAdminBank();
-  showNotif('Đã cập nhật ngân hàng!');
-}
-
-function deleteBank(bid) {
-  if (!confirm('Xóa ngân hàng này?')) return;
-  let banks = DB.get('banks') || [];
-  banks = banks.filter(b=>b.id!==bid);
-  DB.set('banks', banks);
-  loadAdminBank();
 }
 
 // ============================================================
