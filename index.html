@@ -304,6 +304,12 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .order-info-row:last-child{border-bottom:none;}
 
 /* CAPTCHA */
+.captcha-container {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
 .captcha-box {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   padding: 15px;
@@ -338,6 +344,39 @@ tr:hover td{background:rgba(255,255,255,.02);}
 }
 .captcha-refresh:hover {
   color: var(--secondary);
+}
+
+/* AUTO REFRESH INDICATOR */
+.auto-refresh {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: var(--success);
+  border-radius: 50%;
+  margin-left: 8px;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* REAL-TIME UPDATE BADGE */
+.realtime-badge {
+  display: inline-block;
+  background: var(--success);
+  color: #000;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  animation: blink 2s infinite;
+}
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 /* RESPONSIVE */
@@ -545,12 +584,12 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <div class="sidebar-item" onclick="showPage('api-keys')"><i class="fas fa-key"></i> API Key</div>
         </div>
         <div class="sidebar-section" id="adminSidebarSection" style="display:none;">
-          <div class="sidebar-title">Quản Trị</div>
+          <div class="sidebar-title">Quản Trị <span class="realtime-badge">Live</span></div>
           <div class="sidebar-item" onclick="showPage('admin-dashboard')"><i class="fas fa-chart-line"></i> Tổng Quan</div>
-          <div class="sidebar-item" onclick="showPage('admin-users')"><i class="fas fa-users"></i> Người Dùng</div>
+          <div class="sidebar-item" onclick="showPage('admin-users')"><i class="fas fa-users"></i> Người Dùng <span class="badge" id="adminUsersBadge">0</span></div>
           <div class="sidebar-item" onclick="showPage('admin-orders')"><i class="fas fa-shopping-cart"></i> Đơn Hàng</div>
           <div class="sidebar-item" onclick="showPage('admin-services')"><i class="fas fa-cogs"></i> Dịch Vụ</div>
-          <div class="sidebar-item" onclick="showPage('admin-payments')"><i class="fas fa-money-bill"></i> Nạp Tiền</div>
+          <div class="sidebar-item" onclick="showPage('admin-payments')"><i class="fas fa-money-bill"></i> Nạp Tiền <span class="badge badge-warning" id="pendingPaymentsBadge">0</span></div>
           <div class="sidebar-item" onclick="showPage('admin-settings')"><i class="fas fa-sliders-h"></i> Cài Đặt</div>
         </div>
       </div>
@@ -769,7 +808,10 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
 
         <!-- ADMIN DASHBOARD -->
         <div class="page" id="page-admin-dashboard">
-          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Trị - Tổng Quan</h1>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Trị - Tổng Quan</h1>
+            <div class="auto-refresh" title="Tự động cập nhật mỗi 3 giây"></div>
+          </div>
           <div class="grid-4">
             <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-card-info"><h3 id="adminTotalUsers">0</h3><p>Tổng Users</p></div></div>
             <div class="stat-card"><div class="stat-icon green"><i class="fas fa-shopping-cart"></i></div><div class="stat-card-info"><h3 id="adminTotalOrders">0</h3><p>Tổng Đơn</p></div></div>
@@ -782,7 +824,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
               <div id="adminPendingOrders"></div>
             </div>
             <div class="card">
-              <div class="card-header"><div class="card-title">Nạp Tiền Chờ Duyệt</div></div>
+              <div class="card-header"><div class="card-title">Nạp Tiền Chờ Duyệt <span class="badge badge-warning" id="pendingPaymentsCount">0</span></div></div>
               <div id="adminPendingPayments"></div>
             </div>
           </div>
@@ -790,9 +832,9 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
 
         <!-- ADMIN USERS - HIỆN TẤT CẢ TÀI KHOẢN KHÁCH HÀNG -->
         <div class="page" id="page-admin-users">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
             <h1 style="font-size:1.4rem;font-weight:800;">Danh Sách Người Dùng (Tổng: <span id="totalUsersCount">0</span>)</h1>
-            <button class="btn btn-primary btn-sm" onclick="openAddUserModal()"><i class="fas fa-user-plus"></i> Thêm User</button>
+            <div class="auto-refresh" title="Tự động cập nhật mỗi 3 giây"></div>
           </div>
           <div class="card">
             <div class="form-group">
@@ -821,7 +863,10 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
 
         <!-- ADMIN ORDERS - HIỆN TẤT CẢ ĐƠN HÀNG -->
         <div class="page" id="page-admin-orders">
-          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Đơn Hàng (Tổng: <span id="totalOrdersCount">0</span>)</h1>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Đơn Hàng (Tổng: <span id="totalOrdersCount">0</span>)</h1>
+            <div class="auto-refresh" title="Tự động cập nhật mỗi 3 giây"></div>
+          </div>
           <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
             <button class="btn btn-primary btn-sm" onclick="filterAdminOrders('all')">Tất Cả</button>
             <button class="btn btn-outline btn-sm" onclick="filterAdminOrders('pending')">Chờ Duyệt</button>
@@ -878,7 +923,10 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
 
         <!-- ADMIN PAYMENTS - HIỆN TẤT CẢ YÊU CẦU NẠP TIỀN -->
         <div class="page" id="page-admin-payments">
-          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Nạp Tiền (Tổng: <span id="totalPaymentsCount">0</span>)</h1>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h1 style="font-size:1.4rem;font-weight:800;">Quản Lý Nạp Tiền (Tổng: <span id="totalPaymentsCount">0</span>)</h1>
+            <div class="auto-refresh" title="Tự động cập nhật mỗi 3 giây"></div>
+          </div>
           <div class="card">
             <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
               <button class="btn btn-primary btn-sm" onclick="filterPayments('all')">Tất Cả</button>
@@ -913,6 +961,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
               <div class="form-group"><label class="form-label">Tên Website</label><input type="text" class="form-control" id="siteName" value="XuHuongVN"></div>
               <div class="form-group"><label class="form-label">Số Dư Tối Thiểu Đặt Hàng</label><input type="number" class="form-control" id="minBalance" value="1000"></div>
               <div class="form-group"><label class="form-label">Nạp Tiền Tối Thiểu</label><input type="number" class="form-control" id="minDeposit" value="2000"></div>
+              <div class="form-group"><label class="form-label">Tốc Độ Cập Nhật (giây)</label><input type="number" class="form-control" id="refreshRate" value="3" min="1" max="10"></div>
               <button class="btn btn-primary" onclick="saveSettings()">Lưu Cài Đặt</button>
             </div>
           </div>
@@ -1031,13 +1080,16 @@ const DB = {
   del: (key) => localStorage.removeItem(key)
 };
 
+// ADMIN ID CỐ ĐỊNH - KHÔNG THAY ĐỔI
+const ADMIN_ID = 1;
+
 // INIT DEFAULT DATA - CHỈ MỘT ADMIN DUY NHẤT
 function initDB() {
-  // Tạo tài khoản admin duy nhất nếu chưa có
+  // Tạo tài khoản admin duy nhất nếu chưa có - KHÔNG BAO GIỜ RESET
   if (!DB.get('users')) {
     const adminPass = hashPass('admin123');
     DB.set('users', [{
-      id: 1, 
+      id: ADMIN_ID, 
       username: 'admin', 
       email: 'admin@xuhuongvn.com', 
       password: adminPass,
@@ -1051,6 +1103,30 @@ function initDB() {
       lastLogin: new Date().toISOString(),
       ip: '127.0.0.1'
     }]);
+  } else {
+    // ĐẢM BẢO ADMIN LUÔN TỒN TẠI VỚI ID CỐ ĐỊNH
+    const users = DB.get('users') || [];
+    const adminExists = users.some(u => u.id === ADMIN_ID);
+    
+    if (!adminExists) {
+      const adminPass = hashPass('admin123');
+      users.push({
+        id: ADMIN_ID,
+        username: 'admin',
+        email: 'admin@xuhuongvn.com',
+        password: adminPass,
+        role: 'admin',
+        balance: 5000000,
+        totalSpent: 0,
+        apiKey: genKey(),
+        status: 'active',
+        avatar: null,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        ip: '127.0.0.1'
+      });
+      DB.set('users', users);
+    }
   }
   
   if (!DB.get('services')) {
@@ -1090,7 +1166,8 @@ function initDB() {
       siteName:'XuHuongVN', 
       minBalance:1000, 
       minDeposit:2000, 
-      fund:5000000
+      fund:5000000,
+      refreshRate: 3
     });
   }
 }
@@ -1108,6 +1185,94 @@ function genKey() { return 'sk_' + Math.random().toString(36).substr(2,32); }
 function genOrderId() { return 'ORD' + Date.now() + Math.floor(Math.random()*1000); }
 function fmtMoney(n) { return Number(n).toLocaleString('vi-VN') + 'đ'; }
 function fmtDate(d) { return new Date(d).toLocaleString('vi-VN'); }
+
+// ============================================================
+// AUTO REFRESH - CẬP NHẬT LIÊN TỤC - THỜI GIAN THỰC
+// ============================================================
+let autoRefreshInterval = null;
+let lastUpdate = Date.now();
+
+function startAutoRefresh() {
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  
+  const settings = DB.get('settings') || {};
+  const refreshRate = (settings.refreshRate || 3) * 1000;
+  
+  autoRefreshInterval = setInterval(() => {
+    if (currentUser && currentUser.role === 'admin') {
+      // Kiểm tra xem có dữ liệu mới không
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastUpdate;
+      
+      // Cập nhật tất cả dữ liệu admin
+      const currentPage = document.querySelector('#mainContent .page.active')?.id;
+      
+      if (currentPage === 'page-admin-dashboard') {
+        loadAdminDashboard();
+      } else if (currentPage === 'page-admin-users') {
+        loadAdminUsers();
+      } else if (currentPage === 'page-admin-orders') {
+        loadAdminOrders();
+      } else if (currentPage === 'page-admin-payments') {
+        loadAdminPayments();
+      }
+      
+      // Cập nhật badge
+      updatePendingBadges();
+      
+      // Hiển thị thông báo nếu có đơn mới
+      checkForNewData();
+      
+      lastUpdate = currentTime;
+    }
+  }, refreshRate);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+}
+
+function checkForNewData() {
+  const payments = DB.get('payments') || [];
+  const orders = DB.get('orders') || [];
+  
+  const newPayments = payments.filter(p => p.status === 'pending' && new Date(p.createdAt) > new Date(lastUpdate));
+  const newOrders = orders.filter(o => o.status === 'pending' && new Date(o.createdAt) > new Date(lastUpdate));
+  
+  if (newPayments.length > 0) {
+    showServerNotification(`💰 Có ${newPayments.length} yêu cầu nạp tiền mới!`, 'info');
+  }
+  
+  if (newOrders.length > 0) {
+    showServerNotification(`📦 Có ${newOrders.length} đơn hàng mới!`, 'info');
+  }
+}
+
+function updatePendingBadges() {
+  const payments = DB.get('payments') || [];
+  const pendingCount = payments.filter(p => p.status === 'pending').length;
+  
+  const badge = document.getElementById('pendingPaymentsBadge');
+  if (badge) {
+    badge.textContent = pendingCount;
+    badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+  }
+  
+  const countSpan = document.getElementById('pendingPaymentsCount');
+  if (countSpan) {
+    countSpan.textContent = pendingCount;
+  }
+  
+  const users = DB.get('users') || [];
+  const userCount = users.filter(u => u.role !== 'admin').length;
+  const usersBadge = document.getElementById('adminUsersBadge');
+  if (usersBadge) {
+    usersBadge.textContent = userCount;
+  }
+}
 
 // ============================================================
 // CAPTCHA
@@ -1210,6 +1375,12 @@ function doLogin() {
   closeModal();
   showDashboard();
   showNotif('Đăng nhập thành công! Xin chào ' + user.username);
+  
+  // Bắt đầu auto refresh nếu là admin
+  if (user.role === 'admin') {
+    startAutoRefresh();
+    updatePendingBadges();
+  }
 }
 
 function doRegister() {
@@ -1269,11 +1440,15 @@ function doRegister() {
   closeModal();
   showDashboard();
   showNotif('Đăng ký thành công! Chào mừng ' + username);
+  
+  // Cập nhật badge cho admin
+  updatePendingBadges();
 }
 
 function logout() {
   currentUser = null;
   DB.del('session');
+  stopAutoRefresh();
   showLanding();
   showNotif('Đã đăng xuất','info');
 }
@@ -1286,6 +1461,13 @@ function checkSession() {
     if (user) { 
       currentUser = user; 
       showDashboard(); 
+      
+      // Bắt đầu auto refresh nếu là admin
+      if (user.role === 'admin') {
+        startAutoRefresh();
+        updatePendingBadges();
+      }
+      
       return; 
     }
   }
@@ -1403,6 +1585,7 @@ function showDashboard() {
   // CHỈ HIỂN THỊ QUYỀN ADMIN NẾU LÀ ADMIN
   if (currentUser.role === 'admin') {
     document.getElementById('adminSidebarSection').style.display = 'block';
+    updatePendingBadges();
   } else {
     document.getElementById('adminSidebarSection').style.display = 'none';
   }
@@ -1639,6 +1822,9 @@ function placeOrder() {
   // GỬI THÔNG BÁO CHO ADMIN DUY NHẤT
   showServerNotification(`📦 Đơn hàng mới từ ${currentUser.username}: ${service.name} - ${qty.toLocaleString()} - ${fmtMoney(total)}`, 'info');
   
+  // Cập nhật badge cho admin
+  updatePendingBadges();
+  
   document.getElementById('orderLink').value = '';
   document.getElementById('orderQty').value = '';
   document.getElementById('priceCalcBox').style.display = 'none';
@@ -1754,6 +1940,9 @@ function generateDepositCode() {
   
   // GỬI THÔNG BÁO CHO ADMIN DUY NHẤT
   showServerNotification(`💰 Yêu cầu nạp tiền từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
+  
+  // Cập nhật badge cho admin
+  updatePendingBadges();
   
   showNotif('Đã tạo mã nạp tiền: ' + code + ' - Vui lòng chờ admin duyệt!','info');
 }
@@ -1909,10 +2098,12 @@ function loadAdminDashboard() {
       <span style="color:var(--warning);">${p.note}</span>
     </div>
   `).join('') : '<p style="color:var(--text2);">Không có nạp tiền chờ</p>';
+  
+  updatePendingBadges();
 }
 
 // ============================================================
-// ADMIN - USERS - HIỆN TẤT CẢ TÀI KHOẢN
+// ADMIN - USERS - HIỆN TẤT CẢ TÀI KHOẢN KHÁCH HÀNG - CẬP NHẬT THỜI GIAN THỰC
 // ============================================================
 function loadAdminUsers(filter = '') {
   if (currentUser.role !== 'admin') return;
@@ -1930,7 +2121,7 @@ function loadAdminUsers(filter = '') {
       <td style="color:var(--success);font-weight:700;">${fmtMoney(u.balance)}</td>
       <td><span style="color:${u.role === 'admin' ? 'var(--gold)' : 'var(--primary)'};">${u.role.toUpperCase()}</span></td>
       <td><span class="status-badge status-${u.status === 'active' ? 'completed' : 'failed'}">${u.status === 'active' ? 'Hoạt Động' : 'Đã Khóa'}</span></td>
-      <td style="font-size:0.8rem;">${fmtDate(u.createdAt).split(' ')[0]}</td>
+      <td style="font-size:0.8rem;">${fmtDate(u.createdAt).split(' ')[0]}<br><small>${fmtDate(u.createdAt).split(' ')[1]}</small></td>
       <td style="font-size:0.8rem;">${u.ip || 'N/A'}</td>
       <td>
         <button class="btn btn-sm btn-outline" onclick="editUserModal(${u.id})"><i class="fas fa-edit"></i></button>
@@ -1955,7 +2146,7 @@ function openAddUserModal() {
     <div class="form-row">
       <div class="form-group"><label class="form-label">Mật Khẩu</label><input type="password" class="form-control" id="nuPass"></div>
       <div class="form-group"><label class="form-label">Role</label>
-        <select class="form-control" id="nuRole"><option value="user">User</option><option value="admin">Admin</option></select>
+        <select class="form-control" id="nuRole"><option value="user">User</option><option value="admin">Admin (Không nên tạo thêm admin)</option></select>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Số Dư Ban Đầu</label><input type="number" class="form-control" id="nuBalance" value="0"></div>
@@ -1995,6 +2186,7 @@ function addUser() {
   DB.set('users', users);
   closeModal();
   loadAdminUsers();
+  updatePendingBadges();
   showNotif('Thêm user thành công!');
 }
 
@@ -2090,6 +2282,7 @@ function saveAddBalance(userId) {
   addTransaction(userId, 'deposit', amount, note, 'completed');
   closeModal();
   loadAdminUsers();
+  updatePendingBadges();
   showNotif('Đã ' + (amount > 0 ? 'cộng' : 'trừ') + ' tiền thành công!');
 }
 
@@ -2099,6 +2292,7 @@ function toggleUserStatus(userId) {
   users[idx].status = users[idx].status === 'active' ? 'banned' : 'active';
   DB.set('users', users);
   loadAdminUsers();
+  updatePendingBadges();
   showNotif('Đã ' + (users[idx].status === 'active' ? 'mở khóa' : 'khóa') + ' tài khoản!');
 }
 
@@ -2164,6 +2358,7 @@ function approveOrder(orderId) {
     }
     
     loadAdminOrders();
+    updatePendingBadges();
     showNotif('Đã duyệt đơn hàng!');
   }
 }
@@ -2198,6 +2393,7 @@ function rejectOrder(orderId) {
     
     showServerNotification(`❌ Đơn hàng #${orderId} đã bị từ chối. Tiền đã được hoàn lại.`, 'error');
     loadAdminOrders();
+    updatePendingBadges();
     showNotif('Đã từ chối đơn hàng và hoàn tiền!');
   }
 }
@@ -2216,6 +2412,7 @@ function completeOrderAdmin(orderId) {
     }
     
     loadAdminOrders();
+    updatePendingBadges();
     showNotif('Đã hoàn thành đơn hàng!');
   }
 }
@@ -2344,7 +2541,7 @@ function deleteService(sid) {
 }
 
 // ============================================================
-// ADMIN - PAYMENTS - HIỆN TẤT CẢ YÊU CẦU NẠP TIỀN
+// ADMIN - PAYMENTS - HIỆN TẤT CẢ YÊU CẦU NẠP TIỀN - CẬP NHẬT THỜI GIAN THỰC
 // ============================================================
 function loadAdminPayments(filter = 'all') {
   if (currentUser.role !== 'admin') return;
@@ -2371,6 +2568,8 @@ function loadAdminPayments(filter = 'all') {
       </td>
     </tr>
   `).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
+  
+  updatePendingBadges();
 }
 
 function filterPayments(f) { loadAdminPayments(f); }
@@ -2402,6 +2601,7 @@ function approvePayment(pid) {
   DB.set('transactions', transactions);
   
   loadAdminPayments();
+  updatePendingBadges();
   showNotif(`Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`, 'success');
 }
 
@@ -2421,6 +2621,7 @@ function rejectPayment(pid) {
   }
   
   loadAdminPayments();
+  updatePendingBadges();
   showNotif('Đã từ chối giao dịch', 'error');
 }
 
@@ -2434,6 +2635,7 @@ function loadAdminSettings() {
   document.getElementById('siteName').value = settings.siteName || 'XuHuongVN';
   document.getElementById('minBalance').value = settings.minBalance || 1000;
   document.getElementById('minDeposit').value = settings.minDeposit || 2000;
+  document.getElementById('refreshRate').value = settings.refreshRate || 3;
 }
 
 function saveSettings() {
@@ -2441,7 +2643,14 @@ function saveSettings() {
   settings.siteName = document.getElementById('siteName').value;
   settings.minBalance = parseFloat(document.getElementById('minBalance').value);
   settings.minDeposit = parseFloat(document.getElementById('minDeposit').value);
+  settings.refreshRate = parseInt(document.getElementById('refreshRate').value);
   DB.set('settings', settings);
+  
+  // Restart auto refresh với tốc độ mới
+  if (currentUser && currentUser.role === 'admin') {
+    startAutoRefresh();
+  }
+  
   showNotif('Đã lưu cài đặt!');
 }
 
@@ -2590,6 +2799,31 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
 
 // Check for existing session
 checkSession();
+
+// Lắng nghe sự kiện storage để đồng bộ giữa các tab
+window.addEventListener('storage', function(e) {
+  if (currentUser && currentUser.role === 'admin') {
+    // Cập nhật dữ liệu khi có thay đổi từ tab khác
+    const currentPage = document.querySelector('#mainContent .page.active')?.id;
+    
+    if (currentPage === 'page-admin-dashboard') {
+      loadAdminDashboard();
+    } else if (currentPage === 'page-admin-users') {
+      loadAdminUsers();
+    } else if (currentPage === 'page-admin-orders') {
+      loadAdminOrders();
+    } else if (currentPage === 'page-admin-payments') {
+      loadAdminPayments();
+    }
+    
+    updatePendingBadges();
+  }
+});
+
+// Dọn dẹp interval khi chuyển trang
+window.addEventListener('beforeunload', function() {
+  stopAutoRefresh();
+});
 </script>
 </body>
 </html>
