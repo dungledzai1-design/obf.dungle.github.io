@@ -234,6 +234,8 @@ tr:hover td{background:rgba(255,255,255,.02);}
 /* QR CODE */
 .qr-box{background:var(--bg3);border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;}
 .qr-box img{width:200px;height:200px;border-radius:8px;object-fit:contain;}
+.qr-box .qr-overlay{position:relative;display:inline-block;}
+.qr-box .qr-code-text{position:absolute;bottom:10px;left:0;right:0;background:rgba(0,0,0,0.7);color:var(--gold);padding:5px;font-size:0.8rem;font-weight:700;text-align:center;}
 .bank-info{background:var(--bg3);border-radius:10px;padding:16px;margin-top:16px;}
 .bank-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
 .bank-info-row:last-child{border-bottom:none;}
@@ -312,8 +314,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .bank-card .bank-number{font-size:1.2rem;font-weight:700;color:var(--gold);letter-spacing:2px;}
 .bank-card .bank-holder{font-size:1rem;color:var(--text2);}
 .bank-card .bank-branch{color:var(--text2);margin-bottom:8px;}
-.bank-card .qr-code{text-align:center;margin-top:16px;}
+.bank-card .qr-code{text-align:center;margin-top:16px;position:relative;}
 .bank-card .qr-code img{max-width:200px;border:4px solid var(--primary);border-radius:12px;}
+.bank-card .qr-code .qr-text{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:var(--gold);padding:4px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;letter-spacing:1px;}
 
 /* ORDER DETAIL MODAL */
 .order-detail{padding:16px;}
@@ -673,8 +676,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
                   <span class="bank-holder">LÊ TIẾN DŨNG</span>
                 </div>
                 <div class="bank-branch">Chi nhánh: Toàn quốc</div>
-                <div class="qr-code">
-                  <img src="https://sf-static.upanhlaylink.com/img/image_202603013d9fe9465ef3a0de1faee8872fa2f866.jpg" alt="QR Code VP Bank">
+                <div class="qr-code" id="qrCodeContainer">
+                  <img id="qrImage" src="https://sf-static.upanhlaylink.com/img/image_202603013d9fe9465ef3a0de1faee8872fa2f866.jpg" alt="QR Code VP Bank">
+                  <div class="qr-text" id="qrCodeText"></div>
                 </div>
               </div>
               
@@ -1501,7 +1505,7 @@ function statusLabel(s) {
 }
 
 // ============================================================
-// DEPOSIT
+// DEPOSIT - TỰ ĐỘNG THÊM MÃ NẠP TIỀN VÀO QR
 // ============================================================
 function loadDeposit() {
   const bank = DB.get('bank'); // CHỈ MỘT NGÂN HÀNG DUY NHẤT
@@ -1538,6 +1542,14 @@ function generateDepositCode() {
     <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
   
+  // TỰ ĐỘNG THÊM MÃ NẠP TIỀN VÀO ẢNH QR
+  const qrImage = document.getElementById('qrImage');
+  const qrText = document.getElementById('qrCodeText');
+  
+  // Giữ nguyên ảnh QR gốc và thêm text overlay
+  qrImage.src = bank.qrImage;
+  qrText.textContent = code;
+  
   document.getElementById('depositInfo').style.display = 'block';
   
   const transaction = {
@@ -1561,10 +1573,10 @@ function generateDepositCode() {
   const users = DB.get('users') || [];
   const adminUsers = users.filter(u => u.role === 'admin');
   adminUsers.forEach(admin => {
-    showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)}`, 'info');
+    showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
   });
   
-  showNotif('Đã tạo mã nạp tiền: ' + code + '. Chuyển khoản đúng nội dung!','info');
+  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Mã đã được thêm vào QR!','info');
 }
 
 // ============================================================
