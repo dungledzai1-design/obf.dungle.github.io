@@ -59,47 +59,6 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
 }
 
-/* CAPTCHA STYLES */
-.captcha-container {
-  background: var(--bg3);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-.captcha-box {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 4px;
-  color: #fff;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  user-select: none;
-  font-family: monospace;
-}
-.captcha-input {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 12px;
-  border-radius: 8px;
-  width: 100%;
-  font-size: 1rem;
-  text-align: center;
-}
-.captcha-refresh {
-  margin-top: 8px;
-  color: var(--primary);
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-.captcha-refresh:hover {
-  color: var(--secondary);
-}
-
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg2);}
@@ -716,7 +675,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="page" id="page-deposit">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Nạp Tiền</h1>
           
-          <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Số tiền nạp tối thiểu: 2,000đ. Nếu quá 5 phút không được duyệt, hệ thống sẽ tự động cộng tiền!</div>
+          <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Số tiền nạp tối thiểu: 2,000đ. Sau khi chuyển khoản, vui lòng chờ admin duyệt (thường trong vòng 24h).</div>
 
           <div class="grid-2">
             <div class="card">
@@ -839,7 +798,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
             <div class="form-group"><input type="text" class="form-control" placeholder="Tìm kiếm user..." oninput="searchUsers(this.value)" style="max-width:300px;"></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Số Dư</th><th>Role</th><th>Trạng Thái</th><th>Ngày Tạo</th><th>Hành Động</th></tr></thead>
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Số Dư</th><th>Role</th><th>Trạng Thái</th><th>Ngày Tạo</th><th>IP</th><th>Hành Động</th></tr></thead>
                 <tbody id="adminUsersTable"></tbody>
               </table>
             </div>
@@ -892,7 +851,7 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Mã GD</th><th>User</th><th>Số Tiền</th><th>Mã Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th><th>Tự Động</th></tr></thead>
+                <thead><tr><th>Mã GD</th><th>User</th><th>Số Tiền</th><th>Mã Nội Dung</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
                 <tbody id="adminPaymentsTable"></tbody>
               </table>
             </div>
@@ -908,7 +867,6 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
               <div class="form-group"><label class="form-label">Tên Website</label><input type="text" class="form-control" id="siteName" value="XuHuongVN"></div>
               <div class="form-group"><label class="form-label">Số Dư Tối Thiểu Đặt Hàng</label><input type="number" class="form-control" id="minBalance" value="1000"></div>
               <div class="form-group"><label class="form-label">Nạp Tiền Tối Thiểu</label><input type="number" class="form-control" id="minDeposit" value="2000"></div>
-              <div class="form-group"><label class="form-label">Thời Gian Tự Động Duyệt (phút)</label><input type="number" class="form-control" id="autoApproveTime" value="5"></div>
               <button class="btn btn-primary" onclick="saveSettings()">Lưu Cài Đặt</button>
             </div>
           </div>
@@ -1077,8 +1035,7 @@ function initDB() {
       siteName:'XuHuongVN', 
       minBalance:1000, 
       minDeposit:2000, 
-      fund:5000000,
-      autoApproveTime: 5 // phút
+      fund:5000000
     });
   }
 }
@@ -1114,7 +1071,10 @@ function generateCaptcha() {
 }
 
 function refreshCaptcha() {
-  document.getElementById('captchaDisplay').textContent = generateCaptcha();
+  const captchaDisplay = document.getElementById('captchaDisplay');
+  if (captchaDisplay) {
+    captchaDisplay.textContent = generateCaptcha();
+  }
 }
 
 // ============================================================
@@ -1147,7 +1107,9 @@ function openRegisterModal() {
     <div id="usernameStatus" style="margin-bottom:10px;font-size:0.85rem;"></div>
     
     <div class="captcha-container">
-      <div class="captcha-box" id="captchaDisplay">${captcha}</div>
+      <div class="captcha-box">
+        <div class="captcha-text" id="captchaDisplay">${captcha}</div>
+      </div>
       <input type="text" class="captcha-input" id="regCaptcha" placeholder="Nhập mã xác nhận">
       <div class="captcha-refresh" onclick="refreshCaptcha()"><i class="fas fa-sync-alt"></i> Tạo mã mới</div>
     </div>
@@ -1671,7 +1633,7 @@ function statusLabel(s) {
 }
 
 // ============================================================
-// DEPOSIT - TỰ ĐỘNG TẠO QR VỚI MÃ NẠP TIỀN
+// DEPOSIT - TẠO MÃ NẠP TIỀN HIỆN TÊN USER
 // ============================================================
 function loadDeposit() {
   const bank = DB.get('bank'); // CHỈ MỘT NGÂN HÀNG DUY NHẤT
@@ -1708,7 +1670,7 @@ function generateDepositCode() {
     <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
   
-  // TẠO QR CODE VỚI MÃ NẠP TIỀN TỰ ĐỘNG ĐIỀN VÀO NỘI DUNG CHUYỂN KHOẢN
+  // TẠO QR CODE VỚI MÃ NẠP TIỀN
   const bankCode = 'VPB'; // Mã ngân hàng VP Bank
   const qrUrl = `https://img.vietqr.io/image/${bankCode}-${bank.accountNumber}-compact.png?amount=${amount}&addInfo=${encodeURIComponent(code)}&accountName=${encodeURIComponent(bank.accountName)}`;
   
@@ -1738,27 +1700,14 @@ function generateDepositCode() {
   payments.push(transaction);
   DB.set('payments', payments);
   
-  // Thông báo cho admin
-  const users = DB.get('users') || [];
-  const adminUsers = users.filter(u => u.role === 'admin');
+  // GỬI THÔNG BÁO CHO ADMIN - HIỆN TÊN USER
+  const allUsers = DB.get('users') || [];
+  const adminUsers = allUsers.filter(u => u.role === 'admin');
   adminUsers.forEach(admin => {
-    showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
+    showServerNotification(`💰 Yêu cầu nạp tiền từ ${currentUser.username}: ${fmtMoney(amount)} - Mã: ${code}`, 'info');
   });
   
-  // TỰ ĐỘNG DUYỆT SAU 5 PHÚT NẾU ADMIN KHÔNG DUYỆT
-  const settings = DB.get('settings') || {};
-  const autoApproveTime = (settings.autoApproveTime || 5) * 60 * 1000; // Convert to milliseconds
-  
-  setTimeout(() => {
-    const currentPayments = DB.get('payments') || [];
-    const payment = currentPayments.find(p => p.id === transaction.id);
-    
-    if (payment && payment.status === 'pending') {
-      approvePayment(transaction.id, true); // true = auto approve
-    }
-  }, autoApproveTime);
-  
-  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Hệ thống sẽ tự động duyệt sau 5 phút nếu admin không duyệt!','info');
+  showNotif('Đã tạo mã nạp tiền: ' + code + ' - Vui lòng chờ admin duyệt!','info');
 }
 
 // ============================================================
@@ -1904,7 +1853,7 @@ function loadAdminDashboard() {
     </div>
   `).join('') : '<p style="color:var(--text2);">Không có đơn chờ</p>';
   
-  // Nạp tiền chờ duyệt
+  // Nạp tiền chờ duyệt - HIỆN TÊN USER
   const pendingPayments = payments.filter(p => p.status === 'pending').reverse().slice(0, 5);
   document.getElementById('adminPendingPayments').innerHTML = pendingPayments.length ? pendingPayments.map(p => `
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
@@ -1915,7 +1864,7 @@ function loadAdminDashboard() {
 }
 
 // ============================================================
-// ADMIN - USERS
+// ADMIN - USERS - HIỆN TẤT CẢ TÀI KHOẢN
 // ============================================================
 function loadAdminUsers(filter = '') {
   if (currentUser.role !== 'admin') return;
@@ -1932,6 +1881,7 @@ function loadAdminUsers(filter = '') {
       <td><span style="color:${u.role==='admin'?'var(--gold)':'var(--primary)'};">${u.role.toUpperCase()}</span></td>
       <td><span class="status-badge status-${u.status==='active'?'completed':'failed'}">${u.status==='active'?'Hoạt Động':'Đã Khóa'}</span></td>
       <td style="font-size:0.8rem;">${fmtDate(u.createdAt).split(' ')[0]}</td>
+      <td style="font-size:0.8rem;">${u.ip || 'N/A'}</td>
       <td>
         <button class="btn btn-sm btn-outline" onclick="editUserModal(${u.id})"><i class="fas fa-edit"></i></button>
         <button class="btn btn-sm btn-warning" onclick="addBalanceModal(${u.id})" style="margin-left:4px;"><i class="fas fa-plus"></i> Tiền</button>
@@ -2123,7 +2073,7 @@ function loadAdminOrders() {
   document.getElementById('adminOrdersTable').innerHTML = orders.length ? orders.map(o=>`
     <tr>
       <td style="font-size:0.8rem;">${o.id}</td>
-      <td>${o.username}</td>
+      <td><strong>${o.username}</strong></td>
       <td style="font-size:0.85rem;">${o.serviceName}</td>
       <td>${o.quantity.toLocaleString()}</td>
       <td style="color:var(--primary);font-weight:700;">${fmtMoney(o.totalPrice)}</td>
@@ -2341,7 +2291,7 @@ function deleteService(sid) {
 }
 
 // ============================================================
-// ADMIN - PAYMENTS
+// ADMIN - PAYMENTS - HIỆN TÊN USER KHI NẠP TIỀN
 // ============================================================
 function loadAdminPayments(filter = 'all') {
   if (currentUser.role !== 'admin') return;
@@ -2353,7 +2303,7 @@ function loadAdminPayments(filter = 'all') {
   document.getElementById('adminPaymentsTable').innerHTML = payments.length ? payments.map(p=>`
     <tr>
       <td style="font-size:0.8rem;">${p.id}</td>
-      <td>${p.username}</td>
+      <td><strong>${p.username}</strong></td>
       <td style="font-weight:700;color:var(--success);">${fmtMoney(p.amount)}</td>
       <td><code style="background:var(--bg3);padding:3px 8px;border-radius:4px;">${p.note}</code></td>
       <td><span class="status-badge status-${p.status}">${statusLabel(p.status)}</span></td>
@@ -2364,19 +2314,17 @@ function loadAdminPayments(filter = 'all') {
           <button class="btn btn-sm btn-danger" onclick="rejectPayment('${p.id}')" style="margin-left:4px;">Từ Chối</button>
         ` : '--'}
       </td>
-      <td>${p.autoApprove ? '<span class="badge-success">Tự động</span>' : ''}</td>
-    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Không có giao dịch</td></tr>';
 }
 
 function filterPayments(f) { loadAdminPayments(f); }
 
-function approvePayment(pid, auto = false) {
+function approvePayment(pid) {
   const payments = DB.get('payments') || [];
   const idx = payments.findIndex(p=>p.id===pid);
   if (idx === -1) return;
   
   payments[idx].status = 'completed';
-  if (auto) payments[idx].autoApprove = true;
   DB.set('payments', payments);
   
   const users = DB.get('users') || [];
@@ -2389,11 +2337,7 @@ function approvePayment(pid, auto = false) {
     settings.fund = (settings.fund || 0) + payments[idx].amount;
     DB.set('settings', settings);
     
-    const message = auto ? 
-      `💰 Hệ thống tự động duyệt nạp ${fmtMoney(payments[idx].amount)}` : 
-      `💰 Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`;
-    
-    showServerNotification(message, 'success');
+    showServerNotification(`💰 Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`, 'success');
   }
   
   const transactions = DB.get('transactions') || [];
@@ -2402,12 +2346,7 @@ function approvePayment(pid, auto = false) {
   DB.set('transactions', transactions);
   
   loadAdminPayments();
-  
-  const msg = auto ? 
-    `Tự động duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!` : 
-    `Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`;
-  
-  showNotif(msg, 'success');
+  showNotif(`Đã duyệt nạp ${fmtMoney(payments[idx].amount)} cho ${payments[idx].username}!`, 'success');
 }
 
 function rejectPayment(pid) {
@@ -2439,7 +2378,6 @@ function loadAdminSettings() {
   document.getElementById('siteName').value = settings.siteName || 'XuHuongVN';
   document.getElementById('minBalance').value = settings.minBalance || 1000;
   document.getElementById('minDeposit').value = settings.minDeposit || 2000;
-  document.getElementById('autoApproveTime').value = settings.autoApproveTime || 5;
 }
 
 function saveSettings() {
@@ -2447,7 +2385,6 @@ function saveSettings() {
   settings.siteName = document.getElementById('siteName').value;
   settings.minBalance = parseFloat(document.getElementById('minBalance').value);
   settings.minDeposit = parseFloat(document.getElementById('minDeposit').value);
-  settings.autoApproveTime = parseFloat(document.getElementById('autoApproveTime').value);
   DB.set('settings', settings);
   showNotif('Đã lưu cài đặt!');
 }
