@@ -80,42 +80,6 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   50% { transform: scale(1.2); opacity: 0.8; }
 }
 
-/* HIỆU ỨNG LOADING */
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* HIỆU ỨNG RIPPLE */
-.ripple {
-  position: relative;
-  overflow: hidden;
-}
-.ripple::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
-}
-.ripple:active::after {
-  width: 200px;
-  height: 200px;
-  opacity: 0;
-}
-
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg2);}
@@ -269,7 +233,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 /* QR CODE */
 .qr-box{background:var(--bg3);border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;}
-.qr-box img{width:180px;height:180px;border-radius:8px;}
+.qr-box img{width:180px;height:180px;border-radius:8px;object-fit:contain;}
 .bank-info{background:var(--bg3);border-radius:10px;padding:16px;margin-top:16px;}
 .bank-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
 .bank-info-row:last-child{border-bottom:none;}
@@ -347,6 +311,13 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .bank-name{font-weight:700;color:var(--primary);margin-bottom:4px;}
 .bank-number{font-size:0.85rem;color:var(--text);}
 .bank-holder{font-size:0.8rem;color:var(--text2);}
+.bank-qr{max-width:100%;height:auto;margin-top:8px;border-radius:4px;}
+
+/* ORDER DETAIL MODAL */
+.order-detail{padding:16px;}
+.order-info{background:var(--bg3);border-radius:8px;padding:16px;margin:16px 0;}
+.order-info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.order-info-row:last-child{border-bottom:none;}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -554,7 +525,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="sidebar-section">
           <div class="sidebar-title">Tài Khoản</div>
           <div class="sidebar-item" onclick="showPage('deposit')"><i class="fas fa-wallet"></i> Nạp Tiền</div>
-          <div class="sidebar-item" onclick="showPage('withdraw')"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
           <div class="sidebar-item" onclick="showPage('history')"><i class="fas fa-history"></i> Lịch Sử</div>
           <div class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i> Tài Khoản</div>
           <div class="sidebar-item" onclick="showPage('api-keys')"><i class="fas fa-key"></i> API Key</div>
@@ -567,7 +537,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
           <div class="sidebar-item" onclick="showPage('admin-services')"><i class="fas fa-cogs"></i> Dịch Vụ</div>
           <div class="sidebar-item" onclick="showPage('admin-payments')"><i class="fas fa-money-bill"></i> Nạp Tiền</div>
           <div class="sidebar-item" onclick="showPage('admin-bank')"><i class="fas fa-university"></i> Ngân Hàng</div>
-          <div class="sidebar-item" onclick="showPage('admin-withdraw')"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
           <div class="sidebar-item" onclick="showPage('admin-settings')"><i class="fas fa-sliders-h"></i> Cài Đặt</div>
         </div>
       </div>
@@ -594,7 +563,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
             </div>
             <div class="stat-card">
               <div class="stat-icon orange"><i class="fas fa-spinner"></i></div>
-              <div class="stat-card-info"><h3 id="pendingOrdersDisplay">0</h3><p>Đang Xử Lý</p></div>
+              <div class="stat-card-info"><h3 id="pendingOrdersDisplay">0</h3><p>Đang Chờ Duyệt</p></div>
             </div>
             <div class="stat-card">
               <div class="stat-icon teal"><i class="fas fa-coins"></i></div>
@@ -621,7 +590,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
         <div class="page" id="page-new-order">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Đặt Dịch Vụ</h1>
           
-          <div class="alert alert-info"><i class="fas fa-info-circle"></i> Chọn nền tảng và dịch vụ phù hợp, điền link và số lượng để đặt hàng.</div>
+          <div class="alert alert-info"><i class="fas fa-info-circle"></i> Chọn nền tảng và dịch vụ phù hợp, điền link và số lượng để đặt hàng. Đơn hàng sẽ chờ admin duyệt.</div>
 
           <div class="card">
             <div class="form-group">
@@ -723,56 +692,6 @@ tr:hover td{background:rgba(255,255,255,.02);}
           </div>
         </div>
 
-        <!-- WITHDRAW PAGE -->
-        <div class="page" id="page-withdraw">
-          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Rút Tiền</h1>
-          
-          <div class="alert alert-info"><i class="fas fa-info-circle"></i> Rút tiền về mọi ngân hàng tại Việt Nam</div>
-
-          <div class="grid-2">
-            <div class="card">
-              <div class="card-title" style="margin-bottom:16px;">Thông Tin Rút Tiền</div>
-              
-              <div class="stat-card" style="margin-bottom:16px;">
-                <div class="stat-icon green"><i class="fas fa-wallet"></i></div>
-                <div class="stat-card-info">
-                  <h3 id="withdrawBalance">0đ</h3>
-                  <p>Số Dư Khả Dụng</p>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Chọn Ngân Hàng</label>
-                <select class="form-control" id="withdrawBankSelect">
-                  <option value="">-- Chọn ngân hàng --</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Số Tài Khoản</label>
-                <input type="text" class="form-control" id="withdrawAccountNumber" placeholder="Nhập số tài khoản">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Tên Chủ Tài Khoản</label>
-                <input type="text" class="form-control" id="withdrawAccountName" placeholder="Nhập tên chủ tài khoản">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Số Tiền Rút</label>
-                <input type="number" class="form-control" id="withdrawAmount" placeholder="Nhập số tiền cần rút" min="20000">
-              </div>
-
-              <button class="btn btn-primary" style="width:100%;" onclick="requestWithdraw()"><i class="fas fa-hand-holding-usd"></i> Yêu Cầu Rút Tiền</button>
-            </div>
-
-            <div class="card">
-              <div class="card-title" style="margin-bottom:16px;">Lịch Sử Rút Tiền</div>
-              <div id="withdrawHistory"><p style="color:var(--text2);">Chưa có lịch sử rút tiền</p></div>
-            </div>
-          </div>
-        </div>
-
         <!-- PROFILE PAGE -->
         <div class="page" id="page-profile">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Tài Khoản Của Tôi</h1>
@@ -834,12 +753,12 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
           </div>
           <div class="grid-2" style="margin-top:20px;">
             <div class="card">
-              <div class="card-header"><div class="card-title">Nạp Tiền Mới Nhất</div></div>
-              <div id="adminRecentDeposits"></div>
+              <div class="card-header"><div class="card-title">Đơn Hàng Chờ Duyệt</div></div>
+              <div id="adminPendingOrders"></div>
             </div>
             <div class="card">
-              <div class="card-header"><div class="card-title">Đơn Hàng Mới Nhất</div></div>
-              <div id="adminRecentOrders"></div>
+              <div class="card-header"><div class="card-title">Nạp Tiền Mới Nhất</div></div>
+              <div id="adminRecentDeposits"></div>
             </div>
           </div>
         </div>
@@ -864,10 +783,16 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
         <!-- ADMIN ORDERS -->
         <div class="page" id="page-admin-orders">
           <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Đơn Hàng</h1>
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <button class="btn btn-primary btn-sm" onclick="filterAdminOrders('all')">Tất Cả</button>
+            <button class="btn btn-outline btn-sm" onclick="filterAdminOrders('pending')">Chờ Duyệt</button>
+            <button class="btn btn-outline btn-sm" onclick="filterAdminOrders('processing')">Đang Xử Lý</button>
+            <button class="btn btn-outline btn-sm" onclick="filterAdminOrders('completed')">Đã Hoàn Thành</button>
+          </div>
           <div class="card">
             <div class="table-wrap">
               <table>
-                <thead><tr><th>ID</th><th>User</th><th>Dịch Vụ</th><th>Số Lượng</th><th>Tiền</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+                <thead><tr><th>ID</th><th>User</th><th>Dịch Vụ</th><th>Số Lượng</th><th>Tiền</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
                 <tbody id="adminOrdersTable"></tbody>
               </table>
             </div>
@@ -915,24 +840,6 @@ GET /api/v2?action=status&key=YOUR_API_KEY&order=ORDER_ID
             <button class="btn btn-primary btn-sm" onclick="openAddBankModal()"><i class="fas fa-plus"></i> Thêm Ngân Hàng</button>
           </div>
           <div id="banksList"></div>
-        </div>
-
-        <!-- ADMIN WITHDRAW -->
-        <div class="page" id="page-admin-withdraw">
-          <h1 style="font-size:1.4rem;font-weight:800;margin-bottom:20px;">Quản Lý Rút Tiền</h1>
-          <div class="card">
-            <div style="display:flex;gap:8px;margin-bottom:16px;">
-              <button class="btn btn-primary btn-sm" onclick="filterWithdraw('all')">Tất Cả</button>
-              <button class="btn btn-outline btn-sm" onclick="filterWithdraw('pending')">Chờ Duyệt</button>
-              <button class="btn btn-outline btn-sm" onclick="filterWithdraw('completed')">Đã Duyệt</button>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Mã GD</th><th>User</th><th>Ngân Hàng</th><th>Số TK</th><th>Số Tiền</th><th>Trạng Thái</th><th>Thời Gian</th><th>Thao Tác</th></tr></thead>
-                <tbody id="adminWithdrawTable"></tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
         <!-- ADMIN SETTINGS -->
@@ -1083,20 +990,19 @@ function initDB() {
   
   if (!DB.get('orders')) DB.set('orders', []);
   if (!DB.get('transactions')) DB.set('transactions', []);
-  if (!DB.get('withdrawRequests')) DB.set('withdrawRequests', []);
   
   if (!DB.get('banks')) {
     DB.set('banks', [
-      {id:1, bankName:'Vietcombank', accountNumber:'0123456789', accountName:'LE TIEN DUNG', branch:'Hà Nội', isDefault:true},
-      {id:2, bankName:'MB Bank', accountNumber:'0373822468', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:3, bankName:'Techcombank', accountNumber:'1234567890', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:4, bankName:'BIDV', accountNumber:'9876543210', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:5, bankName:'Agribank', accountNumber:'4567890123', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:6, bankName:'ACB', accountNumber:'7890123456', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'},
-      {id:7, bankName:'VPBank', accountNumber:'2345678901', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:8, bankName:'TPBank', accountNumber:'3456789012', accountName:'LE TIEN DUNG', branch:'Hà Nội'},
-      {id:9, bankName:'Sacombank', accountNumber:'5678901234', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'},
-      {id:10, bankName:'HDBank', accountNumber:'6789012345', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh'}
+      {id:1, bankName:'Vietcombank', accountNumber:'0123456789', accountName:'LE TIEN DUNG', branch:'Hà Nội', isDefault:true, qrImage:''},
+      {id:2, bankName:'MB Bank', accountNumber:'0373822468', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:3, bankName:'Techcombank', accountNumber:'1234567890', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:4, bankName:'BIDV', accountNumber:'9876543210', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:5, bankName:'Agribank', accountNumber:'4567890123', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:6, bankName:'ACB', accountNumber:'7890123456', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''},
+      {id:7, bankName:'VPBank', accountNumber:'2345678901', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:8, bankName:'TPBank', accountNumber:'3456789012', accountName:'LE TIEN DUNG', branch:'Hà Nội', qrImage:''},
+      {id:9, bankName:'Sacombank', accountNumber:'5678901234', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''},
+      {id:10, bankName:'HDBank', accountNumber:'6789012345', accountName:'LE TIEN DUNG', branch:'Hồ Chí Minh', qrImage:''}
     ]);
   }
   
@@ -1211,8 +1117,6 @@ function checkSession() {
 // ============================================================
 // CHAT SUPPORT
 // ============================================================
-let chatMessages = [];
-
 function toggleChat() {
   const chat = document.getElementById('chatSupport');
   chat.classList.toggle('show');
@@ -1247,12 +1151,10 @@ function sendChatMessage() {
     time: new Date().toISOString()
   };
   
-  // Lưu tin nhắn cho user
   const userMessages = DB.get('chat_' + currentUser.id) || [];
   userMessages.push(message);
   DB.set('chat_' + currentUser.id, userMessages);
   
-  // Lưu tin nhắn cho admin (tất cả chat)
   const adminChats = DB.get('adminChats') || [];
   adminChats.push({...message, userId: currentUser.id});
   DB.set('adminChats', adminChats);
@@ -1260,7 +1162,6 @@ function sendChatMessage() {
   input.value = '';
   loadChatMessages();
   
-  // Gửi thông báo cho admin nếu đang online
   if (currentUser.role !== 'admin') {
     showServerNotification('Tin nhắn mới từ ' + currentUser.username, 'info');
   }
@@ -1315,21 +1216,24 @@ function showDashboard() {
         </div>
         <div class="dropdown-item" onclick="showPage('profile');toggleDropdown()"><i class="fas fa-user"></i> Tài Khoản</div>
         <div class="dropdown-item" onclick="showPage('deposit');toggleDropdown()"><i class="fas fa-wallet"></i> Nạp Tiền</div>
-        <div class="dropdown-item" onclick="showPage('withdraw');toggleDropdown()"><i class="fas fa-hand-holding-usd"></i> Rút Tiền</div>
         <div class="dropdown-item" onclick="showPage('api-keys');toggleDropdown()"><i class="fas fa-key"></i> API Key</div>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</div>
       </div>
     </div>`;
+  
+  // CHỈ HIỂN THỊ QUYỀN ADMIN NẾU LÀ ADMIN
   if (currentUser.role === 'admin') {
     document.getElementById('adminSidebarSection').style.display = 'block';
+  } else {
+    document.getElementById('adminSidebarSection').style.display = 'none';
   }
   showPage('dashboard');
 }
 
 function showPage(pageId) {
-  if (!currentUser && ['dashboard','new-order','orders','deposit','withdraw','profile','api-keys','history',
-    'admin-dashboard','admin-users','admin-orders','admin-services','admin-payments','admin-bank','admin-withdraw','admin-settings'].includes(pageId)) {
+  if (!currentUser && ['dashboard','new-order','orders','deposit','profile','api-keys','history',
+    'admin-dashboard','admin-users','admin-orders','admin-services','admin-payments','admin-bank','admin-settings'].includes(pageId)) {
     openLoginModal(); return;
   }
 
@@ -1386,7 +1290,6 @@ function loadPageData(pageId) {
     case 'new-order': loadNewOrder(); break;
     case 'orders': loadOrders(); break;
     case 'deposit': loadDeposit(); break;
-    case 'withdraw': loadWithdraw(); break;
     case 'profile': loadProfile(); break;
     case 'history': loadHistory(); break;
     case 'api-keys': loadApiKeys(); break;
@@ -1396,7 +1299,6 @@ function loadPageData(pageId) {
     case 'admin-services': loadAdminServices(); break;
     case 'admin-payments': loadAdminPayments(); break;
     case 'admin-bank': loadAdminBank(); break;
-    case 'admin-withdraw': loadAdminWithdraw(); break;
     case 'admin-settings': loadAdminSettings(); break;
   }
 }
@@ -1409,7 +1311,7 @@ function loadDashboard() {
   document.getElementById('welcomeUser').textContent = currentUser.username;
   document.getElementById('balanceDisplay').textContent = fmtMoney(currentUser.balance);
   document.getElementById('completedOrdersDisplay').textContent = orders.filter(o=>o.status==='completed').length;
-  document.getElementById('pendingOrdersDisplay').textContent = orders.filter(o=>o.status==='processing').length;
+  document.getElementById('pendingOrdersDisplay').textContent = orders.filter(o=>o.status==='pending' || o.status==='processing').length;
   document.getElementById('totalSpentDisplay').textContent = fmtMoney(currentUser.totalSpent || 0);
   
   const recentOrders = orders.slice(-5).reverse();
@@ -1436,7 +1338,6 @@ function loadDashboard() {
     <div style="display:flex;flex-direction:column;gap:10px;">
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Số dư:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(currentUser.balance)}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Tổng chi tiêu:</span><span>${fmtMoney(currentUser.totalSpent||0)}</span></div>
-      <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Role:</span><span style="color:${currentUser.role==='admin'?'var(--gold)':'var(--primary)'};">${currentUser.role.toUpperCase()}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Ngày tham gia:</span><span style="font-size:0.85rem;">${fmtDate(currentUser.createdAt)}</span></div>
     </div>`;
 }
@@ -1527,59 +1428,50 @@ function placeOrder() {
   const service = services.find(s => s.id == sel.value);
   const orders = DB.get('orders') || [];
   const newOrder = {
-    id: genOrderId(), userId: currentUser.id, username: currentUser.username,
-    serviceId: service.id, serviceName: service.name, platform: service.platform,
-    link, quantity: qty, totalPrice: total, status: 'processing',
-    startCount: 0, remains: qty, createdAt: new Date().toISOString()
+    id: genOrderId(), 
+    userId: currentUser.id, 
+    username: currentUser.username,
+    serviceId: service.id, 
+    serviceName: service.name, 
+    platform: service.platform,
+    link, 
+    quantity: qty, 
+    totalPrice: total, 
+    status: 'pending', // Chờ admin duyệt
+    startCount: 0, 
+    remains: qty, 
+    createdAt: new Date().toISOString()
   };
   orders.push(newOrder);
   DB.set('orders', orders);
   
+  // Trừ tiền tạm thời
   users[userIdx].balance -= total;
-  users[userIdx].totalSpent = (users[userIdx].totalSpent || 0) + total;
   DB.set('users', users);
   currentUser = users[userIdx];
   
   // Transaction
-  addTransaction(currentUser.id, 'order', -total, `Đặt hàng: ${service.name} x${qty.toLocaleString()}`, 'completed');
+  addTransaction(currentUser.id, 'order', -total, `Đặt hàng: ${service.name} x${qty.toLocaleString()}`, 'pending');
   
-  // Update fund
+  // Cập nhật quỹ tạm thời
   const settings = DB.get('settings') || {};
   settings.fund = (settings.fund || 0) + total;
   DB.set('settings', settings);
   
-  // Thông báo cho admin
-  const adminUsers = users.filter(u => u.role === 'admin');
+  // GỬI THÔNG BÁO CHO ADMIN
+  const allUsers = DB.get('users') || [];
+  const adminUsers = allUsers.filter(u => u.role === 'admin');
   adminUsers.forEach(admin => {
-    showServerNotification(`Đơn hàng mới từ ${currentUser.username}: ${service.name} - ${qty.toLocaleString()} - ${fmtMoney(total)}`, 'info');
+    showServerNotification(`📦 Đơn hàng mới từ ${currentUser.username}: ${service.name} - ${qty.toLocaleString()} - ${fmtMoney(total)}`, 'info');
   });
-  
-  // Simulate order completion
-  setTimeout(() => completeOrder(newOrder.id), 5000 + Math.random()*10000);
   
   document.getElementById('orderLink').value = '';
   document.getElementById('orderQty').value = '';
   document.getElementById('priceCalcBox').style.display = 'none';
   
   updateNavBalance();
-  showNotif('Đặt hàng thành công! Đơn #' + newOrder.id);
+  showNotif('Đặt hàng thành công! Đơn hàng đang chờ admin duyệt.', 'success');
   showPage('orders');
-}
-
-function completeOrder(orderId) {
-  const orders = DB.get('orders') || [];
-  const idx = orders.findIndex(o => o.id === orderId);
-  if (idx !== -1 && orders[idx].status === 'processing') {
-    orders[idx].status = 'completed';
-    orders[idx].remains = 0;
-    DB.set('orders', orders);
-    
-    // Thông báo cho user
-    const user = (DB.get('users') || []).find(u => u.id === orders[idx].userId);
-    if (user) {
-      showServerNotification(`Đơn hàng #${orderId} đã hoàn thành!`, 'success');
-    }
-  }
 }
 
 // ============================================================
@@ -1602,11 +1494,17 @@ function loadOrders() {
       <td><span class="status-badge status-${o.status}">${statusLabel(o.status)}</span></td>
       <td style="font-size:0.82rem;color:var(--text2);">${fmtDate(o.createdAt)}</td>
     </tr>`).join('');
-  document.getElementById('pendingBadge').textContent = orders.filter(o=>o.status==='processing').length;
+  document.getElementById('pendingBadge').textContent = orders.filter(o=>o.status==='pending' || o.status==='processing').length;
 }
 
 function statusLabel(s) {
-  const m = {processing:'Đang Xử Lý',completed:'Hoàn Thành',pending:'Chờ Xử Lý',failed:'Thất Bại',cancelled:'Đã Hủy'};
+  const m = {
+    pending: 'Chờ Duyệt',
+    processing: 'Đang Xử Lý',
+    completed: 'Hoàn Thành',
+    failed: 'Thất Bại',
+    cancelled: 'Đã Hủy'
+  };
   return m[s] || s;
 }
 
@@ -1614,7 +1512,6 @@ function statusLabel(s) {
 // DEPOSIT
 // ============================================================
 function loadDeposit() {
-  // Load danh sách ngân hàng
   const banks = DB.get('banks') || [];
   const bankList = document.getElementById('bankList');
   bankList.innerHTML = banks.map(b => `
@@ -1622,6 +1519,7 @@ function loadDeposit() {
       <div class="bank-name">${b.bankName}</div>
       <div class="bank-number">${b.accountNumber}</div>
       <div class="bank-holder">${b.accountName}</div>
+      ${b.qrImage ? `<img src="${b.qrImage}" class="bank-qr" alt="QR">` : ''}
     </div>
   `).join('');
   
@@ -1669,109 +1567,42 @@ function generateDepositCode() {
     <div class="bank-info-row"><span style="color:var(--text2);">Số Tiền:</span><span style="font-weight:700;color:var(--success);">${fmtMoney(amount)} <button class="copy-btn" onclick="copyText('${amount}')">Copy</button></span></div>
     <div class="bank-info-row" style="background:rgba(26,115,232,.1);padding:8px;border-radius:6px;"><span style="color:var(--text2);">Nội Dung CK:</span><span style="font-weight:700;color:var(--primary);">${code} <button class="copy-btn" onclick="copyText('${code}')">Copy</button></span></div>`;
   
-  // Generate QR via VietQR API
-  const bankCode = selectedBank.bankName.toLowerCase().replace(' ', '');
-  const qrUrl = `https://img.vietqr.io/image/${bankCode}-${selectedBank.accountNumber}-qr_only.png?amount=${amount}&addInfo=${code}&accountName=${encodeURIComponent(selectedBank.accountName)}`;
-  document.getElementById('qrImage').src = qrUrl;
+  // Sử dụng QR code từ ngân hàng nếu có, nếu không thì tạo tự động
+  if (selectedBank.qrImage) {
+    document.getElementById('qrImage').src = selectedBank.qrImage;
+  } else {
+    const bankCode = selectedBank.bankName.toLowerCase().replace(' ', '');
+    const qrUrl = `https://img.vietqr.io/image/${bankCode}-${selectedBank.accountNumber}-qr_only.png?amount=${amount}&addInfo=${code}&accountName=${encodeURIComponent(selectedBank.accountName)}`;
+    document.getElementById('qrImage').src = qrUrl;
+  }
+  
   document.getElementById('depositInfo').style.display = 'block';
   
-  // Tạo giao dịch
   const transaction = {
-    id: 'DEP' + Date.now(), userId: currentUser.id, type: 'deposit',
-    amount, note: code, status: 'pending', createdAt: new Date().toISOString()
+    id: 'DEP' + Date.now(), 
+    userId: currentUser.id, 
+    type: 'deposit',
+    amount, 
+    note: code, 
+    status: 'pending', 
+    createdAt: new Date().toISOString()
   };
   const transactions = DB.get('transactions') || [];
   transactions.push(transaction);
   DB.set('transactions', transactions);
   
-  // Thêm vào admin payments queue
   const payments = DB.get('payments') || [];
   payments.push({...transaction, username: currentUser.username, bankCode: code});
   DB.set('payments', payments);
   
-  showNotif('Đã tạo mã nạp tiền: ' + code + '. Chuyển khoản đúng nội dung để hệ thống tự xử lý!','info');
-}
-
-// ============================================================
-// WITHDRAW
-// ============================================================
-function loadWithdraw() {
-  document.getElementById('withdrawBalance').textContent = fmtMoney(currentUser.balance);
-  
-  // Load ngân hàng cho dropdown
-  const banks = DB.get('banks') || [];
-  const select = document.getElementById('withdrawBankSelect');
-  select.innerHTML = '<option value="">-- Chọn ngân hàng --</option>' + 
-    banks.map(b => `<option value="${b.id}">${b.bankName} - ${b.accountNumber}</option>`).join('');
-  
-  // Load lịch sử rút tiền
-  const withdraws = (DB.get('withdrawRequests') || []).filter(w => w.userId === currentUser.id).reverse();
-  const historyEl = document.getElementById('withdrawHistory');
-  if (withdraws.length === 0) {
-    historyEl.innerHTML = '<p style="color:var(--text2);">Chưa có lịch sử rút tiền</p>';
-  } else {
-    historyEl.innerHTML = withdraws.map(w => `
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div><div style="font-weight:600;color:var(--danger);">-${fmtMoney(w.amount)}</div><div style="font-size:0.78rem;color:var(--text2);">${w.bankName}</div></div>
-        <div style="text-align:right;"><span class="status-badge status-${w.status}">${statusLabel(w.status)}</span><div style="font-size:0.78rem;color:var(--text2);margin-top:4px;">${fmtDate(w.createdAt)}</div></div>
-      </div>`).join('');
-  }
-}
-
-function requestWithdraw() {
-  const bankId = document.getElementById('withdrawBankSelect').value;
-  const accountNumber = document.getElementById('withdrawAccountNumber').value.trim();
-  const accountName = document.getElementById('withdrawAccountName').value.trim();
-  const amount = parseInt(document.getElementById('withdrawAmount').value);
-  
-  if (!bankId) { showNotif('Vui lòng chọn ngân hàng','error'); return; }
-  if (!accountNumber) { showNotif('Vui lòng nhập số tài khoản','error'); return; }
-  if (!accountName) { showNotif('Vui lòng nhập tên chủ tài khoản','error'); return; }
-  if (!amount || amount < 20000) { showNotif('Số tiền rút tối thiểu 20,000đ','error'); return; }
-  if (amount > currentUser.balance) { showNotif('Số dư không đủ','error'); return; }
-  
-  const banks = DB.get('banks') || [];
-  const bank = banks.find(b => b.id == bankId);
-  
-  const withdrawRequest = {
-    id: 'WD' + Date.now(),
-    userId: currentUser.id,
-    username: currentUser.username,
-    bankName: bank.bankName,
-    bankId: bank.id,
-    accountNumber: accountNumber,
-    accountName: accountName,
-    amount: amount,
-    status: 'pending',
-    createdAt: new Date().toISOString()
-  };
-  
-  const withdraws = DB.get('withdrawRequests') || [];
-  withdraws.push(withdrawRequest);
-  DB.set('withdrawRequests', withdraws);
-  
-  // Trừ tiền tạm thời
-  const users = DB.get('users') || [];
-  const userIdx = users.findIndex(u => u.id === currentUser.id);
-  users[userIdx].balance -= amount;
-  DB.set('users', users);
-  currentUser = users[userIdx];
-  
-  addTransaction(currentUser.id, 'withdraw', -amount, `Rút tiền về ${bank.bankName} - ${accountNumber}`, 'pending');
-  
   // Thông báo cho admin
+  const users = DB.get('users') || [];
   const adminUsers = users.filter(u => u.role === 'admin');
   adminUsers.forEach(admin => {
-    showServerNotification(`Yêu cầu rút tiền mới từ ${currentUser.username}: ${fmtMoney(amount)}`, 'warning');
+    showServerNotification(`💰 Yêu cầu nạp tiền mới từ ${currentUser.username}: ${fmtMoney(amount)}`, 'info');
   });
   
-  document.getElementById('withdrawAccountNumber').value = '';
-  document.getElementById('withdrawAccountName').value = '';
-  document.getElementById('withdrawAmount').value = '';
-  
-  updateNavBalance();
-  loadWithdraw();
-  showNotif('Yêu cầu rút tiền đã được gửi, chờ admin duyệt!','success');
+  showNotif('Đã tạo mã nạp tiền: ' + code + '. Chuyển khoản đúng nội dung!','info');
 }
 
 // ============================================================
@@ -1788,7 +1619,6 @@ function loadProfile() {
       <div>
         <div style="font-weight:700;font-size:1.1rem;">${currentUser.username}</div>
         <div style="color:var(--text2);">${currentUser.email}</div>
-        <div style="color:${currentUser.role==='admin'?'var(--gold)':'var(--primary)'};font-size:0.85rem;">${currentUser.role.toUpperCase()}</div>
       </div>
     </div>
     
@@ -1861,7 +1691,7 @@ function loadHistory() {
   }
   tbody.innerHTML = transactions.map(t => `
     <tr>
-      <td><span style="color:${t.amount>0?'var(--success)':'var(--danger)'};">${t.type==='deposit'?'Nạp Tiền':t.type==='order'?'Đặt Hàng':'Rút Tiền'}</span></td>
+      <td><span style="color:${t.amount>0?'var(--success)':'var(--danger)'};">${t.type==='deposit'?'Nạp Tiền':'Đặt Hàng'}</span></td>
       <td style="font-weight:700;color:${t.amount>0?'var(--success)':'var(--danger)'};">${t.amount>0?'+':''}${fmtMoney(t.amount)}</td>
       <td>${t.note}</td>
       <td><span class="status-badge status-${t.status}">${statusLabel(t.status)}</span></td>
@@ -1907,18 +1737,20 @@ function loadAdminDashboard() {
   document.getElementById('adminRevenue').textContent = fmtMoney(revenue);
   document.getElementById('adminFund').textContent = fmtMoney(settings.fund || 0);
   
+  // Đơn hàng chờ duyệt
+  const pendingOrders = orders.filter(o => o.status === 'pending').reverse().slice(0, 5);
+  document.getElementById('adminPendingOrders').innerHTML = pendingOrders.length ? pendingOrders.map(o => `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+      <span><strong>${o.username}</strong> - ${o.serviceName.slice(0,20)}</span>
+      <span style="color:var(--warning);">${fmtMoney(o.totalPrice)}</span>
+    </div>
+  `).join('') : '<p style="color:var(--text2);">Không có đơn chờ</p>';
+  
   const deposits = (DB.get('transactions')||[]).filter(t=>t.type==='deposit').reverse().slice(0,5);
   document.getElementById('adminRecentDeposits').innerHTML = deposits.length ? deposits.map(d=>`
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
       <span>${d.username||'user'} - ${fmtMoney(d.amount)}</span>
       <span class="status-badge status-${d.status}">${statusLabel(d.status)}</span>
-    </div>`).join('') : '<p style="color:var(--text2);">Chưa có</p>';
-  
-  const recentOrders = orders.reverse().slice(0,5);
-  document.getElementById('adminRecentOrders').innerHTML = recentOrders.length ? recentOrders.map(o=>`
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
-      <span>${o.username} - ${o.serviceName.slice(0,25)}</span>
-      <span class="status-badge status-${o.status}">${statusLabel(o.status)}</span>
     </div>`).join('') : '<p style="color:var(--text2);">Chưa có</p>';
 }
 
@@ -2058,10 +1890,22 @@ function toggleUserStatus(userId) {
 // ============================================================
 // ADMIN - ORDERS
 // ============================================================
+let adminOrdersFilter = 'all';
+
+function filterAdminOrders(filter) {
+  adminOrdersFilter = filter;
+  loadAdminOrders();
+}
+
 function loadAdminOrders() {
   if (currentUser.role !== 'admin') return;
   
-  const orders = (DB.get('orders')||[]).reverse();
+  let orders = DB.get('orders') || [];
+  if (adminOrdersFilter !== 'all') {
+    orders = orders.filter(o => o.status === adminOrdersFilter);
+  }
+  orders = orders.reverse();
+  
   document.getElementById('adminOrdersTable').innerHTML = orders.length ? orders.map(o=>`
     <tr>
       <td style="font-size:0.8rem;">${o.id}</td>
@@ -2070,41 +1914,94 @@ function loadAdminOrders() {
       <td>${o.quantity.toLocaleString()}</td>
       <td style="color:var(--primary);font-weight:700;">${fmtMoney(o.totalPrice)}</td>
       <td><span class="status-badge status-${o.status}">${statusLabel(o.status)}</span></td>
+      <td style="font-size:0.82rem;">${fmtDate(o.createdAt)}</td>
       <td>
-        ${o.status!=='completed'?`<button class="btn btn-sm btn-success" onclick="completeOrderAdmin('${o.id}')">Hoàn Thành</button>`:''}
-        ${o.status==='processing'?`<button class="btn btn-sm btn-danger" onclick="cancelOrder('${o.id}')" style="margin-left:4px;">Hủy</button>`:''}
+        ${o.status === 'pending' ? `
+          <button class="btn btn-sm btn-success" onclick="approveOrder('${o.id}')">Duyệt</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectOrder('${o.id}')" style="margin-left:4px;">Từ Chối</button>
+        ` : o.status === 'processing' ? `
+          <button class="btn btn-sm btn-success" onclick="completeOrderAdmin('${o.id}')">Hoàn Thành</button>
+        ` : ''}
       </td>
-    </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--text2);">Chưa có đơn hàng</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text2);">Không có đơn hàng</td></tr>';
 }
 
-function completeOrderAdmin(orderId) {
-  completeOrder(orderId);
-  loadAdminOrders();
-  showNotif('Đã hoàn thành đơn!');
-}
-
-function cancelOrder(orderId) {
+function approveOrder(orderId) {
   const orders = DB.get('orders') || [];
-  const idx = orders.findIndex(o=>o.id===orderId);
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx !== -1) {
+    orders[idx].status = 'processing';
+    DB.set('orders', orders);
+    
+    // Cập nhật transaction
+    const transactions = DB.get('transactions') || [];
+    const tIdx = transactions.findIndex(t => t.note && t.note.includes(orderId));
+    if (tIdx !== -1) transactions[tIdx].status = 'completed';
+    DB.set('transactions', transactions);
+    
+    // Thông báo cho user
+    const users = DB.get('users') || [];
+    const user = users.find(u => u.id === orders[idx].userId);
+    if (user) {
+      showServerNotification(`✅ Đơn hàng #${orderId} đã được duyệt và đang xử lý!`, 'success');
+    }
+    
+    loadAdminOrders();
+    showNotif('Đã duyệt đơn hàng!');
+  }
+}
+
+function rejectOrder(orderId) {
+  const orders = DB.get('orders') || [];
+  const idx = orders.findIndex(o => o.id === orderId);
   if (idx !== -1) {
     const order = orders[idx];
     orders[idx].status = 'cancelled';
     DB.set('orders', orders);
-    // Refund
+    
+    // Hoàn tiền
     const users = DB.get('users') || [];
-    const uidx = users.findIndex(u=>u.id===order.userId);
+    const uidx = users.findIndex(u => u.id === order.userId);
     if (uidx !== -1) {
       users[uidx].balance += order.totalPrice;
-      users[uidx].totalSpent = Math.max(0, (users[uidx].totalSpent||0) - order.totalPrice);
       DB.set('users', users);
       addTransaction(order.userId, 'refund', order.totalPrice, 'Hoàn tiền đơn #'+orderId, 'completed');
+      
+      // Cập nhật quỹ
+      const settings = DB.get('settings') || {};
+      settings.fund = Math.max(0, (settings.fund || 0) - order.totalPrice);
+      DB.set('settings', settings);
     }
-    const settings = DB.get('settings') || {};
-    settings.fund = Math.max(0, (settings.fund||0) - order.totalPrice);
-    DB.set('settings', settings);
+    
+    // Cập nhật transaction
+    const transactions = DB.get('transactions') || [];
+    const tIdx = transactions.findIndex(t => t.note && t.note.includes(orderId));
+    if (tIdx !== -1) transactions[tIdx].status = 'failed';
+    DB.set('transactions', transactions);
+    
+    showServerNotification(`❌ Đơn hàng #${orderId} đã bị từ chối. Tiền đã được hoàn lại.`, 'error');
+    loadAdminOrders();
+    showNotif('Đã từ chối đơn hàng và hoàn tiền!');
   }
-  loadAdminOrders();
-  showNotif('Đã hủy đơn và hoàn tiền!');
+}
+
+function completeOrderAdmin(orderId) {
+  const orders = DB.get('orders') || [];
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx !== -1) {
+    orders[idx].status = 'completed';
+    DB.set('orders', orders);
+    
+    // Thông báo cho user
+    const users = DB.get('users') || [];
+    const user = users.find(u => u.id === orders[idx].userId);
+    if (user) {
+      showServerNotification(`🎉 Đơn hàng #${orderId} đã hoàn thành!`, 'success');
+    }
+    
+    loadAdminOrders();
+    showNotif('Đã hoàn thành đơn hàng!');
+  }
 }
 
 // ============================================================
@@ -2259,23 +2156,19 @@ function approvePayment(pid) {
   payments[idx].status = 'completed';
   DB.set('payments', payments);
   
-  // Credit user
   const users = DB.get('users') || [];
   const uidx = users.findIndex(u=>u.id===payments[idx].userId);
   if (uidx !== -1) {
     users[uidx].balance += payments[idx].amount;
     DB.set('users', users);
     
-    // Cập nhật quỹ admin
     const settings = DB.get('settings') || {};
     settings.fund = (settings.fund || 0) + payments[idx].amount;
     DB.set('settings', settings);
     
-    // Thông báo cho user
-    showServerNotification(`Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`, 'success');
+    showServerNotification(`💰 Bạn đã được duyệt nạp ${fmtMoney(payments[idx].amount)}`, 'success');
   }
   
-  // Update transaction
   const transactions = DB.get('transactions') || [];
   const tidx = transactions.findIndex(t=>t.id===pid);
   if (tidx !== -1) transactions[tidx].status = 'completed';
@@ -2317,9 +2210,10 @@ function loadAdminBank() {
           <div style="color:var(--text2);font-size:0.88rem;">Số TK: <strong style="color:var(--text);">${b.accountNumber}</strong></div>
           <div style="color:var(--text2);font-size:0.88rem;">Tên TK: <strong style="color:var(--text);">${b.accountName}</strong></div>
           <div style="color:var(--text2);font-size:0.88rem;">Chi Nhánh: ${b.branch}</div>
+          ${b.qrImage ? `<img src="${b.qrImage}" style="max-width:100px;margin-top:8px;" alt="QR">` : ''}
         </div>
         <div style="display:flex;gap:8px;">
-          ${!b.isDefault?`<button class="btn btn-sm btn-outline" onclick="setDefaultBank(${b.id})">Đặt Mặc Định</button>`:''}
+          <button class="btn btn-sm btn-outline" onclick="editBankQR(${b.id})"><i class="fas fa-qrcode"></i> Thêm QR</button>
           <button class="btn btn-sm btn-outline" onclick="editBankModal(${b.id})"><i class="fas fa-edit"></i></button>
           <button class="btn btn-sm btn-danger" onclick="deleteBank(${b.id})"><i class="fas fa-trash"></i></button>
         </div>
@@ -2335,6 +2229,7 @@ function openAddBankModal() {
     <div class="form-group"><label class="form-label">Số Tài Khoản</label><input type="text" class="form-control" id="nbAccNum" placeholder="Số tài khoản"></div>
     <div class="form-group"><label class="form-label">Tên Chủ Tài Khoản</label><input type="text" class="form-control" id="nbAccName" placeholder="Tên chủ TK (viết hoa, không dấu)"></div>
     <div class="form-group"><label class="form-label">Chi Nhánh</label><input type="text" class="form-control" id="nbBranch" placeholder="VD: Hà Nội"></div>
+    <div class="form-group"><label class="form-label">Link Ảnh QR Code</label><input type="url" class="form-control" id="nbQR" placeholder="https://... (có thể để trống)"></div>
     <div class="form-group"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="nbDefault"> Đặt làm mặc định</label></div>
     <button class="btn btn-primary" style="width:100%;" onclick="addBank()">Thêm Ngân Hàng</button>
   `);
@@ -2345,15 +2240,55 @@ function addBank() {
   const accountNumber = document.getElementById('nbAccNum').value.trim();
   const accountName = document.getElementById('nbAccName').value.trim();
   const branch = document.getElementById('nbBranch').value.trim() || 'Toàn Quốc';
+  const qrImage = document.getElementById('nbQR').value.trim();
   const isDefault = document.getElementById('nbDefault').checked;
+  
   if (!bankName || !accountNumber || !accountName) { showNotif('Điền đầy đủ','error'); return; }
+  
   const banks = DB.get('banks') || [];
   if (isDefault) banks.forEach(b => b.isDefault = false);
-  banks.push({id: Date.now(), bankName, accountNumber, accountName, branch, status:'active', isDefault});
+  
+  banks.push({
+    id: Date.now(), 
+    bankName, 
+    accountNumber, 
+    accountName, 
+    branch, 
+    status:'active', 
+    isDefault,
+    qrImage: qrImage || ''
+  });
+  
   DB.set('banks', banks);
   closeModal();
   loadAdminBank();
   showNotif('Thêm ngân hàng thành công!');
+}
+
+function editBankQR(bid) {
+  const banks = DB.get('banks') || [];
+  const b = banks.find(x=>x.id===bid);
+  
+  showModal('Thêm QR Code cho ' + b.bankName, `
+    <div class="form-group">
+      <label class="form-label">Link Ảnh QR Code</label>
+      <input type="url" class="form-control" id="qrLink" value="${b.qrImage || ''}" placeholder="https://...">
+    </div>
+    <div class="qr-box" style="margin-top:16px;">
+      ${b.qrImage ? `<img src="${b.qrImage}" style="max-width:200px;" alt="QR">` : '<p style="color:var(--text2);">Chưa có QR code</p>'}
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:16px;" onclick="saveBankQR(${bid})">Lưu QR Code</button>
+  `);
+}
+
+function saveBankQR(bid) {
+  const banks = DB.get('banks') || [];
+  const idx = banks.findIndex(b=>b.id===bid);
+  banks[idx].qrImage = document.getElementById('qrLink').value;
+  DB.set('banks', banks);
+  closeModal();
+  loadAdminBank();
+  showNotif('Đã cập nhật QR code!');
 }
 
 function editBankModal(bid) {
@@ -2381,104 +2316,12 @@ function saveEditBank(bid) {
   showNotif('Đã cập nhật ngân hàng!');
 }
 
-function setDefaultBank(bid) {
-  const banks = DB.get('banks') || [];
-  banks.forEach(b => b.isDefault = (b.id === bid));
-  DB.set('banks', banks);
-  loadAdminBank();
-}
-
 function deleteBank(bid) {
   if (!confirm('Xóa ngân hàng này?')) return;
   let banks = DB.get('banks') || [];
   banks = banks.filter(b=>b.id!==bid);
   DB.set('banks', banks);
   loadAdminBank();
-}
-
-// ============================================================
-// ADMIN - WITHDRAW
-// ============================================================
-function loadAdminWithdraw(filter = 'all') {
-  if (currentUser.role !== 'admin') return;
-  
-  let withdraws = DB.get('withdrawRequests') || [];
-  if (filter !== 'all') withdraws = withdraws.filter(w => w.status === filter);
-  withdraws = withdraws.reverse();
-  
-  document.getElementById('adminWithdrawTable').innerHTML = withdraws.length ? withdraws.map(w=>`
-    <tr>
-      <td style="font-size:0.8rem;">${w.id}</td>
-      <td>${w.username}</td>
-      <td>${w.bankName}</td>
-      <td>${w.accountNumber}</td>
-      <td style="color:var(--danger);font-weight:700;">${fmtMoney(w.amount)}</td>
-      <td><span class="status-badge status-${w.status==='completed'?'completed':w.status==='pending'?'pending':'failed'}">${w.status==='completed'?'Đã Duyệt':w.status==='pending'?'Chờ Duyệt':'Từ Chối'}</span></td>
-      <td style="font-size:0.82rem;">${fmtDate(w.createdAt)}</td>
-      <td>
-        ${w.status==='pending'?`
-          <button class="btn btn-sm btn-success" onclick="approveWithdraw('${w.id}')">Duyệt</button>
-          <button class="btn btn-sm btn-danger" onclick="rejectWithdraw('${w.id}')" style="margin-left:4px;">Từ Chối</button>
-        `:'--'}
-      </td>
-    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text2);">Không có yêu cầu rút tiền</td></tr>';
-}
-
-function filterWithdraw(f) { loadAdminWithdraw(f); }
-
-function approveWithdraw(wid) {
-  const withdraws = DB.get('withdrawRequests') || [];
-  const idx = withdraws.findIndex(w => w.id === wid);
-  if (idx === -1) return;
-  
-  withdraws[idx].status = 'completed';
-  DB.set('withdrawRequests', withdraws);
-  
-  // Cập nhật quỹ
-  const settings = DB.get('settings') || {};
-  settings.fund = (settings.fund || 0) - withdraws[idx].amount;
-  DB.set('settings', settings);
-  
-  // Cập nhật transaction
-  const transactions = DB.get('transactions') || [];
-  const tidx = transactions.findIndex(t => t.id === wid);
-  if (tidx !== -1) transactions[tidx].status = 'completed';
-  DB.set('transactions', transactions);
-  
-  // Thông báo cho user
-  showServerNotification(`Yêu cầu rút ${fmtMoney(withdraws[idx].amount)} đã được duyệt!`, 'success');
-  
-  loadAdminWithdraw();
-  showNotif('Đã duyệt yêu cầu rút tiền!');
-}
-
-function rejectWithdraw(wid) {
-  const withdraws = DB.get('withdrawRequests') || [];
-  const idx = withdraws.findIndex(w => w.id === wid);
-  if (idx === -1) return;
-  
-  withdraws[idx].status = 'failed';
-  DB.set('withdrawRequests', withdraws);
-  
-  // Hoàn tiền lại cho user
-  const users = DB.get('users') || [];
-  const uidx = users.findIndex(u => u.id === withdraws[idx].userId);
-  if (uidx !== -1) {
-    users[uidx].balance += withdraws[idx].amount;
-    DB.set('users', users);
-  }
-  
-  // Cập nhật transaction
-  const transactions = DB.get('transactions') || [];
-  const tidx = transactions.findIndex(t => t.id === wid);
-  if (tidx !== -1) transactions[tidx].status = 'failed';
-  DB.set('transactions', transactions);
-  
-  // Thông báo cho user
-  showServerNotification(`Yêu cầu rút ${fmtMoney(withdraws[idx].amount)} bị từ chối!`, 'error');
-  
-  loadAdminWithdraw();
-  showNotif('Đã từ chối yêu cầu rút tiền!');
 }
 
 // ============================================================
@@ -2543,7 +2386,16 @@ function addTransaction(userId, type, amount, note, status) {
   const transactions = DB.get('transactions') || [];
   const users = DB.get('users') || [];
   const user = users.find(u=>u.id===userId);
-  transactions.push({id:'TX'+Date.now()+Math.random().toString(36).substr(2,4), userId, username:user?.username, type, amount, note, status, createdAt:new Date().toISOString()});
+  transactions.push({
+    id:'TX'+Date.now()+Math.random().toString(36).substr(2,4), 
+    userId, 
+    username:user?.username, 
+    type, 
+    amount, 
+    note, 
+    status, 
+    createdAt:new Date().toISOString()
+  });
   DB.set('transactions', transactions);
 }
 
