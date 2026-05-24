@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FF VIP Boost">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle fill='%23ff3366' cx='50' cy='50' r='50'/%3E%3Ctext x='50' y='67' font-size='45' text-anchor='middle' fill='white'%3E🔥%3C/text%3E%3C/svg%3E">
+    <!-- Icon màn hình chính iPhone - dùng link ảnh của bạn -->
+    <link rel="apple-touch-icon" href="https://sf-static.upanhlaylink.com/img/image_20260525338e4f782563463d77827d7a0f69e6d9.jpg">
     <style>
         * {
             margin: 0;
@@ -43,7 +44,7 @@
             padding: 24px 22px 36px;
         }
 
-        /* Avatar FF + Anime */
+        /* Avatar dùng link ảnh của bạn */
         .anime-avatar {
             display: flex;
             justify-content: center;
@@ -59,13 +60,13 @@
             justify-content: center;
             box-shadow: 0 10px 25px rgba(255, 50, 50, 0.5);
             border: 2px solid gold;
+            overflow: hidden;
         }
         .avatar-img {
-            width: 95px;
-            height: 95px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            background: #1a1a2e;
         }
 
         /* Device & Admin info */
@@ -225,11 +226,10 @@
 <body>
 <div class="glass-card">
     <div class="content-inner">
-        <!-- Avatar hầu gái Anime + FF style -->
+        <!-- Avatar hầu gái Anime - dùng link ảnh của bạn -->
         <div class="anime-avatar">
             <div class="avatar-circle">
-                <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle fill='%23ffb7c5' cx='100' cy='100' r='98'/%3E%3Cpath fill='%23b35f2b' d='M60 85 L140 85 L132 118 L68 118 L60 85Z'/%3E%3Ccircle fill='%23332222' cx='74' cy='74' r='6'/%3E%3Ccircle fill='%23332222' cx='126' cy='74' r='6'/%3E%3Cpath fill='%23ff7096' d='M82 126 Q100 142 118 126' stroke='%23942e4e' stroke-width='2.5' fill='none' /%3E%3Crect x='78' y='139' width='44' height='16' fill='%23ffadc2' rx='8' /%3E%3Ctext x='100' y='170' font-size='20' fill='%23b82c5c' text-anchor='middle'%3E🔥FF🔥%3C/text%3E%3C/svg%3E"
-                     alt="anime maid ff">
+                <img class="avatar-img" src="https://sf-static.upanhlaylink.com/img/image_20260525338e4f782563463d77827d7a0f69e6d9.jpg" alt="anime maid ff">
             </div>
         </div>
 
@@ -253,7 +253,7 @@
             <p style="font-size:0.7rem;">💎 5 chức năng VIP - reglock by DLee - dành riêng iOS 💎</p>
         </div>
 
-        <!-- Các chức năng mới theo yêu cầu: tăng bám đầu, tăng nhạy, ghim tâm, tăng mượt vuốt, aimlock chuẩn xác (tổng 5 nút) + thêm reglock lock? để đủ hấp dẫn. nhưng vẫn giữ 5 -->
+        <!-- Các chức năng mới: tăng bám đầu, tăng nhạy, ghim tâm, tăng mượt vuốt, aimlock chuẩn xác -->
         <div class="boost-grid" id="boostGrid">
             <button class="rainbow-btn" data-boost="aimClamp">🎯 Tăng bám đầu (Aim Clamp+)</button>
             <button class="rainbow-btn" data-boost="touchSense">📈 Tăng nhạy cảm ứng (Sens)</button>
@@ -271,7 +271,7 @@
         <div class="activation-log" id="activationLog">
             <div class="log-message">
                 <span class="log-icon">💀</span>
-                <span id="logText">Chưa kích hoạt tính năng nào. Hãy chọn 1 boost FF!</span>
+                <span id="logText">Chưa kích hoạt tính năng nào. Bấm nút VIP để tăng bám đầu + aimlock!</span>
             </div>
         </div>
         
@@ -373,9 +373,8 @@
             document.getElementById('activationLog').style.borderLeftColor = "#00ffaa";
         }
         
-        // Hàm mô phỏng kích hoạt hiệu ứng cho từng chức năng (cảm giác tăng thực tế)
+        // Hàm mô phỏng kích hoạt hiệu ứng cho từng chức năng
         function applyFFBoostEffect(boostKey) {
-            // Tạo style động hoặc hiệu ứng cảm giác mạnh
             if (boostKey === 'aimClamp') {
                 let style = document.getElementById('ff-aimclamp');
                 if (!style) {
@@ -414,7 +413,6 @@
             }
             if (boostKey === 'aimlockX') {
                 showMiniNoti("🎯 AIMLOCK CHUẨN XÁC 100% - LOCK ĐẦU KẺ ĐỊCH!");
-                // thêm style giả lập aim
                 const aimDiv = document.createElement('div');
                 aimDiv.style.position = 'fixed';
                 aimDiv.style.pointerEvents = 'none';
@@ -447,7 +445,6 @@
         // Kích hoạt boost chính
         function activateBoost(boostKey) {
             if (boostStates[boostKey]) {
-                // đã kích hoạt rồi
                 document.getElementById('logText').innerHTML = `⚠️ "${boostNames[boostKey]}" đã được kích hoạt trước đó!`;
                 setTimeout(() => updateLog(), 1200);
                 return false;
@@ -456,7 +453,6 @@
             updateButtonUI();
             updateLog();
             applyFFBoostEffect(boostKey);
-            // Thêm hiệu ứng nhẹ cho nút
             const btn = document.querySelector(`.rainbow-btn[data-boost="${boostKey}"]`);
             if(btn) {
                 btn.style.transform = 'scale(0.97)';
@@ -508,10 +504,8 @@
         styleScroll.innerText = `html { scroll-behavior: smooth; } body { -webkit-overflow-scrolling: touch; } .glass-card { overflow-y: auto; max-height: 85vh; scrollbar-width: thin; }`;
         document.head.appendChild(styleScroll);
         
-        // Hiển thị thông báo reglock
         console.log("🔥 Free Fire Boster VIP | Reglock by DLee iOS | Dũng Lê Zalo:0969411158");
         
-        // Thêm hiệu ứng ảo "tăng cường aimlock & bám đầu" thông báo mỗi lần vào trang để tăng uy tín
         setTimeout(() => {
             const logBox = document.getElementById('logText');
             if(logBox && !Object.values(boostStates).some(v=>v)) {
