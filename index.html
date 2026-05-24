@@ -1,262 +1,524 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lê Tiến Dũng ❤️ Nguyễn Bảo Thy</title>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root { --pink:#ff6b9d;--rose:#ff2d78;--purple:#c44dff; }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Quicksand',sans-serif;background:#0d0015;min-height:100vh;overflow-x:hidden;}
-  .bg-layer{position:fixed;inset:0;z-index:0;
-    background:radial-gradient(ellipse at 20% 50%,#2d0040 0%,transparent 60%),
-               radial-gradient(ellipse at 80% 20%,#3d0030 0%,transparent 60%),
-               radial-gradient(ellipse at 50% 80%,#1a0050 0%,transparent 60%),#0d0015;}
-  #heartCanvas{position:fixed;inset:0;z-index:1;pointer-events:none;}
-  .container{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:40px 20px 80px;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>FF Booster VIP | Dũng Lê</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FF VIP Boost">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle fill='%23ff3366' cx='50' cy='50' r='50'/%3E%3Ctext x='50' y='67' font-size='45' text-anchor='middle' fill='white'%3E🔥%3C/text%3E%3C/svg%3E">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-  /* TITLE */
-  .title-banner{text-align:center;margin-bottom:40px;animation:fadeDown .9s ease both;}
-  .title-banner h1{
-    font-family:'Dancing Script',cursive;font-size:clamp(2.2rem,6vw,4rem);
-    background:linear-gradient(135deg,#ff6b9d,#ff2d78,#c44dff,#ffd700);
-    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    filter:drop-shadow(0 0 18px #ff6b9d88);line-height:1.2;}
-  .tagline{color:#ffb3d1;font-size:1rem;letter-spacing:3px;text-transform:uppercase;margin-top:8px;opacity:.8;}
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 30% 10%, #0a0f1e, #010101);
+            font-family: system-ui, -apple-system, 'Segoe UI', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            padding: 20px 16px 40px;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
 
-  /* COUPLE */
-  .couple-card{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:40px;animation:fadeUp 1s .2s ease both;}
-  .profile-box{
-    background:linear-gradient(145deg,rgba(255,107,157,.13),rgba(196,77,255,.08));
-    border:1px solid rgba(255,107,157,.3);border-radius:24px;padding:28px 24px;
-    text-align:center;min-width:200px;backdrop-filter:blur(12px);position:relative;overflow:hidden;
-    transition:transform .3s,box-shadow .3s;}
-  .profile-box:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 20px 60px rgba(255,45,120,.25);}
-  .profile-box::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,157,.06),transparent 60%);pointer-events:none;}
-  .avatar-wrap{width:120px;height:120px;border-radius:50%;margin:0 auto 14px;position:relative;}
-  .avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:3px solid var(--pink);
-    box-shadow:0 0 20px rgba(255,107,157,.5),0 0 40px rgba(255,107,157,.2);}
-  .avatar-wrap::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid transparent;
-    background:linear-gradient(#0d0015,#0d0015) padding-box,linear-gradient(135deg,#ff6b9d,#c44dff,#ff6b9d) border-box;
-    animation:spinRing 4s linear infinite;}
-  @keyframes spinRing{to{transform:rotate(360deg);}}
-  .profile-box .name{font-family:'Dancing Script',cursive;font-size:1.8rem;color:#fff;text-shadow:0 0 12px rgba(255,107,157,.6);}
-  .profile-box .role{font-size:.8rem;color:var(--pink);letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.9;}
-  .heart-connector{font-size:3rem;animation:heartBeat 1.4s infinite;filter:drop-shadow(0 0 16px #ff2d78);user-select:none;}
-  @keyframes heartBeat{0%,100%{transform:scale(1);}14%{transform:scale(1.3);}28%{transform:scale(1);}42%{transform:scale(1.2);}70%{transform:scale(1);}}
+        .glass-card {
+            max-width: 580px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(10, 20, 30, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 75, 100, 0.4);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 200, 100, 0.2) inset;
+            overflow: hidden;
+            transition: transform 0.25s ease;
+        }
 
-  /* COUNTER */
-  .love-counter{
-    background:linear-gradient(145deg,rgba(255,45,120,.12),rgba(196,77,255,.08));
-    border:1px solid rgba(255,107,157,.25);border-radius:28px;padding:36px 28px;
-    text-align:center;margin-bottom:36px;backdrop-filter:blur(16px);animation:fadeUp 1s .4s ease both;
-    position:relative;overflow:hidden;}
-  .love-counter::before{content:'♥';position:absolute;top:-20px;left:50%;transform:translateX(-50%);
-    font-size:120px;color:rgba(255,45,120,.04);pointer-events:none;}
-  .counter-title{font-size:.85rem;color:#ffb3d1;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;opacity:.8;}
-  .counter-grid{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
-  .counter-unit{background:rgba(255,107,157,.1);border:1px solid rgba(255,107,157,.2);border-radius:16px;padding:18px 22px;min-width:90px;}
-  .counter-unit .num{font-family:'Dancing Script',cursive;font-size:3rem;color:#fff;line-height:1;text-shadow:0 0 16px rgba(255,107,157,.7);display:block;}
-  .counter-unit .lbl{font-size:.7rem;color:var(--pink);letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.8;}
-  .start-date{color:#ffb3d1;font-size:.9rem;opacity:.7;}
-  .start-date span{color:var(--pink);font-weight:700;opacity:1;}
+        .content-inner {
+            padding: 24px 22px 36px;
+        }
 
-  /* GALLERY */
-  .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:36px;animation:fadeUp 1s .6s ease both;}
-  .gif-card{border-radius:20px;overflow:hidden;border:1px solid rgba(255,107,157,.25);position:relative;aspect-ratio:1;
-    background:rgba(255,107,157,.05);transition:transform .3s,box-shadow .3s;}
-  .gif-card:hover{transform:scale(1.04) rotate(-1deg);box-shadow:0 16px 40px rgba(255,45,120,.3);}
-  .gif-card img{width:100%;height:100%;object-fit:cover;display:block;}
-  .gif-card .caption{position:absolute;bottom:0;left:0;right:0;
-    background:linear-gradient(transparent,rgba(13,0,21,.85));
-    color:#ffb3d1;font-size:.75rem;letter-spacing:1px;text-align:center;padding:12px 8px 8px;}
-  .gif-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-size:2.5rem;gap:6px;color:#ffb3d1;font-size:.75rem;}
-  .gif-placeholder .big{font-size:2.5rem;}
+        /* Avatar FF + Anime */
+        .anime-avatar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .avatar-circle {
+            width: 105px;
+            height: 105px;
+            background: linear-gradient(145deg, #ff4d4d, #ff8c42);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(255, 50, 50, 0.5);
+            border: 2px solid gold;
+        }
+        .avatar-img {
+            width: 95px;
+            height: 95px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #1a1a2e;
+        }
 
-  /* MESSAGE */
-  .love-msg{background:linear-gradient(145deg,rgba(196,77,255,.1),rgba(255,45,120,.08));
-    border:1px solid rgba(196,77,255,.25);border-radius:24px;padding:32px 28px;text-align:center;animation:fadeUp 1s .8s ease both;}
-  .love-msg p{font-family:'Dancing Script',cursive;font-size:1.5rem;color:#fff;line-height:1.7;text-shadow:0 0 20px rgba(196,77,255,.4);}
-  .emoji-row{font-size:1.8rem;margin-top:14px;letter-spacing:8px;}
+        /* Device & Admin info */
+        .device-status {
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 32px;
+            padding: 12px 16px;
+            margin: 12px 0 16px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            border: 1px solid #ff884d40;
+        }
+        .device-info p {
+            color: #f5e6d3;
+            font-size: 0.8rem;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .device-info span {
+            background: #ffb34730;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #ffe0a3;
+        }
+        .admin-contact {
+            background: linear-gradient(90deg, #ff9900, #ff3300);
+            border-radius: 60px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: inline-block;
+            width: auto;
+        }
 
-  @keyframes fadeDown{from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);}}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+        .intro {
+            text-align: center;
+            margin: 10px 0 20px;
+        }
+        .intro h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #FFD966, #FF6A4B, #FF2E63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .intro p {
+            color: #ffc49b;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+        .reglock-badge {
+            background: #dd224488;
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 8px;
+            backdrop-filter: blur(2px);
+        }
 
-  .stars{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
-  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) var(--delay) infinite ease-in-out alternate;}
-  @keyframes twinkle{from{opacity:.1;transform:scale(.8);}to{opacity:.9;transform:scale(1.2);}}
-  .petal{position:fixed;z-index:2;pointer-events:none;animation:petalFall linear infinite;opacity:.7;}
-  @keyframes petalFall{0%{transform:translateY(-20px) rotate(0deg);opacity:.8;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
-</style>
+        /* Grid nút chức năng Free Fire */
+        .boost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin: 28px 0 20px;
+        }
+        .rainbow-btn {
+            background: linear-gradient(90deg, #ff3c6e, #ffad3c, #5eff8e, #3cb0ff, #c45eff, #ff3c6e);
+            background-size: 300% 100%;
+            border: none;
+            border-radius: 60px;
+            padding: 14px 0;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: white;
+            text-shadow: 0 1px 2px black;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            animation: rainbowMove 2.4s linear infinite;
+            width: 100%;
+        }
+        @keyframes rainbowMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        .rainbow-btn:active {
+            transform: scale(0.96);
+        }
+        .rainbow-btn.active-boost {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            animation: none;
+            box-shadow: 0 0 15px #00ffc3;
+            border: 1px solid #eaffd0;
+        }
+
+        .select-all-wrap {
+            text-align: center;
+            margin: 8px 0 18px;
+        }
+        .select-all-btn {
+            background: rgba(255, 80, 120, 0.7);
+            border: 1px solid rgba(255, 200, 0, 0.8);
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff2cf;
+            backdrop-filter: blur(8px);
+            width: 85%;
+        }
+        .activation-log {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 42px;
+            padding: 14px 16px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffefcf;
+            border-left: 5px solid #ff6f3c;
+        }
+
+        .vip-footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            padding: 12px;
+        }
+        .zalo-link {
+            color: #ffb347;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        button {
+            font-family: inherit;
+        }
+        @media (max-width: 500px) {
+            .boost-grid { gap: 12px; }
+            .rainbow-btn { font-size: 0.8rem; padding: 12px 0; }
+        }
+    </style>
 </head>
 <body>
-<div class="bg-layer"></div>
-<div class="stars" id="stars"></div>
-<canvas id="heartCanvas"></canvas>
+<div class="glass-card">
+    <div class="content-inner">
+        <!-- Avatar hầu gái Anime + FF style -->
+        <div class="anime-avatar">
+            <div class="avatar-circle">
+                <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle fill='%23ffb7c5' cx='100' cy='100' r='98'/%3E%3Cpath fill='%23b35f2b' d='M60 85 L140 85 L132 118 L68 118 L60 85Z'/%3E%3Ccircle fill='%23332222' cx='74' cy='74' r='6'/%3E%3Ccircle fill='%23332222' cx='126' cy='74' r='6'/%3E%3Cpath fill='%23ff7096' d='M82 126 Q100 142 118 126' stroke='%23942e4e' stroke-width='2.5' fill='none' /%3E%3Crect x='78' y='139' width='44' height='16' fill='%23ffadc2' rx='8' /%3E%3Ctext x='100' y='170' font-size='20' fill='%23b82c5c' text-anchor='middle'%3E🔥FF🔥%3C/text%3E%3C/svg%3E"
+                     alt="anime maid ff">
+            </div>
+        </div>
 
-<div class="container">
+        <!-- Thông tin IP + máy + ADMIN DŨNG LÊ -->
+        <div class="device-status">
+            <div class="device-info" id="deviceInfo">
+                <p>📡 Đang tải IP & thiết bị ...</p>
+            </div>
+            <div class="admin-contact">
+                👑 ADMIN: DŨNG LÊ 👑 | ZALO: 0969411158
+            </div>
+            <div class="reglock-badge">
+                🔒 REGLOCK BY DLEE iOS | FREE FIRE BOOSTER VIP 🔒
+            </div>
+        </div>
 
-  <div class="title-banner">
-    <h1>Lê Tiến Dũng ❤️ Nguyễn Bảo Thy</h1>
-    <p class="tagline">✨ Tình yêu của chúng mình ✨</p>
-  </div>
+        <!-- Giới thiệu chỉnh chu -->
+        <div class="intro">
+            <h1>⚡ FF EXTREME BOOSTER ⚡</h1>
+            <p>🎯 Tăng bám đầu | Tăng nhạy | Ghim tâm | Vuốt mượt | Aimlock chuẩn xác 🎯</p>
+            <p style="font-size:0.7rem;">💎 5 chức năng VIP - reglock by DLee - dành riêng iOS 💎</p>
+        </div>
 
-  <div class="couple-card">
-    <div class="profile-box">
-      <div class="avatar-wrap">
-        <img src="https://media.giphy.com/media/hpXdHPfFI5wTABdDx9/giphy.gif" alt="Tiến Dũng"
-             onerror="this.style.display='none'">
-      </div>
-      <div class="name">Tiến Dũng</div>
-      <div class="role">💙 Người yêu em</div>
+        <!-- Các chức năng mới theo yêu cầu: tăng bám đầu, tăng nhạy, ghim tâm, tăng mượt vuốt, aimlock chuẩn xác (tổng 5 nút) + thêm reglock lock? để đủ hấp dẫn. nhưng vẫn giữ 5 -->
+        <div class="boost-grid" id="boostGrid">
+            <button class="rainbow-btn" data-boost="aimClamp">🎯 Tăng bám đầu (Aim Clamp+)</button>
+            <button class="rainbow-btn" data-boost="touchSense">📈 Tăng nhạy cảm ứng (Sens)</button>
+            <button class="rainbow-btn" data-boost="pinPoint">📍 Ghim tâm (PinPoint)</button>
+            <button class="rainbow-btn" data-boost="smoothSwipe">🌀 Tăng mượt vuốt (Swipe Pro)</button>
+            <button class="rainbow-btn" data-boost="aimlockX">🎯 Aimlock chuẩn xác (100% HS)</button>
+        </div>
+
+        <!-- Nút chọn tất cả -->
+        <div class="select-all-wrap">
+            <button id="selectAllBtn" class="select-all-btn">🔥 KÍCH HOẠT TẤT CẢ (MAX VIP) 🔥</button>
+        </div>
+
+        <!-- Log hiển thị đã kích hoạt -->
+        <div class="activation-log" id="activationLog">
+            <div class="log-message">
+                <span class="log-icon">💀</span>
+                <span id="logText">Chưa kích hoạt tính năng nào. Hãy chọn 1 boost FF!</span>
+            </div>
+        </div>
+        
+        <div class="vip-footer">
+            <span>📱 Liên hệ <strong class="zalo-link">Zalo 0969411158 (Dũng Lê)</strong> để mua file VIP | Reglock By DLee iOS | Free Fire Boster siêu cấp 📱</span><br>
+            <span style="font-size:0.65rem;">⚡ WebClip chính thức | Hiệu ứng tối ưu iPhone | Bám đầu, aimlock chuẩn rank ⚡</span>
+        </div>
     </div>
-    <div class="heart-connector">❤️</div>
-    <div class="profile-box">
-      <div class="avatar-wrap">
-        <img src="https://media.giphy.com/media/26xBI73gWquCBLCDO/giphy.gif" alt="Bảo Thy"
-             onerror="this.style.display='none'">
-      </div>
-      <div class="name">Bảo Thy</div>
-      <div class="role">🌸 Người anh yêu</div>
-    </div>
-  </div>
-
-  <div class="love-counter">
-    <div class="counter-title">💕 Chúng mình đã yêu nhau được</div>
-    <div class="counter-grid">
-      <div class="counter-unit"><span class="num" id="cnt-days">1</span><span class="lbl">Ngày</span></div>
-      <div class="counter-unit"><span class="num" id="cnt-hours">00</span><span class="lbl">Giờ</span></div>
-      <div class="counter-unit"><span class="num" id="cnt-mins">00</span><span class="lbl">Phút</span></div>
-      <div class="counter-unit"><span class="num" id="cnt-secs">00</span><span class="lbl">Giây</span></div>
-    </div>
-    <div class="start-date">Bắt đầu từ ngày <span>26 / 03 / 2026</span> 🌹</div>
-  </div>
-
-  <div class="gallery" id="gallery"></div>
-
-  <div class="love-msg">
-    <p>"Mỗi ngày có em bên cạnh là mỗi ngày anh trân trọng nhất.<br>
-       Em là điều tuyệt vời nhất xảy ra trong cuộc đời anh. 💕<br>
-       Dù thời gian có trôi qua, tình yêu này mãi không phai."</p>
-    <div class="emoji-row">🌹 💕 🌸 💖 ✨</div>
-  </div>
 </div>
 
 <script>
-// STARS
-const starsEl = document.getElementById('stars');
-for(let i=0;i<80;i++){
-  const s=document.createElement('div');s.className='star';
-  const sz=Math.random()*2.5+.5;
-  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*3+2).toFixed(1)}s;--delay:${(Math.random()*4).toFixed(1)}s;`;
-  starsEl.appendChild(s);
-}
+    (function() {
+        // ------------------- IP & TÊN MÁY ------------------
+        const deviceInfoDiv = document.getElementById('deviceInfo');
+        function getDeviceName() {
+            const ua = navigator.userAgent;
+            if (/iPhone/i.test(ua)) {
+                let model = "iPhone";
+                if (ua.includes("iPhone14")) model = "iPhone 12/13/14";
+                else if (ua.includes("iPhone15")) model = "iPhone 15/16";
+                else if (ua.includes("iPhone13")) model = "iPhone 13 Series";
+                else model = "iPhone (iOS)";
+                return `${model} | iOS ${getIOSVersion()}`;
+            } else if (/iPad/i.test(ua)) return "iPad Pro/iPadOS";
+            return "Apple Device (FF Boost)";
+        }
+        function getIOSVersion() {
+            const ua = navigator.userAgent;
+            const match = ua.match(/OS (\d+)[_\d]*/);
+            return match && match[1] ? match[1] : "16+";
+        }
+        async function fetchIPAndDisplay() {
+            let ipText = "Đang lấy...";
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                ipText = data.ip;
+            } catch(e) { ipText = "Local/VPN"; }
+            const deviceNameRaw = getDeviceName();
+            deviceInfoDiv.innerHTML = `
+                <p>🖥️ <strong>Thiết bị:</strong> <span>${deviceNameRaw}</span></p>
+                <p>🌍 <strong>IP truy cập:</strong> <span>${ipText}</span> <span class="badge" style="background:#ff884d30;">🔐 Reglock iOS</span></p>
+                <p>🎮 <strong>Free Fire Booster:</strong> <span>VIP Ready</span> | <strong>Admin: Dũng Lê</strong></p>
+            `;
+        }
+        fetchIPAndDisplay();
 
-// PETALS
-const ptypes=['🌸','🌺','💮','🌷'];
-for(let i=0;i<14;i++){
-  const p=document.createElement('div');p.className='petal';
-  p.textContent=ptypes[Math.floor(Math.random()*ptypes.length)];
-  p.style.cssText=`left:${Math.random()*100}%;animation-duration:${(Math.random()*8+6).toFixed(1)}s;animation-delay:${(Math.random()*10).toFixed(1)}s;font-size:${(Math.random()*12+10)|0}px;`;
-  document.body.appendChild(p);
-}
-
-// GIF GALLERY — dùng Giphy media URLs (không bị CORS trên PC)
-const gifs = [
-  { src:'https://media.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif', caption:'💖 Bên nhau mãi mãi',   emoji:'💖' },
-  { src:'https://media.giphy.com/media/3oEjI1erPMTMBFmNHi/giphy.gif', caption:'🌸 Hạnh phúc mỗi ngày', emoji:'🌸' },
-  { src:'https://media.giphy.com/media/xUPGcguWZHRC2HyBRS/giphy.gif', caption:'✨ Yêu em rất nhiều',   emoji:'✨' },
-  { src:'https://media.giphy.com/media/26uf2YTgF5upXUTm0/giphy.gif',  caption:'💌 Mãi là của nhau',    emoji:'💌' }
-];
-const gallery = document.getElementById('gallery');
-gifs.forEach(item=>{
-  const card=document.createElement('div');card.className='gif-card';
-  const img=document.createElement('img');
-  img.alt=item.caption;img.loading='lazy';
-  img.onerror=function(){
-    this.remove();
-    const ph=document.createElement('div');ph.className='gif-placeholder';
-    ph.innerHTML=`<span class="big">${item.emoji}</span><span>Anime Love</span>`;
-    card.insertBefore(ph,card.firstChild);
-  };
-  img.src=item.src;
-  const cap=document.createElement('div');cap.className='caption';cap.textContent=item.caption;
-  card.appendChild(img);card.appendChild(cap);gallery.appendChild(card);
-});
-
-// LOVE COUNTER
-// Ngày 26/03/2026 = Ngày 1; ngày 27/03/2026 = Ngày 2; ...
-function updateCounter(){
-  const start = new Date(2026, 2, 26, 0, 0, 0); // 26/3/2026 00:00:00
-  const now   = new Date();
-  const diff  = now - start;
-  if(diff < 0){
-    document.getElementById('cnt-days').textContent='0';
-    document.getElementById('cnt-hours').textContent='00';
-    document.getElementById('cnt-mins').textContent='00';
-    document.getElementById('cnt-secs').textContent='00';
-    return;
-  }
-  const days  = Math.floor(diff / 86400000) + 1; // +1 để ngày đầu tiên = 1
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const mins  = Math.floor((diff % 3600000)  / 60000);
-  const secs  = Math.floor((diff % 60000)    / 1000);
-  document.getElementById('cnt-days').textContent  = days;
-  document.getElementById('cnt-hours').textContent = String(hours).padStart(2,'0');
-  document.getElementById('cnt-mins').textContent  = String(mins).padStart(2,'0');
-  document.getElementById('cnt-secs').textContent  = String(secs).padStart(2,'0');
-}
-updateCounter();
-setInterval(updateCounter,1000);
-
-// 3D HEARTS
-const canvas=document.getElementById('heartCanvas');
-const ctx=canvas.getContext('2d');
-let W,H;
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-class Heart{
-  constructor(){this.reset(true);}
-  reset(init=false){
-    this.x=Math.random()*W;this.y=init?Math.random()*H:H+40;
-    this.sz=Math.random()*22+8;this.spd=Math.random()*1.4+0.5;
-    this.dx=(Math.random()-.5)*1.2;this.rot=Math.random()*Math.PI*2;
-    this.dRot=(Math.random()-.5)*.05;this.opa=Math.random()*.6+.3;
-    this.hue=Math.random()<.5?340:280;this.sc3d=Math.random()*.5+.6;
-    this.pulse=Math.random()*Math.PI*2;
-  }
-  draw(){
-    this.pulse+=.05;
-    const s=this.sz*this.sc3d*(1+Math.sin(this.pulse)*.07);
-    ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.rot);
-    ctx.globalAlpha=this.opa*.25;ctx.fillStyle=`hsl(${this.hue},100%,20%)`;
-    hp(ctx,s,3,4);ctx.fill();
-    ctx.globalAlpha=this.opa;
-    const g=ctx.createRadialGradient(-s*.15,-s*.25,s*.05,0,0,s*.9);
-    g.addColorStop(0,`hsl(${this.hue+20},100%,85%)`);
-    g.addColorStop(.4,`hsl(${this.hue},100%,65%)`);
-    g.addColorStop(1,`hsl(${this.hue-20},100%,35%)`);
-    ctx.fillStyle=g;hp(ctx,s,0,0);ctx.fill();
-    ctx.globalAlpha=this.opa*.5;ctx.fillStyle='rgba(255,255,255,.6)';
-    hp(ctx,s*.4,-s*.18,-s*.22);ctx.fill();
-    ctx.restore();
-    this.y-=this.spd;this.x+=this.dx;this.rot+=this.dRot;
-    if(this.y<-this.sz*2)this.reset();
-  }
-}
-function hp(c,sz,ox,oy){
-  const s=sz;c.beginPath();c.moveTo(ox,oy-s*.3);
-  c.bezierCurveTo(ox,oy-s*.85,ox-s,oy-s*.85,ox-s,oy-s*.3);
-  c.bezierCurveTo(ox-s,oy+s*.1,ox,oy+s*.55,ox,oy+s*.55);
-  c.bezierCurveTo(ox,oy+s*.55,ox+s,oy+s*.1,ox+s,oy-s*.3);
-  c.bezierCurveTo(ox+s,oy-s*.85,ox,oy-s*.85,ox,oy-s*.3);
-  c.closePath();
-}
-const hearts=Array.from({length:45},()=>new Heart());
-function loop(){ctx.clearRect(0,0,W,H);hearts.forEach(h=>h.draw());requestAnimationFrame(loop);}
-loop();
+        // ---------- Các boost state (5 chức năng FF) ----------
+        const boostStates = {
+            aimClamp: false,
+            touchSense: false,
+            pinPoint: false,
+            smoothSwipe: false,
+            aimlockX: false
+        };
+        
+        const boostNames = {
+            aimClamp: "🎯 Tăng bám đầu (Aim Clamp+)",
+            touchSense: "📈 Tăng nhạy cảm ứng (Sens)",
+            pinPoint: "📍 Ghim tâm (PinPoint)",
+            smoothSwipe: "🌀 Tăng mượt vuốt (Swipe Pro)",
+            aimlockX: "🎯 Aimlock chuẩn xác (100% HS)"
+        };
+        
+        // Cập nhật UI nút
+        function updateButtonUI() {
+            for (const [key, isActive] of Object.entries(boostStates)) {
+                const btn = document.querySelector(`.rainbow-btn[data-boost="${key}"]`);
+                if (btn) {
+                    if (isActive) {
+                        btn.classList.add('active-boost');
+                        if (!btn.getAttribute('data-active-label')) {
+                            btn.setAttribute('data-original', btn.innerText);
+                            btn.innerText = `✅ ${boostNames[key]} (Đã kích hoạt)`;
+                            btn.setAttribute('data-active-label', 'true');
+                        }
+                    } else {
+                        btn.classList.remove('active-boost');
+                        if (btn.getAttribute('data-active-label')) {
+                            btn.innerText = btn.getAttribute('data-original') || boostNames[key];
+                            btn.removeAttribute('data-active-label');
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Log thông báo đã kích hoạt
+        function updateLog() {
+            const activeList = Object.entries(boostStates).filter(([_, active]) => active).map(([key]) => boostNames[key]);
+            const logSpan = document.getElementById('logText');
+            if (activeList.length === 0) {
+                logSpan.innerHTML = `💀 Chưa kích hoạt tính năng nào. Bấm nút VIP để tăng bám đầu + aimlock!`;
+                document.getElementById('activationLog').style.borderLeftColor = "#ff6f3c";
+                return;
+            }
+            const summary = activeList.join(' · ');
+            logSpan.innerHTML = `⚡ ĐÃ KÍCH HOẠT (${activeList.length}/5): ${summary} ⚡<br><span style="font-size:0.7rem;">🔥 Reglock by DLee | Free Fire đã tối ưu bám đầu, vuốt mượt, aimlock 🔥</span>`;
+            document.getElementById('activationLog').style.borderLeftColor = "#00ffaa";
+        }
+        
+        // Hàm mô phỏng kích hoạt hiệu ứng cho từng chức năng (cảm giác tăng thực tế)
+        function applyFFBoostEffect(boostKey) {
+            // Tạo style động hoặc hiệu ứng cảm giác mạnh
+            if (boostKey === 'aimClamp') {
+                let style = document.getElementById('ff-aimclamp');
+                if (!style) {
+                    style = document.createElement('style');
+                    style.id = 'ff-aimclamp';
+                    style.innerText = `/* Aim Clamp+ */ .rainbow-btn:active { transition: 0.05s linear; }`;
+                    document.head.appendChild(style);
+                }
+                showMiniNoti("🎯 Bám đầu siêu nhạy - Đã kích hoạt độ bám cao cấp!");
+            }
+            if (boostKey === 'touchSense') {
+                document.body.style.touchAction = 'manipulation';
+                const meta = document.createElement('meta');
+                if(!document.querySelector('meta[name="touch-boost"]')) {
+                    meta.name = "touch-boost";
+                    meta.content = "extreme-sensitivity";
+                    document.head.appendChild(meta);
+                }
+                showMiniNoti("📈 Cảm ứng tăng 200% - vuốt cực nhanh!");
+            }
+            if (boostKey === 'pinPoint') {
+                showMiniNoti("📍 Ghim tâm hoàn hảo - chuẩn xác vào headshot!");
+                document.documentElement.style.setProperty('--pinpoint', '1');
+                const glow = document.createElement('style');
+                glow.id = 'pinpointGlow';
+                if(!document.getElementById('pinpointGlow')) {
+                    glow.innerText = `.rainbow-btn:focus { box-shadow: 0 0 0 2px #ff55dd; }`;
+                    document.head.appendChild(glow);
+                }
+            }
+            if (boostKey === 'smoothSwipe') {
+                document.documentElement.style.scrollBehavior = 'smooth';
+                const glass = document.querySelector('.glass-card');
+                if(glass) glass.style.transition = 'transform 0.12s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+                showMiniNoti("🌀 Vuốt mượt như lụa, cảm ứng tốc độ cao!");
+            }
+            if (boostKey === 'aimlockX') {
+                showMiniNoti("🎯 AIMLOCK CHUẨN XÁC 100% - LOCK ĐẦU KẺ ĐỊCH!");
+                // thêm style giả lập aim
+                const aimDiv = document.createElement('div');
+                aimDiv.style.position = 'fixed';
+                aimDiv.style.pointerEvents = 'none';
+                aimDiv.style.bottom = '20px';
+                aimDiv.style.right = '20px';
+                aimDiv.style.background = 'rgba(255,0,80,0.7)';
+                aimDiv.style.padding = '6px 12px';
+                aimDiv.style.borderRadius = '30px';
+                aimDiv.style.fontSize = '12px';
+                aimDiv.style.color = 'white';
+                aimDiv.style.zIndex = '9999';
+                aimDiv.innerText = '🔒 AIMLOCK ACTIVE';
+                aimDiv.id = 'aimlockIndicator';
+                if(!document.getElementById('aimlockIndicator')) document.body.appendChild(aimDiv);
+                setTimeout(() => { if(aimDiv) aimDiv.remove(); }, 2500);
+            }
+        }
+        
+        function showMiniNoti(msg) {
+            const logDiv = document.getElementById('activationLog');
+            const oldText = document.getElementById('logText').innerHTML;
+            const tempMsg = document.getElementById('logText');
+            tempMsg.innerHTML = `✨ ${msg} ✨`;
+            setTimeout(() => {
+                if (Object.values(boostStates).some(v=>v===true)) updateLog();
+                else tempMsg.innerHTML = oldText;
+            }, 1400);
+        }
+        
+        // Kích hoạt boost chính
+        function activateBoost(boostKey) {
+            if (boostStates[boostKey]) {
+                // đã kích hoạt rồi
+                document.getElementById('logText').innerHTML = `⚠️ "${boostNames[boostKey]}" đã được kích hoạt trước đó!`;
+                setTimeout(() => updateLog(), 1200);
+                return false;
+            }
+            boostStates[boostKey] = true;
+            updateButtonUI();
+            updateLog();
+            applyFFBoostEffect(boostKey);
+            // Thêm hiệu ứng nhẹ cho nút
+            const btn = document.querySelector(`.rainbow-btn[data-boost="${boostKey}"]`);
+            if(btn) {
+                btn.style.transform = 'scale(0.97)';
+                setTimeout(() => { if(btn) btn.style.transform = ''; }, 120);
+            }
+            return true;
+        }
+        
+        // Kích hoạt tất cả
+        function activateAllBoosts() {
+            let anyNew = false;
+            for (let key in boostStates) {
+                if (!boostStates[key]) {
+                    boostStates[key] = true;
+                    anyNew = true;
+                    applyFFBoostEffect(key);
+                }
+            }
+            if (anyNew) {
+                updateButtonUI();
+                updateLog();
+                document.getElementById('logText').innerHTML = `💎 SIÊU VIP: TẤT CẢ 5 CHỨC NĂNG ĐÃ KÍCH HOẠT! Bám đầu + Aimlock + Ghim tâm + Vuốt mượt 💎<br> 🔥 Reglock By DLee iOS Free Fire Boster hoạt động 100% 🔥`;
+                setTimeout(() => updateLog(), 2000);
+            } else {
+                document.getElementById('logText').innerHTML = `✅ Đã ở chế độ tối thượng! Cả 5 chức năng đều active.`;
+                setTimeout(() => updateLog(), 1400);
+            }
+        }
+        
+        // Gán sự kiện cho các nút rainbow
+        const btns = document.querySelectorAll('.rainbow-btn');
+        btns.forEach(btn => {
+            const boostKey = btn.getAttribute('data-boost');
+            if (boostKey && boostStates.hasOwnProperty(boostKey)) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activateBoost(boostKey);
+                });
+            }
+        });
+        
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        selectAllBtn.addEventListener('click', () => {
+            activateAllBoosts();
+        });
+        
+        // Thêm style mượt, hiệu ứng lướt
+        const styleScroll = document.createElement('style');
+        styleScroll.innerText = `html { scroll-behavior: smooth; } body { -webkit-overflow-scrolling: touch; } .glass-card { overflow-y: auto; max-height: 85vh; scrollbar-width: thin; }`;
+        document.head.appendChild(styleScroll);
+        
+        // Hiển thị thông báo reglock
+        console.log("🔥 Free Fire Boster VIP | Reglock by DLee iOS | Dũng Lê Zalo:0969411158");
+        
+        // Thêm hiệu ứng ảo "tăng cường aimlock & bám đầu" thông báo mỗi lần vào trang để tăng uy tín
+        setTimeout(() => {
+            const logBox = document.getElementById('logText');
+            if(logBox && !Object.values(boostStates).some(v=>v)) {
+                logBox.innerHTML = `🎯 Chào mừng! Hãy kích hoạt "Tăng bám đầu" hoặc "Aimlock" để tối ưu Free Fire ngay 🎯 <br> 📞 Liên hệ Dũng Lê 0969411158 mua file VIP reglock`;
+            }
+        }, 800);
+    })();
 </script>
 </body>
 </html>
