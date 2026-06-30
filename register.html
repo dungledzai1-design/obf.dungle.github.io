@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Zalo IMEI Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Animated background -->
+        <div class="auth-bg">
+            <div class="gradient-orb orb1"></div>
+            <div class="gradient-orb orb2"></div>
+            <div class="gradient-orb orb3"></div>
+            <div class="gradient-orb orb4"></div>
+            <div class="grid-pattern"></div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-card glass-effect register-card">
+            <div class="auth-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                    </div>
+                    <h1 class="auth-title">Tạo tài khoản</h1>
+                </div>
+                <p class="auth-subtitle">Đăng ký để sử dụng công cụ</p>
+            </div>
+
+            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Tên đăng nhập
+                    </label>
+                    <input type="text" id="regUsername" class="form-input" placeholder="Chọn tên đăng nhập" required minlength="3" maxlength="20">
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email
+                    </label>
+                    <input type="email" id="regEmail" class="form-input" placeholder="Nhập email của bạn" required>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Mật khẩu
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regPassword" class="form-input" placeholder="Tạo mật khẩu" required minlength="6">
+                        <button type="button" class="toggle-password" onclick="togglePassword('regPassword')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Xác nhận mật khẩu
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="regConfirmPassword" class="form-input" placeholder="Nhập lại mật khẩu" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('regConfirmPassword')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <!-- Human Verification -->
+                <div class="verification-section">
+                    <div class="verification-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                        <span>Xác minh con người</span>
+                    </div>
+                    <div class="verification-content">
+                        <div class="captcha-container">
+                            <div class="captcha-box" id="captchaBox">
+                                <span class="captcha-text" id="captchaText"></span>
+                            </div>
+                            <button type="button" class="captcha-refresh" onclick="generateCaptcha()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 4v6h-6"/>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="text" id="captchaInput" class="form-input captcha-input" placeholder="Nhập mã xác minh" required maxlength="6">
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn primary-btn" id="registerBtn">
+                    <span class="btn-text">Đăng ký</span>
+                    <span class="btn-loader" style="display: none;">
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                    </span>
+                </button>
+
+                <div class="auth-divider">
+                    <span>đã có tài khoản?</span>
+                </div>
+
+                <button type="button" class="auth-btn secondary-btn" onclick="window.location.href='index.html'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Đăng nhập
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span class="version-tag">v4.0.0</span>
+                <span class="status-dot online"></span>
+                <span class="status-text">Bảo mật cao cấp</span>
+            </div>
+        </div>
+
+        <div id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
