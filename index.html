@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Zalo IMEI Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Animated background -->
+        <div class="auth-bg">
+            <div class="gradient-orb orb1"></div>
+            <div class="gradient-orb orb2"></div>
+            <div class="gradient-orb orb3"></div>
+            <div class="gradient-orb orb4"></div>
+            <div class="grid-pattern"></div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="auth-card glass-effect">
+            <div class="auth-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <h1 class="auth-title">Zalo IMEI Tool</h1>
+                </div>
+                <p class="auth-subtitle">Đăng nhập để bắt đầu</p>
+            </div>
+
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Tên đăng nhập
+                    </label>
+                    <input type="text" id="loginUsername" class="form-input" placeholder="Nhập tên đăng nhập" required>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Mật khẩu
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Nhập mật khẩu" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-focus-line"></div>
+                </div>
+
+                <button type="submit" class="auth-btn primary-btn" id="loginBtn">
+                    <span class="btn-text">Đăng nhập</span>
+                    <span class="btn-loader" style="display: none;">
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                    </span>
+                </button>
+
+                <div class="auth-divider">
+                    <span>hoặc</span>
+                </div>
+
+                <button type="button" class="auth-btn secondary-btn" onclick="window.location.href='register.html'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <line x1="20" y1="8" x2="20" y2="14"/>
+                        <line x1="23" y1="11" x2="17" y2="11"/>
+                    </svg>
+                    Tạo tài khoản mới
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span class="version-tag">v4.0.0</span>
+                <span class="status-dot online"></span>
+                <span class="status-text">Hệ thống sẵn sàng</span>
+            </div>
+        </div>
+
+        <!-- Toast notification -->
+        <div id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
