@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+aiohttp
+websockets
+httpx
+zlapi
+pycryptodome
+requests
+Pillow
+python-multipart
+resend
