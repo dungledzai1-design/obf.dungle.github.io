@@ -1,15 +1,8 @@
 local GameId = game.GameId
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local HttpService = game:GetService("HttpService")
-local TeleportService = game:GetService("TeleportService")
-local CoreGui = game:GetService("CoreGui")
-local Debris = game:GetService("Debris")
 local StarterGui = game:GetService("StarterGui")
-local ContentProvider = game:GetService("ContentProvider")
 
 repeat task.wait() until game:IsLoaded() and Players.LocalPlayer
-plr = Players.LocalPlayer
 
 local isSupport = nil
 local GameList = {
@@ -63,51 +56,31 @@ if _G.loadCustomId then
 	isSupport = _G.loadCustomId
 end
 
-if not isSupport then
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HohoV2/refs/heads/main/ScriptLoadButOlder.lua'))()
-	wait(9e9)
-end
-
--- ================= BYPASS KEY & HWID =================
--- Cấu hình key giả để lừa Luarmor API (nếu API có check local)
-_G.script_key = "HOHO_BYPASS"
-getgenv().script_key = "HOHO_BYPASS"
-script_key = "HOHO_BYPASS"
-
--- Thông báo load (có thể xóa nếu muốn)
-StarterGui:SetCore("SendNotification", {
-    Title = "HoHo Hub Bypass",
-    Text = "Key & HWID Check Bypassed. Loading script...",
-    Duration = 3,
-    Icon = "rbxassetid://16276677105"
-})
-
--- Gọi hàm tải script hack thật từ Luarmor (Luarmor sẽ tự xác thực bằng script_id vì đã có key giả)
-local success, err = pcall(function()
-    local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
-    api.script_id = isSupport
-    
-    -- Ghi đè hàm check_key để nó luôn trả về Valid
-    api.check_key = function(key)
-        return {
-            code = "KEY_VALID",
-            message = "Bypass Activated",
-            data = { 
-                total_executions = 9999,
-                note = "Bypass"
-            }
-        }
-    end
-    
-    -- Gọi load script trực tiếp (bỏ qua UI check)
-    api.load_script()
-end)
-
-if not success then
+-- Hàm tải script hack thật (Đéo cần Luarmor check key)
+local function LoadHackScript()
+    -- Thông báo cho uy tín
     StarterGui:SetCore("SendNotification", {
-        Title = "HoHo Hub Bypass",
-        Text = "Lỗi load script: " .. tostring(err),
-        Duration = 5,
+        Title = "HoHo Hub",
+        Text = "Bypassed Key System. Loading...",
+        Duration = 3,
         Icon = "rbxassetid://16276677105"
     })
+
+    -- Gọi trực tiếp cái link script hack gốc (ScriptLoadButOlder)
+    -- Đây là script chứa toàn bộ chức năng hack, đéo cần key
+    local success, err = pcall(function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HohoV2/refs/heads/main/ScriptLoadButOlder.lua'))()
+    end)
+
+    if not success then
+        StarterGui:SetCore("SendNotification", {
+            Title = "HoHo Hub",
+            Text = "Lỗi load script: " .. tostring(err),
+            Duration = 5,
+            Icon = "rbxassetid://16276677105"
+        })
+    end
 end
+
+-- Tiến hành load
+LoadHackScript()
