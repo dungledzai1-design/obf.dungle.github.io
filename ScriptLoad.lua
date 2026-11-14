@@ -56,31 +56,28 @@ if _G.loadCustomId then
 	isSupport = _G.loadCustomId
 end
 
--- Hàm tải script hack thật (Đéo cần Luarmor check key)
-local function LoadHackScript()
-    -- Thông báo cho uy tín
-    StarterGui:SetCore("SendNotification", {
-        Title = "HoHo Hub",
-        Text = "Bypassed Key System. Loading...",
-        Duration = 3,
-        Icon = "rbxassetid://16276677105"
-    })
+StarterGui:SetCore("SendNotification", {
+    Title = "HoHo Hub Bypass",
+    Text = "Bypassed! Loading...",
+    Duration = 3,
+    Icon = "rbxassetid://16276677105"
+})
 
-    -- Gọi trực tiếp cái link script hack gốc (ScriptLoadButOlder)
-    -- Đây là script chứa toàn bộ chức năng hack, đéo cần key
-    local success, err = pcall(function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HohoV2/refs/heads/main/ScriptLoadButOlder.lua'))()
-    end)
-
-    if not success then
-        StarterGui:SetCore("SendNotification", {
-            Title = "HoHo Hub",
-            Text = "Lỗi load script: " .. tostring(err),
-            Duration = 5,
-            Icon = "rbxassetid://16276677105"
-        })
-    end
+if not isSupport then
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HohoV2/refs/heads/main/ScriptLoadButOlder.lua'))()
+	wait(9e9)
 end
 
--- Tiến hành load
-LoadHackScript()
+-- Gọi trực tiếp link script hack gốc, đéo cần qua Luarmor API nữa
+local success, err = pcall(function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HohoV2/refs/heads/main/ScriptLoadButOlder.lua'))()
+end)
+
+if not success then
+    StarterGui:SetCore("SendNotification", {
+        Title = "HoHo Hub",
+        Text = "Lỗi: " .. tostring(err),
+        Duration = 5,
+        Icon = "rbxassetid://16276677105"
+    })
+end
